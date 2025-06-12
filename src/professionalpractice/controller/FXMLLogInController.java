@@ -1,14 +1,22 @@
 package professionalpractice.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.ConectionBD;
+import professionalpractice.utils.Utils;
 
 public class FXMLLogInController implements Initializable {
 
@@ -54,10 +62,28 @@ public class FXMLLogInController implements Initializable {
     }
     
     private void verifyCredentials(String username, String password) {
-        try {
+        /*try {
             
         } catch() {
             
+        } */
+    }
+
+    private void goHomeScreen() {
+        try {
+            Stage baseScenario = (Stage) tfUsername.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/FXMLHomeScreen.fxml"));
+            Parent view = loader.load();
+
+            FXMLHomeScreenController controller = loader.getController();
+            controller.initializeInformation();
+
+            Scene mainScene = new Scene(view);
+            baseScenario.setScene(mainScene);
+            baseScenario.setTitle("Pagina Principal");
+            baseScenario.showAndWait();
+        } catch(IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");
         }
     }
     
