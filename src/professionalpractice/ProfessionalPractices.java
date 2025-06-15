@@ -25,9 +25,8 @@ public class ProfessionalPractices extends Application {
             primaryStage.setScene(sceneLogIn);
             primaryStage.setTitle("Inicio de Sesión");
             primaryStage.show();
-
         } catch (IOException ex) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo recuperar la ventana para iniciar sesión");
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");
         }
     }
 

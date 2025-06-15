@@ -42,7 +42,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button fx:id="btnClickLogIn" layoutX="118.0" layoutY="301.0" mnemonicParsing="false" style="-fx-background-color: #22891f;" text="Iniciar sesión" textFill="WHITE">
+            <Button layoutX="118.0" layoutY="301.0" mnemonicParsing="false" onAction="#btnClickLogIn" style="-fx-background-color: #22891f;" text="Iniciar sesión" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
