@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
-import professionalpractice.controller.coordinator.FXMLCoordinatorMainScreenController;
+import professionalpractice.controller.evaluator.FXMLEvaluatorMainScreenController;
 import professionalpractice.utils.Utils;
 
 public class FXMLLogInController implements Initializable {
@@ -30,7 +30,7 @@ public class FXMLLogInController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //Conexion
+        //TODO Conexion
     }        
 
     @FXML
@@ -61,26 +61,33 @@ public class FXMLLogInController implements Initializable {
     }
     
     private void verifyCredentials(String username, String password) {
+        //Prueba de credenciales
+        if (username.equals("admin") && password.equals("admin")) {
+            goHomeScreen();
+        } else {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en iniciar sesión", "Usuario o contraseña incorrectos");
+        }
+        //TODO
         /*try {
             
         } catch() {
             
-        } */
+        }*/
     }
 
     private void goHomeScreen() {
         try {
-            Stage baseScenario = (Stage) tfUsername.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/FXMLCoordinatorMainScreen.fxml"));
+            Stage baseStage = (Stage) tfUsername.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
             Parent view = loader.load();
 
-            FXMLCoordinatorMainScreenController controller = loader.getController();
+            FXMLEvaluatorMainScreenController controller = loader.getController();
             controller.initializeInformation();
 
             Scene mainScene = new Scene(view);
-            baseScenario.setScene(mainScene);
-            baseScenario.setTitle("Pagina Principal");
-            baseScenario.showAndWait();
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Pagina Principal");
+            baseStage.show();
         } catch(IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");
         }

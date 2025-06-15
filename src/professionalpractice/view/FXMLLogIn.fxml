@@ -5,48 +5,54 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="536.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.FXMLLogInController">
+<AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.FXMLLogInController">
    <children>
-      <ImageView fitHeight="550.0" fitWidth="603.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="550.0" fitWidth="609.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../resource/BackgroundLogIn.jpg" />
          </image>
       </ImageView>
-      <AnchorPane layoutX="128.0" layoutY="58.0" prefHeight="433.0" prefWidth="341.0" style="-fx-background-color: ffffff; -fx-background-radius: 9;" styleClass="fluent-pane">
+      <AnchorPane layoutX="128.0" layoutY="58.0" prefHeight="433.0" prefWidth="341.0" style="-fx-background-color: ffffff; -fx-background-radius: 9;">
          <children>
-            <Label layoutX="24.0" layoutY="33.0" text="Prácticas profesionales" textAlignment="CENTER" textFill="#36618f">
+            <Label layoutX="36.0" layoutY="33.0" text="Prácticas profesionales" textAlignment="CENTER" textFill="#36618f">
                <font>
                   <Font name="System Bold" size="26.0" />
                </font>
             </Label>
-            <Label layoutX="103.0" layoutY="65.0" text="Inicio de sesión">
+            <Label layoutX="113.0" layoutY="65.0" text="Inicio de sesión">
                <font>
                   <Font size="18.0" />
                </font></Label>
-            <Label layoutX="89.0" layoutY="124.0" text="Usuario">
+            <Label layoutX="89.0" layoutY="124.0" text="Usuario" textFill="#000000b7">
                <font>
-                  <Font size="15.0" />
+                  <Font size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="tfUsername" layoutX="89.0" layoutY="145.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent;" />
-            <Label layoutX="89.0" layoutY="208.0" text="Contraseña">
+            <TextField fx:id="tfUsername" layoutX="89.0" layoutY="145.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent; -fx-padding: 5 0 2 0;">
                <font>
                   <Font size="15.0" />
+               </font></TextField>
+            <Label layoutX="89.0" layoutY="208.0" text="Contraseña" textFill="#000000b7">
+               <font>
+                  <Font size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="tfPassword" layoutX="89.0" layoutY="229.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent;" />
-            <Label layoutX="84.0" layoutY="409.0" text="Universidad Veracruzana" textAlignment="CENTER">
+            <TextField fx:id="tfPassword" layoutX="89.0" layoutY="229.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent; -fx-padding: 5 0 2 0;">
+               <font>
+                  <Font size="15.0" />
+               </font></TextField>
+            <Label layoutX="93.0" layoutY="409.0" text="Universidad Veracruzana" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
-            <Button layoutX="108.0" layoutY="301.0" mnemonicParsing="false" onAction="#btnClickLogIn" style="-fx-background-color: #22891f;" text="Iniciar sesión" textFill="WHITE">
+            <Button layoutX="118.0" layoutY="301.0" mnemonicParsing="false" onAction="#btnClickLogIn" style="-fx-background-color: #22891f;" text="Iniciar sesión" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
             </Button>
-            <Label fx:id="lbErrorUsername" layoutX="99.0" layoutY="172.0" textFill="#e45555" />
-            <Label fx:id="lbErrorPassword" layoutX="99.0" layoutY="256.0" textFill="#e45555" />
+            <Label fx:id="lbErrorUsername" layoutX="88.0" layoutY="177.0" textFill="#e45555" />
+            <Label fx:id="lbErrorPassword" layoutX="88.0" layoutY="261.0" textFill="#e45555" />
          </children>
       </AnchorPane>
    </children>
