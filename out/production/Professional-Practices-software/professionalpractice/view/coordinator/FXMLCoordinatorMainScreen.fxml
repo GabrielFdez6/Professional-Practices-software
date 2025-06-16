@@ -43,7 +43,7 @@
                </color></DropShadow>
          </effect>
          <children>
-            <Button contentDisplay="CENTER" layoutX="29.0" layoutY="109.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="185.0" style="-fx-background-color: #146cd0;" text="Asignar Proyecto" textFill="WHITE">
+            <Button contentDisplay="CENTER" layoutX="29.0" layoutY="109.0" mnemonicParsing="false" onAction="#btnAssignProjects" prefHeight="26.0" prefWidth="185.0" style="-fx-background-color: #146cd0;" text="Asignar Proyecto" textFill="WHITE">
                <font>
                   <Font name="Arial Bold" size="14.0" />
                </font>
@@ -55,6 +55,16 @@
                   </DropShadow>
                </effect>
             </Button>
+            <Label layoutX="57.0" layoutY="55.0" text="Asignar Proyecto">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="99.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resource/coordinator/AssignProjects.png" />
+               </image>
+            </ImageView>
          </children></AnchorPane>
       <AnchorPane layoutX="280.0" layoutY="126.0" prefHeight="149.0" prefWidth="241.0" style="-fx-background-color: white; -fx-background-radius: 9;">
          <effect>
