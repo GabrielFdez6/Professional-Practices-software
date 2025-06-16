@@ -31,9 +31,7 @@ public class FXMLStudentMainScreenController implements Initializable {
         // TODO
     }
 
-    // Este método es crucial para recibir la información del estudiante desde el login
     public void configureScreen(Student student) {
-        this.loggedInStudent = student;
         if (student != null) {
             lbWelcome.setText("BIENVENIDO(A), " + student.getFirstName().toUpperCase());
             lbFullName.setText(student.getFullName());

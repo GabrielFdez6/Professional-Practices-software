@@ -53,6 +53,8 @@ public class FXMLEvaluationRubricController implements Initializable {
     @FXML
     private TextField tfSpellingGrammarScore;
     private ObservableList<EvaluationCriterion> criteria;
+    @FXML
+    private TextField tfEvaluationTitle;
 
 
     @Override

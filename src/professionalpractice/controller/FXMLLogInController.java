@@ -81,7 +81,6 @@ public class FXMLLogInController implements Initializable {
         try {
             UserAccount user = userAccountDAO.getUserByUsername(username);
 
-            // La librería BCrypt debe estar en tu classpath para que esto funcione.
             if (user != null && BCrypt.checkpw(password, user.getPassword())) {
                 System.out.println(user.getPassword());
                 System.out.println(password);
@@ -109,7 +108,6 @@ public class FXMLLogInController implements Initializable {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Credenciales incorrectas", "Usuario o contraseña no válidos. Por favor, inténtelo de nuevo.");
             }
         } catch (SQLException e) {
-            // ¡Aquí manejamos el error de la base de datos!
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar a la base de datos. Por favor, inténtelo más tarde.");
         }
     }
@@ -142,7 +140,7 @@ public class FXMLLogInController implements Initializable {
 
     private void goStudentHomeScreen(int userId) {
         try {
-            Student student = studentDAO.getStudentByUserId(userId);
+             Student student = studentDAO.getStudentByUserId(userId);
             if (student == null) {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del estudiante asociada a esta cuenta.");
                 return;
@@ -173,14 +171,8 @@ public class FXMLLogInController implements Initializable {
         }
     }
 
-    private void goEvaluatorHomeScreen(int userid) {
+    private void goEvaluatorHomeScreen(String username) {
         try {
-            Student student = studentDAO.getStudentByUserId(userid);
-            if (student == null) {
-                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del evaluador asociada a esta cuenta.");
-                return;
-            }
-
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
             Parent view = loader.load();
@@ -192,8 +184,6 @@ public class FXMLLogInController implements Initializable {
             baseStage.setScene(mainScene);
             baseStage.setTitle("Página Principal Evaluador");
             baseStage.show();
-        } catch (SQLException e) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
         }

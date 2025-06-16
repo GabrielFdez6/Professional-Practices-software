@@ -161,4 +161,33 @@ public class StudentDAO implements IStudentDAO {
         }
         return response;
     }
+
+    public static ArrayList<Student> getStudents() throws SQLException {
+        ArrayList<Student> students = new ArrayList<>();
+        Connection connection = ConectionBD.getConnection();
+
+        if (connection != null) {
+            try {
+                String query = "SELECT idStudent, enrollment, semester, email, firstName, lastNameMother, lastNameFather FROM student";
+                PreparedStatement ps = connection.prepareStatement(query);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Student student = new Student();
+                    student.setIdStudent(rs.getInt("idStudent"));
+                    student.setEnrollment(rs.getString("enrollment"));
+                    student.setSemester(rs.getString("semester"));
+                    student.setEmail(rs.getString("email"));
+                    student.setFirstName(rs.getString("firstName"));
+                    student.setLastNameMother(rs.getString("lastNameMother"));
+                    student.setLastNameFather(rs.getString("lastNameFather"));
+                    students.add(student);
+                }
+                connection.close();
+            } catch (SQLException e) {
+                System.err.println("Error al obtener los estudiantes: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return students;
+    }
 }
