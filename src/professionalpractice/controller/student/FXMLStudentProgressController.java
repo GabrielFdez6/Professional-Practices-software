@@ -36,6 +36,10 @@ public class FXMLStudentProgressController implements Initializable {
     }
 
     public void configureView(Student student) {
+        if (student == null) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Sesión", "No se ha iniciado sesión correctamente. Por favor, inicia sesión de nuevo.");
+            return;
+        }
         try{
             StudentProgress progress = studentDAO.getStudentProgress(student.getIdStudent());
 
@@ -43,18 +47,17 @@ public class FXMLStudentProgressController implements Initializable {
                 populateData(progress);
             } else {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Consulta", "No se pudo recuperar tu información de progreso. Intenta más tarde.");
-                closeWindow();
             }
         } catch (SQLException e){
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos", "Ocurrió un error al consultar tu progreso. Por favor, intenta más tarde.");
             System.err.println("Error al obtener el progreso del estudiante: " + e.getMessage());
             e.printStackTrace();
-            closeWindow();
+
         } catch (Exception e) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error Inesperado", "Ocurrió un error inesperado. Por favor, intenta más tarde.");
             System.err.println("Error inesperado: " + e.getMessage());
             e.printStackTrace();
-            closeWindow();
+
         }
 
     }
@@ -81,12 +84,5 @@ public class FXMLStudentProgressController implements Initializable {
         Node source = (Node) event.getSource();
         Stage currentStage = (Stage) source.getScene().getWindow();
         currentStage.close();
-    }
-
-    private void closeWindow() {
-        // Método auxiliar para cerrar la ventana en caso de error inicial.
-        // Se busca el Stage desde un componente que sí o sí existe, como lbFullName.
-        Stage stage = (Stage) lbFullName.getScene().getWindow();
-        stage.close();
     }
 }
