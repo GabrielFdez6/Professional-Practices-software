@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="450.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.practicasprofesionales.controller.AcademicProgressStudentsController">
+    <children>
+        <Label layoutX="175.0" layoutY="24.0" text="Avance Académico de Estudiantes">
+            <font>
+                <Font name="System Bold" size="24.0" />
+            </font>
+        </Label>
+        <TableView fx:id="tvStudents" layoutX="32.0" layoutY="81.0" prefHeight="295.0" prefWidth="586.0">
+            <columns>
+                <TableColumn fx:id="tcEnrollment" prefWidth="120.0" text="Matrícula" />
+                <TableColumn fx:id="tcName" prefWidth="250.0" text="Nombre" />
+                <TableColumn fx:id="tcSemester" prefWidth="85.0" text="Semestre" />
+                <TableColumn fx:id="tcProject" prefWidth="130.0" text="Proyecto" />
+            </columns>
+        </TableView>
+        <Button fx:id="btnConsultAdvance" layoutX="506.0" layoutY="396.0" onAction="#btnConsultAdvanceClick" prefHeight="31.0" prefWidth="112.0" text="Consultar" />
+        <Button fx:id="btnExit" layoutX="32.0" layoutY="396.0" onAction="#btnExitClick" prefHeight="31.0" prefWidth="75.0" text="Salir" />
+    </children>
+</AnchorPane>
