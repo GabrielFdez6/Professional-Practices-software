@@ -171,14 +171,16 @@ public class FXMLLogInController implements Initializable {
         }
     }
 
-    private void goEvaluatorHomeScreen(String username) {
+    private void goEvaluatorHomeScreen(int userId) {
         try {
+            Student student = studentDAO.getStudentByUserId(userId);
+
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
             Parent view = loader.load();
 
             FXMLEvaluatorMainScreenController controller = loader.getController();
-            controller.loadUserInformation(student);
+            controller.loadUserInformation(student.getFirstName());
 
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
@@ -186,6 +188,8 @@ public class FXMLLogInController implements Initializable {
             baseStage.show();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar el usuario", "Lo sentimos, no se pudo cargar la información del usuario.");
         }
     }
 
