@@ -88,7 +88,7 @@ public class StudentDAO implements IStudentDAO {
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     student = new Student();
-                    student.setIdUser(rs.getInt("idStudent"));
+                    student.setIdStudent(rs.getInt("idStudent"));
                     student.setEnrollment(rs.getString("enrollment")); // Corregido: enrollment
                     student.setSemester(rs.getString("semester"));
                     student.setEmail(rs.getString("email"));

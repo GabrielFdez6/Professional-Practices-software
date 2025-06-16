@@ -18,13 +18,18 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.mindrot.jbcrypt.BCrypt;
 import professionalpractice.ProfessionalPractices;
+import professionalpractice.controller.academic.FXMLAcademicMainScreenController;
 import professionalpractice.controller.coordinator.FXMLCoordinatorMainScreenController;
 import professionalpractice.controller.evaluator.FXMLEvaluatorMainScreenController;
 import professionalpractice.controller.student.FXMLStudentMainScreenController;
+import professionalpractice.model.dao.AcademicDAO;
 import professionalpractice.model.dao.StudentDAO;
 import professionalpractice.model.dao.UserAccountDAO;
+import professionalpractice.model.dao.interfaces.IAcademicDAO;
 import professionalpractice.model.dao.interfaces.IStudentDAO;
 import professionalpractice.model.dao.interfaces.IUserAccountDAO;
+import professionalpractice.model.pojo.Academic;
+import professionalpractice.model.pojo.Coordinator;
 import professionalpractice.model.pojo.Student;
 import professionalpractice.model.pojo.UserAccount;
 import professionalpractice.utils.Utils;
@@ -38,11 +43,13 @@ public class FXMLLogInController implements Initializable {
 
     private IUserAccountDAO userAccountDAO;
     private IStudentDAO studentDAO;
+    private IAcademicDAO academicDAO;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         userAccountDAO = new UserAccountDAO();
         studentDAO = new StudentDAO();
+        academicDAO = new AcademicDAO();
     }
 
     @FXML
@@ -89,8 +96,11 @@ public class FXMLLogInController implements Initializable {
                     case "COORDINATOR":
                         goCoordinatorHomeScreen();
                         break;
+                    case "TEACHER":
+                        goTeacherHomeScreen(user.getUserId());
+                        break;
                     case "EVALUATOR":
-                        goEvaluatorHomeScreen();
+                        goEvaluatorHomeScreen(user.getUserId());
                         break;
                     default:
                         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Rol no reconocido", "El rol de usuario no es válido.");
@@ -101,6 +111,32 @@ public class FXMLLogInController implements Initializable {
         } catch (SQLException e) {
             // ¡Aquí manejamos el error de la base de datos!
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar a la base de datos. Por favor, inténtelo más tarde.");
+        }
+    }
+
+    private void goTeacherHomeScreen(int userId) {
+        try {
+            Academic academic = academicDAO.getAcademicByUserId(userId); // Necesitarás crear este método en AcademicDAO
+            if (academic == null) {
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del académico asociada a esta cuenta.");
+                return;
+            }
+
+            Stage baseStage = (Stage) tfUsername.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/academic/FXMLAcademicMainScreen.fxml"));
+            Parent view = loader.load();
+
+            FXMLAcademicMainScreenController controller = loader.getController();
+            controller.configureScreen(academic);
+
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Página Principal del Académico");
+            baseStage.show();
+
+        } catch (Exception e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error Inesperado", "Ocurrió un error inesperado. Por favor, intenta más tarde.");
+            e.printStackTrace();
         }
     }
 
@@ -150,7 +186,7 @@ public class FXMLLogInController implements Initializable {
             Parent view = loader.load();
 
             FXMLEvaluatorMainScreenController controller = loader.getController();
-            controller.loadUserInformation();
+            controller.loadUserInformation(student);
 
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
@@ -165,11 +201,17 @@ public class FXMLLogInController implements Initializable {
 
     private void goCoordinatorHomeScreen() {
         try {
+//            Coordinator coordinator = coordinatorDAO.getAcademicByUserId(userId);
+//            if (coordinator == null) {
+//                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del coordinador asociada a esta cuenta.");
+//                return;
+//            }
+
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
             Parent view = loader.load();
             FXMLCoordinatorMainScreenController controller = loader.getController();
-            controller.initializeInformation();
+            controller.configureScreen("Coordinador");
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
             baseStage.setTitle("Página Principal Coordinador");
@@ -179,8 +221,6 @@ public class FXMLLogInController implements Initializable {
         }
     }
     private void closeWindow() {
-        // Método auxiliar para cerrar la ventana en caso de error inicial.
-        // Se busca el Stage desde un componente que sí o sí existe, como lbFullName.
         Stage stage = (Stage) lbErrorPassword.getScene().getWindow();
         stage.close();
     }

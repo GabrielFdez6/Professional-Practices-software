@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.academic.FXMLAcademicMainScreenController">
+    <children>
+        <AnchorPane prefHeight="65.0" prefWidth="800.0" style="-fx-background-color: white;">
+            <children>
+                <ImageView cache="true" fitHeight="58.0" fitWidth="69.0" layoutX="8.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../resource/logoUV.png" />
+                    </image>
+                </ImageView>
+                <Label fx:id="lbFullName" layoutX="520.0" layoutY="23.0" text="[Nombre del Académico]">
+                    <font>
+                        <Font name="Arial" size="15.0" />
+                    </font>
+                </Label>
+                <Label layoutX="78.0" layoutY="24.0" text="UNIVERSIDAD VERACRUZANA">
+                    <font>
+                        <Font name="System Bold" size="15.0" />
+                    </font>
+                </Label>
+                <Button layoutX="693.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnClickLogOut" style="-fx-background-color: white; -fx-border-radius: 3; -fx-border-color: #ff0000;" text="Cerrar Sesión" textFill="#ff0000c4">
+                    <font>
+                        <Font name="Arial" size="12.0" />
+                    </font>
+                </Button>
+            </children>
+            <effect>
+                <DropShadow blurType="GAUSSIAN" height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
+                    <color>
+                        <Color opacity="0.18008658289909363" />
+                    </color>
+                </DropShadow>
+            </effect>
+        </AnchorPane>
+        <Label fx:id="lbWelcome" layoutX="50.0" layoutY="98.0" text="BIENVENIDO(A), ACADÉMICO">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+
+        <AnchorPane layoutX="82.0" layoutY="181.0" prefHeight="229.0" prefWidth="311.0" style="-fx-background-color: white; -fx-background-radius: 9;">
+            <effect>
+                <DropShadow height="20.51" offsetY="2.0" radius="9.7575" width="20.52">
+                    <color>
+                        <Color opacity="0.1599999964237213" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <children>
+                <Button onAction="#btnClickConsultStudentProgress" contentDisplay="CENTER" layoutX="101.0" layoutY="164.0" mnemonicParsing="false" style="-fx-background-color: #146cd0;" text="Consultar" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                    <effect>
+                        <DropShadow offsetY="2.0" radius="9.75" width="20.0">
+                            <color>
+                                <Color opacity="0.23999999463558197" />
+                            </color>
+                        </DropShadow>
+                    </effect>
+                </Button>
+                <ImageView fitHeight="58.0" fitWidth="87.0" layoutX="128.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../resource/academic/consultStudents.png" />
+                    </image>
+                </ImageView>
+                <Label layoutX="38.0" layoutY="102.0" text="Consultar Avance de Estudiantes">
+                    <font>
+                        <Font name="System Bold" size="16.0" />
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
+
+    </children>
+</AnchorPane>
