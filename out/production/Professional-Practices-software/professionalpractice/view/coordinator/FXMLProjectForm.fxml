@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="477.0" prefWidth="481.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLProjectFormController">
+   <children>
+      <AnchorPane prefHeight="27.0" prefWidth="481.0" style="-fx-background-color: white;">
+          <effect>
+              <DropShadow height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
+                  <color>
+                      <Color opacity="0.18000000715255737" />
+                  </color></DropShadow>
+          </effect>
+         <children>
+             <Label layoutX="330.0" layoutY="6.0" text="Universidad Veracruzana">
+                 <font>
+                     <Font name="Arial Bold" size="12.0" />
+                 </font></Label>
+         </children></AnchorPane>
+      <Label layoutX="111.0" layoutY="60.0" text="DATOS DEL PROYECTO">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="44.0" layoutY="128.0" text="Nombre del proyecto:" textFill="#000000b8">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfProjectName" layoutX="44.0" layoutY="148.0" prefHeight="25.0" prefWidth="394.0" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4;">
+         <font>
+            <Font size="15.0" />
+         </font></TextField>
+      <Label layoutX="44.0" layoutY="194.0" text="Disponibilidad:" textFill="#000000b8">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfAvailability" layoutX="44.0" layoutY="214.0" prefHeight="33.0" prefWidth="394.0" promptText="Número de cupos" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4;">
+         <font>
+            <Font size="15.0" />
+         </font></TextField>
+      <Label layoutX="44.0" layoutY="314.0" text="Descripción:" textFill="#000000b8">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="taDescription" layoutX="44.0" layoutY="335.0" prefHeight="75.0" prefWidth="394.0" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4;">
+         <font>
+            <Font size="15.0" />
+         </font></TextArea>
+      <Label layoutX="44.0" layoutY="252.0" text="Metodologia:" textFill="#000000b8">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfMethodology" layoutX="44.0" layoutY="272.0" prefHeight="25.0" prefWidth="394.0" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4;">
+         <font>
+            <Font size="15.0" />
+         </font></TextField>
+       <Button layoutX="297.0" layoutY="439.0" mnemonicParsing="false" onAction="#btnRegisterProject" style="-fx-background-color: #146cd0;" text="Registrar" textFill="WHITE">
+           <font>
+               <Font name="Arial Bold" size="14.0" />
+           </font>
+           <effect>
+               <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
+                   <color>
+                       <Color opacity="0.38675323128700256" />
+                   </color>
+               </DropShadow>
+           </effect></Button>       <Button layoutX="389.0" layoutY="439.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
+           <font>
+               <Font name="Arial Bold" size="14.0" />
+           </font>
+           <effect>
+               <DropShadow height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
+                   <color>
+                       <Color opacity="0.14000000059604645" />
+                   </color></DropShadow>
+           </effect></Button>
+   </children>
+</AnchorPane>

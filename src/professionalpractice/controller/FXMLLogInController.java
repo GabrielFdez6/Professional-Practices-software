@@ -61,12 +61,15 @@ public class FXMLLogInController implements Initializable {
     }
     
     private void verifyCredentials(String username, String password) {
-        //Prueba de credenciales
+        //Prueba de credenciales para entrar
         if (username.equals("admin") && password.equals("admin")) {
             goHomeScreen();
+        } else if (username.equals("coordinator") && password.equals("coordinator")) {
+            goCoordinatorHomeScreen();
         } else {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en iniciar sesión", "Usuario o contraseña incorrectos");
         }
+
         //TODO
         /*try {
             
@@ -75,6 +78,7 @@ public class FXMLLogInController implements Initializable {
         }*/
     }
 
+    //Metodos para cambiar de pantalla de prueba
     private void goHomeScreen() {
         try {
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
@@ -86,7 +90,22 @@ public class FXMLLogInController implements Initializable {
 
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
-            baseStage.setTitle("Pagina Principal");
+            baseStage.setTitle("Pagina Principal Evaluador");
+            baseStage.show();
+        } catch(IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");
+        }
+    }
+
+    private void goCoordinatorHomeScreen() {
+        try {
+            Stage baseStage = (Stage) tfUsername.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
+            Parent view = loader.load();
+
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Pagina Principal Coordinador");
             baseStage.show();
         } catch(IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");

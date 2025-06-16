@@ -43,12 +43,12 @@
          </font>
       </Label>
       <Label fx:id="lbStudentName" layoutX="584.0" layoutY="41.0" text="Estudiante:" />
-      <Label layoutX="27.0" layoutY="471.0" text="OBSERVACIONES Y COMENTARIOS">
+      <Label layoutX="27.0" layoutY="475.0" text="OBSERVACIONES Y COMENTARIOS">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <VBox layoutX="27.0" layoutY="496.0" prefHeight="117.0" prefWidth="388.0" spacing="5.0">
+      <VBox layoutX="27.0" layoutY="503.0" prefHeight="117.0" prefWidth="388.0" spacing="5.0">
          <children>
             <Separator prefWidth="200.0" />
             <TextArea fx:id="taObservationsAndComments" prefHeight="124.0" prefWidth="388.0" style="-fx-background-color: white; -fx-border-radius: 4; -fx-border-color: #dedede;" />
@@ -92,7 +92,7 @@
             <TextField fx:id="tfSpellingGrammarScore" alignment="CENTER" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
-      <Label layoutX="502.0" layoutY="471.0" text="CALIFICACIÓN">
+      <Label layoutX="502.0" layoutY="475.0" text="CALIFICACIÓN">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

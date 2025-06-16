@@ -3,6 +3,8 @@ package professionalpractice.utils;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Control;
+import javafx.stage.Stage;
 
 public class Utils {
 
@@ -25,5 +27,9 @@ public class Utils {
         alertConfirmation.getButtonTypes().setAll(acceptButton, cancelButton);
 
         return alertConfirmation.showAndWait().orElse(cancelButton) == acceptButton;
+    }
+
+    public static Stage getSceneComponent(Control component) {
+        return (Stage)  component.getScene().getWindow();
     }
 }
