@@ -89,8 +89,8 @@ public class FXMLStudentListController implements Initializable {
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluationRubric.fxml"));
             Parent view = loader.load();
 
-            /*FXMLEvaluationRubricController controller = loader.getController();
-            controller.setStudentToEvaluate(selectedStudent); */
+            FXMLEvaluationRubricController controller = loader.getController();
+            controller.initializeData(selectedStudent);
 
             Scene mainScene = new Scene(view);
             EvaluationRubric.setScene(mainScene);

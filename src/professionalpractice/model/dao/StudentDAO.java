@@ -190,4 +190,19 @@ public class StudentDAO implements IStudentDAO {
         }
         return students;
     }
+
+    public static int getRecordIdByStudentId(int idStudent) throws SQLException {
+        int idRecord = -1;
+        String query = "SELECT idRecord FROM record WHERE idStudent = ? LIMIT 1";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, idStudent);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    idRecord = rs.getInt("idRecord");
+                }
+            }
+        }
+        return idRecord;
+    }
 }
