@@ -20,29 +20,22 @@ import professionalpractice.utils.Utils;
 public class FXMLEvaluatorMainScreenController implements Initializable {
 
     @FXML
-    private Label lbFullName;
-    @FXML
-    private Label lbWelcome;
-
-    private Student loggedInStudent;
+    private Label lbUsername;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-
-    public void loadUserInformation(Student student) {
-        this.loggedInStudent = student;
-        if (student != null) {
-            lbWelcome.setText("BIENVENIDO(A), " + student.getFirstName().toUpperCase());
-            lbFullName.setText(student.getFullName());
+    public void loadUserInformation(String username) {
+        if (username != null && !username.isEmpty()) {
+            lbUsername.setText(username);
         }
     }
 
     @FXML
     public void btnClickGradePresentations(ActionEvent actionEvent) {
         try {
-            Stage baseStage = (Stage) lbFullName.getScene().getWindow();
+            Stage baseStage = (Stage) lbUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLStudentList.fxml"));
             Parent view = loader.load();
 
@@ -58,7 +51,7 @@ public class FXMLEvaluatorMainScreenController implements Initializable {
     @FXML
     public void btnClickLogOut(ActionEvent actionEvent) {
         try {
-            Stage baseStage = (Stage) lbFullName.getScene().getWindow();
+            Stage baseStage = (Stage) lbUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/FXMLLogIn.fxml"));
             Parent viewLogIn = loader.load();
             Scene LogInScene = new Scene(viewLogIn);
