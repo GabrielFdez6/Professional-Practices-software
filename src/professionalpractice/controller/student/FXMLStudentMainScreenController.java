@@ -2,6 +2,7 @@ package professionalpractice.controller.student;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,25 +15,28 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
+import professionalpractice.model.dao.RecordDAO;
+import professionalpractice.model.dao.interfaces.IRecordDAO;
+import professionalpractice.model.pojo.Record;
 import professionalpractice.model.pojo.Student;
 import professionalpractice.utils.Utils;
 
 public class FXMLStudentMainScreenController implements Initializable {
 
-    @FXML
-    private Label lbFullName;
-    @FXML
-    private Label lbWelcome;
+    @FXML private Label lbFullName;
+    @FXML private Label lbWelcome;
 
     private Student loggedInStudent;
+    private IRecordDAO recordDAO;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        this.recordDAO = new RecordDAO();
     }
 
     public void configureScreen(Student student) {
         if (student != null) {
+            this.loggedInStudent = student;
             lbWelcome.setText("BIENVENIDO(A), " + student.getFirstName().toUpperCase());
             lbFullName.setText(student.getFullName());
         }
@@ -65,7 +69,7 @@ public class FXMLStudentMainScreenController implements Initializable {
             Parent view = loader.load();
 
             FXMLStudentProgressController controller = loader.getController();
-            controller.configureView(this.loggedInStudent); // Pasamos el estudiante al controlador de progreso
+            controller.configureView(this.loggedInStudent);
 
             Stage stage = new Stage();
             stage.setScene(new Scene(view));
@@ -81,7 +85,35 @@ public class FXMLStudentMainScreenController implements Initializable {
 
     @FXML
     private void btnClickManageDeliveries(ActionEvent event) {
-        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Función no disponible",
-                "Esta funcionalidad aún no ha sido implementada.");
+        try {
+            Record studentRecord = recordDAO.getRecordByStudentId(loggedInStudent.getIdStudent());
+
+            if (studentRecord == null) {
+                Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Sin Expediente", "Aún no tienes un expediente de prácticas activo en el sistema.");
+                return;
+            }
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(Utils.getSceneComponent(lbFullName));
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/student/FXMLDeliveryList.fxml"));
+            Parent view = loader.load();
+
+            FXMLDeliveryListController controller = loader.getController();
+            controller.initData(studentRecord.getIdRecord());
+
+            Scene scene = new Scene(view);
+            stage.setTitle("Gestionar Mis Entregas");
+            stage.setScene(scene);
+            stage.showAndWait();
+
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo obtener tu expediente del sistema.");
+            e.printStackTrace();
+        } catch (IOException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al Cargar", "No se pudo mostrar la ventana de entregas.");
+            e.printStackTrace();
+        }
     }
 }

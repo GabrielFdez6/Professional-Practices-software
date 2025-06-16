@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.utils.Utils;
@@ -18,19 +19,14 @@ import java.util.ResourceBundle;
 
 public class FXMLCoordinatorMainScreenController implements Initializable {
 
-    @FXML
-    private Label lbWelcome;
-    @FXML
-    private Label lbFullName;
+    @FXML private Label lbWelcome;
+    @FXML private Label lbFullName;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // Initialization logic can go here if needed
     }
 
-    /**
-     * Configura la pantalla principal del coordinador con el nombre completo.
-     * @param fullName Nombre completo del coordinador.
-     */
     public void configureScreen(String fullName) {
         if (fullName != null && !fullName.isEmpty()) {
             lbFullName.setText(fullName);
@@ -39,12 +35,36 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
         }
     }
 
-    /**
-     * Inicia el flujo para registrar un nuevo RESPONSABLE (CU-14).
-     * Navega a la pantalla de selección de Organización Vinculada.
-     */
     @FXML
-    public void btnRegisterResponsible(ActionEvent actionEvent) {
+    void btnAssignProjects(ActionEvent event) {
+        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Función en Desarrollo", "Esta funcionalidad para asignar proyectos aún no ha sido implementada.");
+    }
+
+    @FXML
+    void btnRegisterProject(ActionEvent event) {
+        // For now, this will open the delivery scheduling window as per CU-06 in the PDF.
+        // The button text says "Registrar Proyecto", but the most relevant unimplemented feature is scheduling.
+        try {
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.initOwner(Utils.getSceneComponent(lbFullName));
+
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLScheduleDelivery.fxml"));
+            Parent view = loader.load();
+            Scene scene = new Scene(view);
+
+            modalStage.setTitle("Programar Entrega de Documentos");
+            modalStage.setScene(scene);
+            modalStage.showAndWait();
+
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de programación.");
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnRegisterResponsible(ActionEvent event) {
         try {
             Stage baseStage = (Stage) lbFullName.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOV.fxml"));
@@ -59,19 +79,15 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
         }
     }
 
-    /**
-     * Inicia el flujo para actualizar un RESPONSABLE (CU-15).
-     * Navega a la pantalla de selección de Proyectos.
-     */
     @FXML
-    public void btnUpdateResponsible(ActionEvent actionEvent) {
+    void btnUpdateResponsible(ActionEvent event) {
         try {
             Stage baseStage = (Stage) lbFullName.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLSelectProject.fxml"));
             Parent view = loader.load();
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
-            baseStage.setTitle("Seleccionar Proyecto");
+            baseStage.setTitle("Seleccionar Proyecto para Actualizar Responsable");
             baseStage.show();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
@@ -79,24 +95,8 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
         }
     }
 
-    /**
-     * Maneja el clic en el botón "Registrar Proyecto".
-     * Esta es una funcionalidad diferente a registrar un RESPONSABLE.
-     */
     @FXML
-    public void btnRegisterProject(ActionEvent actionEvent) {
-        // En el futuro, este botón debería abrir la interfaz para registrar un NUEVO PROYECTO.
-        // Por ahora, mostramos una alerta para diferenciarlo.
-        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Función en Desarrollo", "Esta sección es para registrar los datos de un nuevo Proyecto, no de un Responsable.");
-    }
-
-    @FXML
-    public void btnAssignProjects(ActionEvent actionEvent) {
-        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Función en Desarrollo", "Esta funcionalidad para asignar proyectos aún no ha sido implementada.");
-    }
-
-    @FXML
-    public void btnClickLogOut(ActionEvent actionEvent) {
+    void btnClickLogOut(ActionEvent event) {
         try {
             Stage baseStage = (Stage) lbFullName.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/FXMLLogIn.fxml"));
