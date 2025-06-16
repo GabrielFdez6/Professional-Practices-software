@@ -3,11 +3,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="500.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLDeliverDocumentController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLDeliverDocumentController">
     <children>
         <Label fx:id="lblDeliveryName" text="Nombre de la Entrega" textFill="#007bff">
             <font>
@@ -16,23 +18,32 @@
         </Label>
         <HBox alignment="CENTER" spacing="20.0">
             <children>
-                <Label fx:id="lblStartDate" text="Fecha de Inicio: YYYY-MM-DD" />
-                <Label fx:id="lblEndDate" text="Fecha de Fin: YYYY-MM-DD" />
+                <Label fx:id="lblStartDate" text="Fecha de Inicio: yyyy-MM-DD" />
+                <Label fx:id="lblEndDate" text="Fecha de Fin: yyyy-MM-DD" />
             </children>
         </HBox>
-        <VBox alignment="CENTER" prefHeight="120.0" spacing="10.0" style="-fx-border-color: #007bff; -fx-border-style: dashed; -fx-background-color: #f8f9fa;">
+        <VBox alignment="CENTER" prefHeight="100.0" spacing="10.0" style="-fx-border-color: #007bff; -fx-border-style: dashed; -fx-background-color: #f8f9fa;">
             <children>
                 <Button onAction="#btnAttachFileClick" text="Clic aquí para adjuntar archivos" />
                 <Label fx:id="lblFileName" text="Ningún archivo seleccionado" textFill="#6c757d" />
             </children>
         </VBox>
+
+        <VBox fx:id="vboxDynamicFields" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
+            <children>
+                <TextField fx:id="tfReportedHours" managed="false" promptText="Horas Reportadas (ej. 40)" visible="false" />
+                <TextField fx:id="tfGrade" managed="false" promptText="Calificación (Opcional, ej. 8.5)" visible="false" />
+                <TextArea fx:id="taObservations" managed="false" prefHeight="80.0" promptText="Observaciones (Opcional)" visible="false" />
+            </children>
+        </VBox>
+
         <HBox alignment="CENTER" spacing="30.0">
             <children>
                 <Button onAction="#btnDeliverClick" prefWidth="100.0" style="-fx-background-color: #28a745;" text="Entregar" textFill="WHITE" />
                 <Button onAction="#btnCancelClick" prefWidth="100.0" style="-fx-background-color: #dc3545;" text="Cancelar" textFill="WHITE" />
             </children>
             <VBox.margin>
-                <Insets top="20.0" />
+                <Insets top="10.0" />
             </VBox.margin>
         </HBox>
     </children>

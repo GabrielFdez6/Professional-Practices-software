@@ -11,13 +11,12 @@ import professionalpractice.model.pojo.UserAccount;
 
 public class UserAccountDAO implements IUserAccountDAO {
 
-    @Override
     public UserAccount getUserByUsername(String username) throws SQLException {
         UserAccount user = null;
         String query = "SELECT idUser, username, password, role FROM UserAccount WHERE username = ?";
 
-        // Usando try-with-resources para garantizar el cierre de recursos
-        try (Connection connection = ConectionBD.getConnection();
+        // Usar la conexión especial de login
+        try (Connection connection = ConectionBD.getLoginConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setString(1, username);
@@ -33,7 +32,6 @@ public class UserAccountDAO implements IUserAccountDAO {
             }
         } catch (SQLException e) {
             System.err.println("DAO Error - getUserByUsername: " + e.getMessage());
-            // Relanzamos la excepción para que el controlador la maneje
             throw e;
         }
         return user;

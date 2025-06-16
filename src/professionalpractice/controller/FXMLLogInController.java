@@ -22,10 +22,13 @@ import professionalpractice.controller.academic.FXMLAcademicMainScreenController
 import professionalpractice.controller.coordinator.FXMLCoordinatorMainScreenController;
 import professionalpractice.controller.evaluator.FXMLEvaluatorMainScreenController;
 import professionalpractice.controller.student.FXMLStudentMainScreenController;
+import professionalpractice.model.SesionUsuario;
 import professionalpractice.model.dao.AcademicDAO;
+import professionalpractice.model.dao.CoordinatorDAO;
 import professionalpractice.model.dao.StudentDAO;
 import professionalpractice.model.dao.UserAccountDAO;
 import professionalpractice.model.dao.interfaces.IAcademicDAO;
+import professionalpractice.model.dao.interfaces.ICoordinatorDAO;
 import professionalpractice.model.dao.interfaces.IStudentDAO;
 import professionalpractice.model.dao.interfaces.IUserAccountDAO;
 import professionalpractice.model.pojo.Academic;
@@ -44,12 +47,14 @@ public class FXMLLogInController implements Initializable {
     private IUserAccountDAO userAccountDAO;
     private IStudentDAO studentDAO;
     private IAcademicDAO academicDAO;
+    private ICoordinatorDAO coordinatorDAO;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         userAccountDAO = new UserAccountDAO();
         studentDAO = new StudentDAO();
         academicDAO = new AcademicDAO();
+        coordinatorDAO = new CoordinatorDAO();
     }
 
     @FXML
@@ -78,22 +83,21 @@ public class FXMLLogInController implements Initializable {
     }
 
     private void verifyCredentials(String username, String password) {
+        IUserAccountDAO userAccountDAO = new UserAccountDAO();
         try {
             UserAccount user = userAccountDAO.getUserByUsername(username);
 
             if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-                System.out.println(user.getPassword());
-                System.out.println(password);
-                System.out.println(user.getUsername());
+                SesionUsuario.getInstancia().setRolUsuario(user.getRole());
+                SesionUsuario.getInstancia().setIdUsuario(user.getUserId());
 
                 String role = user.getRole();
-                System.out.println(role);
                 switch (role) {
                     case "STUDENT":
                         goStudentHomeScreen(user.getUserId());
                         break;
                     case "COORDINATOR":
-                        goCoordinatorHomeScreen();
+                        goCoordinatorHomeScreen(user.getUserId());
                         break;
                     case "TEACHER":
                         goTeacherHomeScreen(user.getUserId());
@@ -193,25 +197,25 @@ public class FXMLLogInController implements Initializable {
         }
     }
 
-    private void goCoordinatorHomeScreen() {
+    private void goCoordinatorHomeScreen(int userId) {
+
         try {
-//            Coordinator coordinator = coordinatorDAO.getAcademicByUserId(userId);
-//            if (coordinator == null) {
-//                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del coordinador asociada a esta cuenta.");
-//                return;
-//            }
+            Coordinator coordinator = coordinatorDAO.getCoordinatorByIdUser(userId);
 
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
             Parent view = loader.load();
             FXMLCoordinatorMainScreenController controller = loader.getController();
-            controller.configureScreen("Coordinador");
+            controller.configureScreen(coordinator);
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
             baseStage.setTitle("Página Principal Coordinador");
             baseStage.show();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar el usuario", "Lo sentimos, no se pudo cargar la información del usuario.");
+
         }
     }
     private void closeWindow() {

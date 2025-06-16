@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecordDAO implements IRecordDAO {
 
@@ -30,5 +32,21 @@ public class RecordDAO implements IRecordDAO {
             }
         }
         return record;
+    }
+    @Override
+    public List<Integer> getAllActiveRecordIds() throws SQLException {
+        List<Integer> recordIds = new ArrayList<>();
+        String query = "SELECT idRecord FROM record";
+        Connection conn = ConectionBD.getConnection(); // Get the shared connection
+
+        // DO NOT use try-with-resources on the connection object here
+        try (PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                recordIds.add(rs.getInt("idRecord"));
+            }
+        }
+        // DO NOT close the connection here. The calling method will handle it.
+        return recordIds;
     }
 }

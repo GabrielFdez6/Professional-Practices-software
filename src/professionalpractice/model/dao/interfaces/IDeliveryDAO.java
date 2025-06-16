@@ -10,4 +10,5 @@ public interface IDeliveryDAO {
 
     List<Delivery> getDeliveriesByRecord(int idRecord) throws SQLException;
 
+    int scheduleDeliveryForAllRecords(Delivery delivery) throws SQLException;
 }

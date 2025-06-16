@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
+import professionalpractice.model.SesionUsuario;
 import professionalpractice.model.dao.RecordDAO;
 import professionalpractice.model.dao.interfaces.IRecordDAO;
 import professionalpractice.model.pojo.Record;
@@ -45,6 +46,7 @@ public class FXMLStudentMainScreenController implements Initializable {
     @FXML
     private void btnClickLogOut(ActionEvent event) {
         try {
+            SesionUsuario.getInstancia().cerrarSesion();
             Stage baseStage = (Stage) lbFullName.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/FXMLLogIn.fxml"));
             Parent viewLogIn = loader.load();
