@@ -4,10 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import professionalpractice.model.ConectionBD;
 import professionalpractice.model.dao.interfaces.IStudentDAO;
 import professionalpractice.model.pojo.Student;
 import professionalpractice.model.pojo.StudentProgress;
+import professionalpractice.model.pojo.StudentProject;
+import professionalpractice.utils.Constants;
 
 public class StudentDAO implements IStudentDAO {
 
@@ -40,14 +45,14 @@ public class StudentDAO implements IStudentDAO {
 
                 if (resultSet.next()) {
                     Student student = new Student();
-                    student.setStudentId(resultSet.getInt("idStudent"));
-                    student.setStudentNumber(resultSet.getString("enrollment")); // Corregido: enrollment
+                    student.setIdStudent(resultSet.getInt("idStudent"));
+                    student.setEnrollment(resultSet.getString("enrollment")); // Corregido: enrollment
                     student.setSemester(resultSet.getString("semester"));
                     student.setEmail(resultSet.getString("email"));
                     student.setFirstName(resultSet.getString("firstName")); // Corregido: firstName
-                    student.setMaternalLastName(resultSet.getString("lastNameMother")); // Corregido: lastNameMother
-                    student.setPaternalLastName(resultSet.getString("lastNameFather")); // Corregido: lastNameFather
-                    student.setFinalGrade(resultSet.getDouble("grade")); // Corregido: grade
+                    student.setLastNameMother(resultSet.getString("lastNameMother")); // Corregido: lastNameMother
+                    student.setLastNameFather(resultSet.getString("lastNameFather")); // Corregido: lastNameFather
+                    student.setGrade(resultSet.getDouble("grade")); // Corregido: grade
 
                     studentProgress = new StudentProgress();
                     studentProgress.setProjectName(resultSet.getString("nombreProyecto"));
@@ -83,14 +88,14 @@ public class StudentDAO implements IStudentDAO {
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
                     student = new Student();
-                    student.setStudentId(rs.getInt("idStudent"));
-                    student.setStudentNumber(rs.getString("enrollment")); // Corregido: enrollment
+                    student.setIdUser(rs.getInt("idStudent"));
+                    student.setEnrollment(rs.getString("enrollment")); // Corregido: enrollment
                     student.setSemester(rs.getString("semester"));
                     student.setEmail(rs.getString("email"));
                     student.setFirstName(rs.getString("firstName")); // Corregido: firstName
-                    student.setMaternalLastName(rs.getString("lastNameMother")); // Corregido: lastNameMother
-                    student.setPaternalLastName(rs.getString("lastNameFather")); // Corregido: lastNameFather
-                    student.setUserId(rs.getInt("idUser"));
+                    student.setLastNameMother(rs.getString("lastNameMother")); // Corregido: lastNameMother
+                    student.setLastNameFather(rs.getString("lastNameFather")); // Corregido: lastNameFather
+                    student.setIdUser(rs.getInt("idUser"));
                 }
                 connection.close();
             } catch (SQLException e) {
@@ -99,5 +104,61 @@ public class StudentDAO implements IStudentDAO {
             }
         }
         return student;
+    }
+
+    /**
+     * Recupera una lista de estudiantes con sus proyectos asignados, filtrando por el profesor (academic) y el periodo (term).
+     * Este método se alinea con el Flujo Normal, paso 1 del CU-10.
+     *
+     * @param idAcademic El ID del profesor que imparte la materia.
+     * @param idTerm El ID del periodo escolar actual.
+     * @return Un HashMap que contiene un código de respuesta y, si la operación es exitosa,
+     * una lista de objetos StudentProject con la información de los estudiantes.
+     */
+    public static HashMap<String, Object> getStudentsWithProjectByProfessor(int idAcademic, int idTerm) {
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("responseCode", Constants.OPERATION_SUCCESFUL);
+
+
+        // Consulta SQL que une las tablas necesarias para obtener los datos requeridos por la vista.
+        String query =
+                "SELECT s.idStudent, s.enrollment, " +
+                        "CONCAT(s.firstName, ' ', s.lastNameFather, ' ', s.lastNameMother) AS studentFullName, " +
+                        "s.semester, p.name AS projectName " +
+                        "FROM student s " +
+                        "JOIN record r ON s.idStudent = r.idStudent " +
+                        "JOIN project p ON r.idRecord = p.idRecord " +
+                        "JOIN subjectgroup sg ON r.idSubjectGroup = sg.idSubjectGroup " +
+                        "JOIN teachingassignment ta ON sg.idSubjectGroup = ta.idSubjectGroup " +
+                        "WHERE ta.idAcademic = ? AND sg.idTerm = ? AND s.isAssignedToProject = 1;";
+
+        try (Connection connection = ConectionBD.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+            // Se establecen los parámetros para el PreparedStatement para filtrar la búsqueda.
+            pstmt.setInt(1, idAcademic);
+            pstmt.setInt(2, idTerm);
+
+            ArrayList<StudentProject> studentsList = new ArrayList<>();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // Se crea un objeto StudentProject por cada fila del resultado.
+                    StudentProject studentProject = new StudentProject();
+                    studentProject.setIdStudent(rs.getInt("idStudent"));
+                    studentProject.setEnrollment(rs.getString("enrollment"));
+                    studentProject.setStudentFullName(rs.getString("studentFullName"));
+                    studentProject.setSemester(rs.getString("semester"));
+                    studentProject.setProjectName(rs.getString("projectName"));
+                    studentsList.add(studentProject);
+                }
+            }
+            response.put("students", studentsList);
+
+        } catch (SQLException ex) {
+            // En caso de una excepción SQL, se cambia el código de respuesta.
+            response.put("responseCode", Constants.CONNECTION_FAILED);
+            ex.printStackTrace();
+        }
+        return response;
     }
 }
