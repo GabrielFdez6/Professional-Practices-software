@@ -16,7 +16,6 @@ import professionalpractice.model.dao.CoordinatorDAO;
 import professionalpractice.model.dao.interfaces.ICoordinatorDAO;
 import professionalpractice.model.pojo.Coordinator;
 import professionalpractice.utils.Utils;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -63,7 +62,18 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
 
     @FXML
     void btnAssignProjects(ActionEvent event) {
-        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Función en Desarrollo", "Esta funcionalidad para asignar proyectos aún no ha sido implementada.");
+        try {
+            Stage baseStage = (Stage) lbFullName.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLInfoStudentsProject.fxml"));
+            Parent view = loader.load();
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Seleccionar Organización Vinculada");
+            baseStage.show();
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
+            ex.printStackTrace();
+        }
     }
 
     @FXML
@@ -73,14 +83,13 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
             modalStage.initModality(Modality.APPLICATION_MODAL);
             modalStage.initOwner(Utils.getSceneComponent(lbFullName));
 
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLScheduleDelivery.fxml"));
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOVRegisterProject.fxml"));
             Parent view = loader.load();
             Scene scene = new Scene(view);
 
             modalStage.setTitle("Programar Entrega de Documentos");
             modalStage.setScene(scene);
             modalStage.showAndWait();
-
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de programación.");
             ex.printStackTrace();
