@@ -13,12 +13,20 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.pojo.EvaluationCriterion;
+import professionalpractice.model.pojo.Student;
 import professionalpractice.utils.Utils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
+import professionalpractice.model.dao.PresentationEvaluationDAO;
+import professionalpractice.model.dao.StudentDAO;
+import professionalpractice.model.pojo.PresentationEvaluation;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class FXMLEvaluationRubricController implements Initializable {
 
@@ -55,6 +63,7 @@ public class FXMLEvaluationRubricController implements Initializable {
     private ObservableList<EvaluationCriterion> criteria;
     @FXML
     private TextField tfEvaluationTitle;
+    private Student studentToEvaluate;
 
 
     @Override
@@ -75,6 +84,13 @@ public class FXMLEvaluationRubricController implements Initializable {
         tfISMethodsTechniquesScore.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
 
         calculateAndSetAverage();
+    }
+
+    public void initializeData(Student student) {
+        this.studentToEvaluate = student;
+        if (studentToEvaluate != null) {
+            lbStudentName.setText("Estudiante: " + studentToEvaluate.getFullName());
+        }
     }
 
     private void calculateAndSetAverage() {
@@ -126,7 +142,6 @@ public class FXMLEvaluationRubricController implements Initializable {
             }
         });
     }
-
 
     private void configureTable() {
         colCriterion.setCellValueFactory(new PropertyValueFactory<>("criterion"));
@@ -213,5 +228,44 @@ public class FXMLEvaluationRubricController implements Initializable {
 
     @FXML
     public void btnSaveGrade(ActionEvent actionEvent) {
+        if (studentToEvaluate == null || tfEvaluationTitle.getText().isEmpty() || lbScoreAverage.getText().equals("0.0")) {
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos incompletos",
+                    "Debe asignar un título y calificar todos los rubros antes de guardar.");
+            return;
+        }
+
+        try {
+            int idRecord = StudentDAO.getRecordIdByStudentId(studentToEvaluate.getIdStudent());
+            if (idRecord == -1) {
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de datos", "No se pudo encontrar el expediente del estudiante.");
+                return;
+            }
+
+            PresentationEvaluation evaluation = new PresentationEvaluation();
+            evaluation.setTitle(tfEvaluationTitle.getText());
+            evaluation.setObservations(taObservationsAndComments.getText());
+            evaluation.setGrade(new BigDecimal(lbScoreAverage.getText()));
+            evaluation.setDate(Date.valueOf(LocalDate.now()));
+            evaluation.setIdRecord(idRecord);
+
+            PresentationEvaluationDAO dao = new PresentationEvaluationDAO();
+            int response = dao.saveEvaluation(evaluation);
+
+            if (response == 200) {
+                Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Evaluación guardada",
+                        "La evaluación se ha guardado exitosamente.");
+                Stage currentStage = (Stage) lbStudentName.getScene().getWindow();
+                currentStage.close();
+            } else {
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al guardar", "Ocurrió un error al guardar la evaluación.");
+            }
+
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de base de datos", "No se pudo conectar con la base de datos para guardar la información.");
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en calificación", "El promedio no es un número válido.");
+            e.printStackTrace();
+        }
     }
 }
