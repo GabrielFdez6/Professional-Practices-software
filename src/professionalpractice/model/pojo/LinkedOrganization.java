@@ -56,4 +56,5 @@ public class LinkedOrganization {
     public void setActive(boolean active) {
         isActive = active;
     }
+
 }

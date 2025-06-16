@@ -12,7 +12,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.dao.LinkedOrganizationDAO;
@@ -69,14 +68,26 @@ public class FXMLListOVRegisterProjectController implements Initializable {
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Selección Requerida", "Por favor, selecciona una organización de la lista.");
             return;
         }
+
         try {
-            Stage baseStage = (Stage) tvLinkedOrganizations.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerListRegController.fxml"));
+            // 1. Cargar el FXML de la siguiente ventana (que ahora es FXMLProjectManagerList.fxml)
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerList.fxml")); // <-- ¡CAMBIO AQUÍ!
             Parent view = loader.load();
+
+            // 2. Obtener el controlador de la siguiente ventana (que ahora es FXMLProjectManagerListController)
+            FXMLProjectManagerListController nextController = loader.getController(); // <-- ¡CAMBIO AQUÍ!
+
+            // 3. Pasar la OV seleccionada al siguiente controlador
+            nextController.setLinkedOrganization(selectedOV); // Este método ya existe en FXMLProjectManagerListController
+
+            // 4. Mostrar la nueva ventana
+            Stage baseStage = (Stage) tvLinkedOrganizations.getScene().getWindow();
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
-            baseStage.setTitle("Seleccionar responsable del proyecto");
+            // El título dinámico lo maneja el FXMLProjectManagerListController
+            baseStage.setTitle("Seleccionar Responsable de Proyecto");
             baseStage.show();
+
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
             ex.printStackTrace();

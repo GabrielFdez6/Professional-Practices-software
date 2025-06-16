@@ -9,4 +9,5 @@ public interface IProjectManagerDAO {
     int registerProjectManager(ProjectManager manager) throws SQLException;
     int updateProjectManager(ProjectManager manager) throws SQLException;
     List<ProjectManager> getAllProjectManagersByProjectId(int projectId) throws SQLException;
+    List<ProjectManager> getProjectManagersByOrganizationId(int organizationId) throws SQLException;
 }

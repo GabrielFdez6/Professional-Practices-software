@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.dao.ProjectManagerDAO;
 import professionalpractice.model.dao.interfaces.IProjectManagerDAO;
+import professionalpractice.model.pojo.LinkedOrganization;
 import professionalpractice.model.pojo.Project;
 import professionalpractice.model.pojo.ProjectManager;
 import professionalpractice.utils.Utils;
@@ -24,6 +26,7 @@ import professionalpractice.utils.Utils;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class FXMLProjectManagerListController implements Initializable {
@@ -33,11 +36,13 @@ public class FXMLProjectManagerListController implements Initializable {
     @FXML private TableColumn<ProjectManager, String> colPosition;
     @FXML private TableColumn<ProjectManager, String> colEmail;
     @FXML private TableColumn<ProjectManager, String> colPhoneNumber;
+    @FXML private Label lblTitle; // Campo FXML para el título dinámico
 
     private IProjectManagerDAO projectManagerDAO;
     private ObservableList<ProjectManager> projectManagers;
-    private Project selectedProject;
 
+    private Project currentProject;
+    private LinkedOrganization currentLinkedOrganization;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -47,8 +52,19 @@ public class FXMLProjectManagerListController implements Initializable {
     }
 
     public void setProject(Project project) {
-        this.selectedProject = project;
+        this.currentProject = project;
+        this.currentLinkedOrganization = null;
+        // this.callingContextType = 0; // Ya no necesario para btnRegresar
         loadProjectManagers();
+        updateTitle();
+    }
+
+    public void setLinkedOrganization(LinkedOrganization organization) {
+        this.currentLinkedOrganization = organization;
+        this.currentProject = null;
+        // this.callingContextType = 1; // Ya no necesario para btnRegresar
+        loadProjectManagers();
+        updateTitle();
     }
 
     private void configureTable(){
@@ -59,63 +75,89 @@ public class FXMLProjectManagerListController implements Initializable {
     }
 
     private void loadProjectManagers(){
-        if (selectedProject != null) {
-            try {
-                projectManagers.setAll(projectManagerDAO.getAllProjectManagersByProjectId(selectedProject.getIdProject()));
-                tvProjectManagers.setItems(projectManagers);
-            } catch (SQLException e) {
-                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudieron cargar los responsables.");
-                e.printStackTrace();
+        try {
+            if (currentLinkedOrganization != null) {
+                List<ProjectManager> managers = projectManagerDAO.getProjectManagersByOrganizationId(currentLinkedOrganization.getIdLinkedOrganization());
+                projectManagers.setAll(managers);
+                if (managers.isEmpty()) {
+                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Sin Responsables",
+                            "No hay responsables de proyecto registrados para la organización: " + currentLinkedOrganization.getName() + ".");
+                }
+            } else if (currentProject != null) {
+                List<ProjectManager> managers = projectManagerDAO.getAllProjectManagersByProjectId(currentProject.getIdProject());
+                projectManagers.setAll(managers);
+                if (managers.isEmpty()) {
+                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Sin Responsables",
+                            "No hay responsables de proyecto registrados para el proyecto: " + currentProject.getName() + ".");
+                }
+            } else {
+                projectManagers.clear();
+                Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Información", "No se ha especificado un proyecto o una organización para cargar responsables.");
+            }
+            tvProjectManagers.setItems(projectManagers);
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudieron cargar los responsables.");
+            e.printStackTrace();
+        }
+    }
+
+    private void updateTitle() {
+        if (lblTitle != null) {
+            if (currentLinkedOrganization != null) {
+                lblTitle.setText("RESPONSABLES DE LA ORGANIZACIÓN: " + currentLinkedOrganization.getName());
+            } else if (currentProject != null) {
+                lblTitle.setText("RESPONSABLES PARA EL PROYECTO: " + currentProject.getName());
+            } else {
+                lblTitle.setText("SELECCIONAR RESPONSABLE DE PROYECTO");
             }
         }
     }
 
     @FXML
-    public void btnCancel(ActionEvent actionEvent) {
-        goSelectProjectScreen();
+    public void btnRegresar(ActionEvent actionEvent) {
+        try {
+            Stage stage = (Stage) tvProjectManagers.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOVRegisterProject.fxml"));
+            Parent view = loader.load();
+
+            Scene scene = new Scene(view);
+            stage.setScene(scene);
+            stage.setTitle("Organizaciones Vinculadas");
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación", "No se pudo regresar a la pantalla de organizaciones vinculadas.");
+        }
     }
 
     @FXML
     public void btnSelectProjectManager(ActionEvent actionEvent) {
         ProjectManager selectedManager = tvProjectManagers.getSelectionModel().getSelectedItem();
         if(selectedManager == null){
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Selección Requerida", "Debe seleccionar un responsable para actualizar.");
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Selección Requerida", "Por favor, selecciona un responsable de proyecto de la lista.");
             return;
         }
 
-        try {
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLUpdateResponsible.fxml"));
-            Parent view = loader.load();
+        if (currentLinkedOrganization != null) {
+            try {
+                Stage baseStage = (Stage) tvProjectManagers.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLAddEditProject.fxml"));
+                Parent view = loader.load();
 
-            FXMLUpdateResponsibleController controller = loader.getController();
-            controller.initData(selectedManager);
+                FXMLAddEditProjectController nextController = loader.getController();
+                nextController.initDataForNewProject(currentLinkedOrganization, selectedManager);
 
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(Utils.getSceneComponent(tvProjectManagers));
-            modalStage.setTitle("Actualizar Responsable");
-            modalStage.setScene(new Scene(view));
-            modalStage.showAndWait();
+                Scene mainScene = new Scene(view);
+                baseStage.setScene(mainScene);
+                baseStage.setTitle("Gestión de Proyectos del Responsable");
+                baseStage.show();
 
-            // Refrescamos la tabla por si hubo cambios
-            loadProjectManagers();
-
-        } catch (IOException e) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Carga", "No se pudo mostrar el formulario de actualización.");
-            e.printStackTrace();
-        }
-    }
-
-    private void goSelectProjectScreen() {
-        try {
-            Stage stage = (Stage) tvProjectManagers.getScene().getWindow();
-            Parent view = FXMLLoader.load(ProfessionalPractices.class.getResource("view/coordinator/FXMLSelectProject.fxml"));
-            Scene scene = new Scene(view);
-            stage.setScene(scene);
-            stage.setTitle("Seleccionar Proyecto");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException ex) {
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de gestión de proyectos del responsable.");
+                ex.printStackTrace();
+            }
+        } else {
+            Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Acción Inválida", "Por favor, selecciona una organización vinculada primero para gestionar proyectos.");
         }
     }
 }

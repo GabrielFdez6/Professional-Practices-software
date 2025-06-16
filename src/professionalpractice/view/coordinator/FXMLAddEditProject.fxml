@@ -6,9 +6,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLAddEditProjectController">
+<AnchorPane prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLAddEditProjectController">
     <children>
-        <AnchorPane layoutX="62.0" layoutY="52.0" prefHeight="447.0" prefWidth="677.0" style="-fx-background-color: white; -fx-background-radius: 9;">
+        <AnchorPane layoutX="62.0" layoutY="52.0" prefHeight="447.0" prefWidth="726.0" style="-fx-background-color: white; -fx-background-radius: 9;">
             <effect>
                 <DropShadow height="20.45" offsetY="2.0" radius="9.7425" width="20.52">
                     <color>
@@ -16,24 +16,31 @@
                     </color></DropShadow>
             </effect>
             <children>
-                <Label layoutX="224.0" layoutY="14.0" text="PROYECTOS REGISTRADOS">
+                <Label fx:id="lblTitle" layoutX="10.0" layoutY="14.0" text="PROYECTOS ASIGNADOS A [RESPONSABLE]">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
                 </Label>
-                <TableView fx:id="tvProjects" layoutY="44.0" prefHeight="403.0" prefWidth="677.0" style="-fx-background-color: white;">
+                <Label fx:id="lblPMInfo" layoutX="10.0" layoutY="40.0" text="Responsable: [Nombre PM] - Organización: [Nombre OV]" textFill="#606060">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+
+                <TableView fx:id="tvProjects" layoutY="70.0" prefHeight="377.0" prefWidth="726.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="colProjectName" prefWidth="75.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Nombre" />
+                        <TableColumn fx:id="colProjectName" prefWidth="75.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Nombre del Proyecto" />
                         <TableColumn fx:id="colDescription" prefWidth="75.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Descripción" />
-                        <TableColumn fx:id="colMethodology" prefWidth="75.0" text="Metodologia" />
-                        <TableColumn fx:id="colPhoneNumber" prefWidth="75.0" text="Disponibilidad" />
+                        <TableColumn fx:id="colMethodology" prefWidth="75.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Metodología" />
+                        <TableColumn fx:id="colAvailability" prefWidth="75.0" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Disponibilidad" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
             </children></AnchorPane>
-        <Button layoutX="661.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
+
+        <Button layoutX="576.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnRegresar" style="-fx-background-color: #f3f4f6;" text="Regresar">
             <effect>
                 <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
                     <color>
@@ -43,8 +50,23 @@
             </effect>
             <font>
                 <Font name="Arial Bold" size="14.0" />
-            </font></Button>
-        <Button layoutX="507.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnAddProject" style="-fx-background-color: #146cd0;" text="Agregar" textFill="WHITE">
+            </font>
+        </Button>
+
+        <Button layoutX="690.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #ff4d4d;" text="Cancelar" textFill="WHITE">
+            <effect>
+                <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
+                    <color>
+                        <Color opacity="0.3" />
+                    </color>
+                </DropShadow>
+            </effect>
+            <font>
+                <Font name="Arial Bold" size="14.0" />
+            </font>
+        </Button>
+
+        <Button layoutX="462.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnEditProject" style="-fx-background-color: #146cd0;" text="Modificar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
@@ -54,8 +76,22 @@
                         <Color opacity="0.38675323128700256" />
                     </color>
                 </DropShadow>
-            </effect></Button>
-        <AnchorPane prefHeight="27.0" prefWidth="800.0" style="-fx-background-color: white;">
+            </effect>
+        </Button>
+        <Button layoutX="348.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnAddProject" style="-fx-background-color: #28a745;" text="Agregar" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="14.0" />
+            </font>
+            <effect>
+                <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
+                    <color>
+                        <Color opacity="0.38675323128700256" />
+                    </color>
+                </DropShadow>
+            </effect>
+        </Button>
+
+        <AnchorPane prefHeight="27.0" prefWidth="850.0" style="-fx-background-color: white;">
             <effect>
                 <DropShadow height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
                     <color>
@@ -63,22 +99,12 @@
                     </color></DropShadow>
             </effect>
             <children>
-                <Label layoutX="648.0" layoutY="6.0" text="Universidad Veracruzana">
+                <Label layoutX="680.0" layoutY="6.0" text="Universidad Veracruzana">
                     <font>
                         <Font name="Arial Bold" size="12.0" />
-                    </font></Label>
-            </children></AnchorPane>
-      <Button layoutX="591.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnEditProject" style="-fx-background-color: #c5de45;" text="Editar" textFill="WHITE">
-         <font>
-            <Font name="Arial Bold" size="14.0" />
-         </font>
-         <effect>
-            <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
-               <color>
-                  <Color opacity="0.38675323128700256" />
-               </color>
-            </DropShadow>
-         </effect>
-      </Button>
+                    </font>
+                </Label>
+            </children>
+        </AnchorPane>
     </children>
 </AnchorPane>

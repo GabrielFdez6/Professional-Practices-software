@@ -7,14 +7,14 @@ public class Project {
     private int idLinkedOrganization;
     private int idCoordinator;
     private String name;
-    private String department;
+    private String department; // Campo existente
     private String description;
     private String methodology;
     private int availability;
 
     public Project() {}
 
-    public Project(int idProject, int idRecord, int idProjectManager, int idLinkedOrganization, int idCoordinator, String name, String department, String description, String methodology, int availability) {
+    public Project(int idProject, int idRecord, int idProjectManager, int idLinkedOrganization, int idCoordinator, String name, String department, String description, String methodology, String status, int availability) {
         this.idProject = idProject;
         this.idRecord = idRecord;
         this.idProjectManager = idProjectManager;
@@ -105,5 +105,16 @@ public class Project {
 
     public void setAvailability(int availability) {
         this.availability = availability;
+    }
+
+    // Opcional: toString() para depuración
+    @Override
+    public String toString() {
+        return "Project{" +
+                "idProject=" + idProject +
+                ", name='" + name + '\'' +
+                ", idLinkedOrganization=" + idLinkedOrganization +
+                ", idProjectManager=" + idProjectManager +
+                '}';
     }
 }

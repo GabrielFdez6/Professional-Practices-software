@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDAO implements IProjectDAO {
+
     @Override
     public List<Project> getAllProjects() throws SQLException {
         List<Project> projects = new ArrayList<>();
-        String query = "SELECT idProject, name, department, description FROM project";
+        String query = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager FROM project";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
@@ -25,8 +26,12 @@ public class ProjectDAO implements IProjectDAO {
                 Project project = new Project();
                 project.setIdProject(rs.getInt("idProject"));
                 project.setName(rs.getString("name"));
-                project.setDepartment(rs.getString("department"));
+                // project.setDepartment(rs.getString("department"));
                 project.setDescription(rs.getString("description"));
+                project.setMethodology(rs.getString("methodology"));
+                project.setAvailability(rs.getInt("availability"));
+                project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
+                project.setIdProjectManager(rs.getInt("idProjectManager"));
                 projects.add(project);
             }
         }
@@ -35,7 +40,7 @@ public class ProjectDAO implements IProjectDAO {
 
     public ArrayList<Project> getAvailableProjects() throws SQLException {
         ArrayList<Project> projects = new ArrayList<>();
-        String query = "SELECT idProject, name, department, description, availability FROM project WHERE availability > 0";
+        String query = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager FROM project WHERE availability > 0";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
@@ -44,9 +49,12 @@ public class ProjectDAO implements IProjectDAO {
                 Project project = new Project();
                 project.setIdProject(rs.getInt("idProject"));
                 project.setName(rs.getString("name"));
-                project.setDepartment(rs.getString("department"));
+                // project.setDepartment(rs.getString("department"));
                 project.setDescription(rs.getString("description"));
                 project.setAvailability(rs.getInt("availability"));
+                project.setMethodology(rs.getString("methodology"));
+                project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
+                project.setIdProjectManager(rs.getInt("idProjectManager"));
                 projects.add(project);
             }
         }
@@ -130,5 +138,102 @@ public class ProjectDAO implements IProjectDAO {
             }
         }
         return responseCode;
+    }
+
+    // --- NUEVOS MÉTODOS REQUERIDOS ---
+
+    @Override
+    public int saveProject(Project project) throws SQLException {
+        String sql = "INSERT INTO project (name, description, methodology, availability, idLinkedOrganization, idProjectManager) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, project.getName());
+            pstmt.setString(2, project.getDescription());
+            pstmt.setString(3, project.getMethodology());
+            pstmt.setInt(4, project.getAvailability());
+            pstmt.setInt(5, project.getIdLinkedOrganization());
+            pstmt.setInt(6, project.getIdProjectManager());
+            int rowsAffected = pstmt.executeUpdate();
+            return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : Constants.OPERATION_FAILED;
+        }
+    }
+
+    @Override
+    public int updateProject(Project project) throws SQLException {
+        String sql = "UPDATE project SET name = ?, description = ?, methodology = ?, availability = ?, idLinkedOrganization = ?, idProjectManager = ? WHERE idProject = ?";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, project.getName());
+            pstmt.setString(2, project.getDescription());
+            pstmt.setString(3, project.getMethodology());
+            pstmt.setInt(4, project.getAvailability());
+            pstmt.setInt(5, project.getIdLinkedOrganization());
+            pstmt.setInt(6, project.getIdProjectManager());
+            pstmt.setInt(7, project.getIdProject());
+            int rowsAffected = pstmt.executeUpdate();
+            return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : Constants.OPERATION_FAILED;
+        }
+    }
+
+    @Override
+    public List<Project> getProjectsByProjectManagerId(int projectManagerId) throws SQLException {
+        List<Project> projects = new ArrayList<>();
+        String sql = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager " +
+                "FROM project " +
+                "WHERE idProjectManager = ?";
+
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, projectManagerId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Project project = new Project();
+                    project.setIdProject(rs.getInt("idProject"));
+                    project.setName(rs.getString("name"));
+                    project.setDescription(rs.getString("description"));
+                    project.setMethodology(rs.getString("methodology"));
+                    project.setAvailability(rs.getInt("availability"));
+                    project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
+                    project.setIdProjectManager(rs.getInt("idProjectManager"));
+                    projects.add(project);
+                }
+            }
+        }
+        return projects;
+    }
+
+    @Override
+    public Project getProjectById(int projectId) throws SQLException {
+        Project project = null;
+        String sql = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager " +
+                "FROM project WHERE idProject = ?";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, projectId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    project = new Project();
+                    project.setIdProject(rs.getInt("idProject"));
+                    project.setName(rs.getString("name"));
+                    project.setDescription(rs.getString("description"));
+                    project.setMethodology(rs.getString("methodology"));
+                    project.setAvailability(rs.getInt("availability"));
+                    project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
+                    project.setIdProjectManager(rs.getInt("idProjectManager"));
+                }
+            }
+        }
+        return project;
+    }
+
+    @Override
+    public int deleteProject(int projectId) throws SQLException {
+        String sql = "DELETE FROM project WHERE idProject = ?";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, projectId);
+            int rowsAffected = pstmt.executeUpdate();
+            return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : Constants.OPERATION_FAILED;
+        }
     }
 }
