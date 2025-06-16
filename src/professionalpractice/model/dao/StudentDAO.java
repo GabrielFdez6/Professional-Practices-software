@@ -205,4 +205,28 @@ public class StudentDAO implements IStudentDAO {
         }
         return idRecord;
     }
+
+    public ArrayList<Student> getUnassignedStudents() throws SQLException {
+        ArrayList<Student> students = new ArrayList<>();
+        String query = "SELECT idStudent, enrollment, semester, email, firstName, lastNameMother, lastNameFather FROM student WHERE isAssignedToProject = 0 OR isAssignedToProject IS NULL";
+        try (Connection connection = ConectionBD.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Student student = new Student();
+                student.setIdStudent(rs.getInt("idStudent"));
+                student.setEnrollment(rs.getString("enrollment"));
+                student.setSemester(rs.getString("semester"));
+                student.setEmail(rs.getString("email"));
+                student.setFirstName(rs.getString("firstName"));
+                student.setLastNameMother(rs.getString("lastNameMother"));
+                student.setLastNameFather(rs.getString("lastNameFather"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener los estudiantes no asignados: " + e.getMessage());
+            throw e;
+        }
+        return students;
+    }
 }

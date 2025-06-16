@@ -68,7 +68,6 @@ public class FXMLRegisterResponsibleController {
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Nombre, Apellido Paterno y Correo son obligatorios.");
             return false;
         }
-        // Añadir más validaciones si es necesario (ej. formato de email)
         return true;
     }
 

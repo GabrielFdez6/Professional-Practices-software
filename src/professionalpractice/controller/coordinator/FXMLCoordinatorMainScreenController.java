@@ -12,7 +12,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.utils.Utils;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,7 +23,6 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Initialization logic can go here if needed
     }
 
     public void configureScreen(String fullName) {
@@ -37,26 +35,34 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
 
     @FXML
     void btnAssignProjects(ActionEvent event) {
-        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Función en Desarrollo", "Esta funcionalidad para asignar proyectos aún no ha sido implementada.");
+        try {
+            Stage baseStage = (Stage) lbFullName.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLInfoStudentsProject.fxml"));
+            Parent view = loader.load();
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Seleccionar Organización Vinculada");
+            baseStage.show();
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
+            ex.printStackTrace();
+        }
     }
 
     @FXML
     void btnRegisterProject(ActionEvent event) {
-        // For now, this will open the delivery scheduling window as per CU-06 in the PDF.
-        // The button text says "Registrar Proyecto", but the most relevant unimplemented feature is scheduling.
         try {
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL);
             modalStage.initOwner(Utils.getSceneComponent(lbFullName));
 
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLScheduleDelivery.fxml"));
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOV.fxml"));
             Parent view = loader.load();
             Scene scene = new Scene(view);
 
             modalStage.setTitle("Programar Entrega de Documentos");
             modalStage.setScene(scene);
             modalStage.showAndWait();
-
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de programación.");
             ex.printStackTrace();

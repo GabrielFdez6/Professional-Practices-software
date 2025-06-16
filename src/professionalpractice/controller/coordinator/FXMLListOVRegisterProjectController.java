@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class FXMLListOVController implements Initializable {
+public class FXMLListOVRegisterProjectController implements Initializable {
 
     @FXML private TableView<LinkedOrganization> tvLinkedOrganizations;
     @FXML private TableColumn<LinkedOrganization, String> colCompanyName;
@@ -69,23 +69,16 @@ public class FXMLListOVController implements Initializable {
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Selección Requerida", "Por favor, selecciona una organización de la lista.");
             return;
         }
-
         try {
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLRegisterResponsible.fxml"));
+            Stage baseStage = (Stage) tvLinkedOrganizations.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerListRegController.fxml"));
             Parent view = loader.load();
-
-            FXMLRegisterResponsibleController controller = loader.getController();
-            controller.initData(selectedOV);
-
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(Utils.getSceneComponent(tvLinkedOrganizations));
-            modalStage.setTitle("Registrar Nuevo Responsable");
-            modalStage.setScene(new Scene(view));
-            modalStage.showAndWait();
-
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Seleccionar responsable del proyecto");
+            baseStage.show();
         } catch (IOException ex) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de registro.");
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
             ex.printStackTrace();
         }
     }

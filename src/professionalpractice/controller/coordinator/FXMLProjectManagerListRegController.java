@@ -26,7 +26,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class FXMLProjectManagerListController implements Initializable {
+public class FXMLProjectManagerListRegController implements Initializable {
 
     @FXML private TableView<ProjectManager> tvProjectManagers;
     @FXML private TableColumn<ProjectManager, String> colManagerName;
@@ -84,25 +84,16 @@ public class FXMLProjectManagerListController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLUpdateResponsible.fxml"));
+            Stage baseStage = (Stage) tvProjectManagers.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLAddEditProjectController.fxml"));
             Parent view = loader.load();
-
-            FXMLUpdateResponsibleController controller = loader.getController();
-            controller.initData(selectedManager);
-
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(Utils.getSceneComponent(tvProjectManagers));
-            modalStage.setTitle("Actualizar Responsable");
-            modalStage.setScene(new Scene(view));
-            modalStage.showAndWait();
-
-            // Refrescamos la tabla por si hubo cambios
-            loadProjectManagers();
-
-        } catch (IOException e) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Carga", "No se pudo mostrar el formulario de actualización.");
-            e.printStackTrace();
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Seleccionar Organización Vinculada");
+            baseStage.show();
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
+            ex.printStackTrace();
         }
     }
 

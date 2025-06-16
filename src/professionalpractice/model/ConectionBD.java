@@ -10,7 +10,7 @@ public class ConectionBD {
     private static final String HOST = "localhost:3306";
     private static final String DB = "professionalpractices";
     private static final String USER = "root";
-    private static final String PASSWORD = "Monte1324.";
+    private static final String PASSWORD = "G1212";
 
     private static Connection conn;
 

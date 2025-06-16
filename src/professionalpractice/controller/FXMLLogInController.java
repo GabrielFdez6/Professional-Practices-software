@@ -99,7 +99,7 @@ public class FXMLLogInController implements Initializable {
                         goTeacherHomeScreen(user.getUserId());
                         break;
                     case "EVALUATOR":
-                        goEvaluatorHomeScreen(user.getUserId());
+                        goEvaluatorHomeScreen(user.getUsername());
                         break;
                     default:
                         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Rol no reconocido", "El rol de usuario no es válido.");
@@ -171,16 +171,14 @@ public class FXMLLogInController implements Initializable {
         }
     }
 
-    private void goEvaluatorHomeScreen(int userId) {
+    private void goEvaluatorHomeScreen(String username) {
         try {
-            Student student = studentDAO.getStudentByUserId(userId);
-
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
             Parent view = loader.load();
 
             FXMLEvaluatorMainScreenController controller = loader.getController();
-            controller.loadUserInformation(student.getFirstName());
+            controller.loadUserInformation(username);
 
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
@@ -188,8 +186,6 @@ public class FXMLLogInController implements Initializable {
             baseStage.show();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
-        } catch (SQLException e) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar el usuario", "Lo sentimos, no se pudo cargar la información del usuario.");
         }
     }
 
