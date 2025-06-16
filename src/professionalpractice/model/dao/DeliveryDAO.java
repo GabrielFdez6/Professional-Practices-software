@@ -2,6 +2,7 @@ package professionalpractice.model.dao;
 
 import professionalpractice.model.ConectionBD;
 import professionalpractice.model.dao.interfaces.IDeliveryDAO;
+import professionalpractice.model.dao.interfaces.IRecordDAO;
 import professionalpractice.model.pojo.Delivery;
 import professionalpractice.utils.Constants;
 
@@ -79,5 +80,56 @@ public class DeliveryDAO implements IDeliveryDAO {
             int rowsAffected = pstmt.executeUpdate();
             return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : 0;
         }
+    }
+
+    @Override
+    public int scheduleDeliveryForAllRecords(Delivery delivery) throws SQLException {
+        int rowsAffected = 0;
+        String query = "INSERT INTO delivery (name, deliveryType, startDate, endDate, description, idRecord) VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = null; // Declare connection outside the try block
+
+        try {
+            conn = ConectionBD.getConnection();
+            conn.setAutoCommit(false); // Start transaction
+
+            IRecordDAO recordDAO = new RecordDAO();
+            List<Integer> recordIds = recordDAO.getAllActiveRecordIds();
+
+            if (recordIds.isEmpty()) {
+                return Constants.OPERATION_SUCCESFUL; // Nothing to do
+            }
+
+            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+                for (Integer recordId : recordIds) {
+                    pstmt.setString(1, delivery.getName());
+                    pstmt.setString(2, delivery.getDeliveryType());
+                    pstmt.setTimestamp(3, delivery.getStartDate());
+                    pstmt.setTimestamp(4, delivery.getEndDate());
+                    pstmt.setString(5, delivery.getDescription());
+                    pstmt.setInt(6, recordId);
+                    pstmt.addBatch();
+                }
+
+                int[] batchResults = pstmt.executeBatch();
+                for (int result : batchResults) {
+                    rowsAffected += (result > 0) ? result : 0;
+                }
+            }
+
+            conn.commit(); // Commit transaction if everything was successful
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                conn.rollback(); // Roll back all changes if an error occurred
+            }
+            throw e; // Re-throw the exception to be handled by the controller
+        } finally {
+            if (conn != null) {
+                conn.setAutoCommit(true); // Always restore default behavior
+                conn.close(); // Finally, close the connection
+            }
+        }
+
+        return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : 0;
     }
 }

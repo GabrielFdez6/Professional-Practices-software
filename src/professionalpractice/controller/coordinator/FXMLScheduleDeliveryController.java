@@ -57,8 +57,8 @@ public class FXMLScheduleDeliveryController implements Initializable {
             delivery.setDescription(tfDescription.getText().trim());
 
             try {
-                if (deliveryDAO.scheduleDelivery(delivery) == Constants.OPERATION_SUCCESFUL) {
-                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", "La entrega ha sido programada correctamente.");
+                if (deliveryDAO.scheduleDeliveryForAllRecords(delivery) == Constants.OPERATION_SUCCESFUL) {
+                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", "La entrega ha sido programada correctamente para todos los estudiantes.");
                     closeWindow();
                 } else {
                     Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en la Operación", "No se pudo programar la entrega.");

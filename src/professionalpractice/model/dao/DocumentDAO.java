@@ -7,13 +7,31 @@ import professionalpractice.model.pojo.InitialDocument;
 import professionalpractice.model.pojo.ReportDocument;
 
 import java.sql.*;
+import java.math.BigDecimal;
 
 public class DocumentDAO implements IDocumentDAO {
 
     @Override
     public int saveInitialDocument(InitialDocument document) throws SQLException {
         String query = "INSERT INTO initialdocument (name, date, delivered, status, filePath, observations, grade) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        return saveDocument(query, document.getName(), document.getFilePath());
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+            pstmt.setString(1, document.getName());
+            pstmt.setDate(2, new java.sql.Date(document.getDate().getTime()));
+            pstmt.setBoolean(3, document.isDelivered());
+            pstmt.setString(4, document.getStatus());
+            pstmt.setString(5, document.getFilePath());
+            pstmt.setString(6, document.getObservations());
+
+            if (document.getGrade() != null) {
+                pstmt.setBigDecimal(7, document.getGrade());
+            } else {
+                pstmt.setNull(7, Types.DECIMAL);
+            }
+
+            return executeAndGetId(pstmt);
+        }
     }
 
     @Override
@@ -30,39 +48,38 @@ public class DocumentDAO implements IDocumentDAO {
             pstmt.setString(6, document.getStatus());
             pstmt.setString(7, document.getFilePath());
 
-            pstmt.executeUpdate();
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-            }
+            return executeAndGetId(pstmt);
         }
-        return -1;
     }
 
     @Override
     public int saveFinalDocument(FinalDocument document) throws SQLException {
         String query = "INSERT INTO finaldocument (name, date, delivered, status, filePath, observations, grade) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        return saveDocument(query, document.getName(), document.getFilePath());
-    }
-
-    private int saveDocument(String query, String name, String filePath) throws SQLException {
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            pstmt.setString(1, name);
-            pstmt.setDate(2, new java.sql.Date(System.currentTimeMillis())); // Current date
-            pstmt.setBoolean(3, true); // Delivered
-            pstmt.setString(4, "EN_REVISION"); // Initial status
-            pstmt.setString(5, filePath);
-            pstmt.setString(6, null); // No observations initially
-            pstmt.setBigDecimal(7, null); // No grade initially
+            pstmt.setString(1, document.getName());
+            pstmt.setDate(2, new java.sql.Date(document.getDate().getTime()));
+            pstmt.setBoolean(3, document.isDelivered());
+            pstmt.setString(4, document.getStatus());
+            pstmt.setString(5, document.getFilePath());
+            pstmt.setString(6, document.getObservations());
 
-            pstmt.executeUpdate();
-            try (ResultSet rs = pstmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
+            if (document.getGrade() != null) {
+                pstmt.setBigDecimal(7, document.getGrade());
+            } else {
+                pstmt.setNull(7, Types.DECIMAL);
+            }
+
+            return executeAndGetId(pstmt);
+        }
+    }
+
+    private int executeAndGetId(PreparedStatement pstmt) throws SQLException {
+        pstmt.executeUpdate();
+        try (ResultSet rs = pstmt.getGeneratedKeys()) {
+            if (rs.next()) {
+                return rs.getInt(1);
             }
         }
         return -1;

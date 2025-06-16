@@ -4,6 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import professionalpractice.model.dao.DeliveryDAO;
@@ -19,6 +22,7 @@ import professionalpractice.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +37,10 @@ public class FXMLDeliverDocumentController {
     @FXML private Label lblStartDate;
     @FXML private Label lblEndDate;
     @FXML private Label lblFileName;
+    @FXML private VBox vboxDynamicFields;
+    @FXML private TextField tfReportedHours;
+    @FXML private TextField tfGrade;
+    @FXML private TextArea taObservations;
 
     private Delivery currentDelivery;
     private File selectedFile;
@@ -51,6 +59,27 @@ public class FXMLDeliverDocumentController {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
         lblStartDate.setText("Fecha de Inicio: " + sdf.format(delivery.getStartDate()));
         lblEndDate.setText("Fecha de Fin: " + sdf.format(delivery.getEndDate()));
+
+        // Show dynamic fields based on delivery type
+        vboxDynamicFields.setVisible(true);
+        vboxDynamicFields.setManaged(true);
+
+        switch(delivery.getDeliveryType()) {
+            case "INITIAL DOCUMENT":
+            case "FINAL DOCUMENT":
+                tfGrade.setVisible(true);
+                tfGrade.setManaged(true);
+                taObservations.setVisible(true);
+                taObservations.setManaged(true);
+                break;
+            case "REPORT":
+                tfReportedHours.setVisible(true);
+                tfReportedHours.setManaged(true);
+                tfGrade.setVisible(true);
+                tfGrade.setManaged(true);
+                tfGrade.setPromptText("Calificación (ej. 8.5)"); // No es opcional
+                break;
+        }
     }
 
     @FXML
@@ -66,42 +95,24 @@ public class FXMLDeliverDocumentController {
 
     @FXML
     void btnDeliverClick(ActionEvent event) {
-        if (selectedFile == null) {
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Archivo no seleccionado", "Debes adjuntar un archivo antes de entregar.");
+        if (selectedFile == null || !validateDynamicFields()) {
             return;
         }
 
         try {
-            // 1. Physically copy the file to a server directory.
             File savedFile = copyFileToDeliveriesFolder(selectedFile);
             String newFilePath = savedFile.getPath();
             int newDocumentId = -1;
 
-            // 2. Connect to a DAO to save the file path and update document status.
             switch (currentDelivery.getDeliveryType()) {
                 case "INITIAL DOCUMENT":
-                    InitialDocument initialDoc = new InitialDocument();
-                    initialDoc.setName(currentDelivery.getName());
-                    initialDoc.setFilePath(newFilePath);
-                    newDocumentId = documentDAO.saveInitialDocument(initialDoc);
+                    newDocumentId = saveInitialDocument(newFilePath);
                     break;
                 case "REPORT":
-                    ReportDocument reportDoc = new ReportDocument();
-                    reportDoc.setName(currentDelivery.getName());
-                    reportDoc.setFilePath(newFilePath);
-                    reportDoc.setDate(new Date());
-                    reportDoc.setDelivered(true);
-                    reportDoc.setStatus("EN_REVISION");
-                    // These would be filled from a form in a more complex scenario
-                    reportDoc.setReportedHours(0);
-                    reportDoc.setGrade(null);
-                    newDocumentId = documentDAO.saveReportDocument(reportDoc);
+                    newDocumentId = saveReportDocument(newFilePath);
                     break;
                 case "FINAL DOCUMENT":
-                    FinalDocument finalDoc = new FinalDocument();
-                    finalDoc.setName(currentDelivery.getName());
-                    finalDoc.setFilePath(newFilePath);
-                    newDocumentId = documentDAO.saveFinalDocument(finalDoc);
+                    newDocumentId = saveFinalDocument(newFilePath);
                     break;
                 default:
                     Utils.showSimpleAlert(Alert.AlertType.ERROR, "Tipo Inválido", "El tipo de entrega no es reconocido.");
@@ -109,10 +120,9 @@ public class FXMLDeliverDocumentController {
             }
 
             if (newDocumentId == -1) {
-                throw new SQLException("No se pudo guardar la información del documento en la base de datos.");
+                throw new SQLException("No se pudo guardar la información del documento en la BD.");
             }
 
-            // 3. Update the 'delivery' table to link the new document ID.
             int result = ((DeliveryDAO) deliveryDAO).linkDocumentToDelivery(currentDelivery.getIdDelivery(), newDocumentId, currentDelivery.getDeliveryType());
 
             if (result == Constants.OPERATION_SUCCESFUL) {
@@ -123,28 +133,85 @@ public class FXMLDeliverDocumentController {
             }
 
         } catch (IOException e) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Archivo", "No se pudo guardar el archivo en el servidor. Inténtalo de nuevo.");
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Archivo", "No se pudo guardar el archivo. Verifique los permisos e inténtelo de nuevo.");
             e.printStackTrace();
-        } catch (SQLException e) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos", "Ocurrió un error al guardar la información: " + e.getMessage());
+        } catch (SQLException | NumberFormatException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "Ocurrió un error al guardar la información: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    private int saveInitialDocument(String filePath) throws SQLException {
+        InitialDocument doc = new InitialDocument();
+        doc.setName(currentDelivery.getName());
+        doc.setFilePath(filePath);
+        doc.setDate(new Date());
+        doc.setDelivered(true);
+        doc.setStatus("EN_REVISION");
+        doc.setObservations(taObservations.getText());
+        if (!tfGrade.getText().trim().isEmpty()) {
+            doc.setGrade(new BigDecimal(tfGrade.getText()));
+        }
+        return documentDAO.saveInitialDocument(doc);
+    }
+
+    private int saveReportDocument(String filePath) throws SQLException {
+        ReportDocument doc = new ReportDocument();
+        doc.setName(currentDelivery.getName());
+        doc.setFilePath(filePath);
+        doc.setDate(new Date());
+        doc.setDelivered(true);
+        doc.setStatus("EN_REVISION");
+        doc.setReportedHours(Integer.parseInt(tfReportedHours.getText()));
+        doc.setGrade(new BigDecimal(tfGrade.getText()));
+        return documentDAO.saveReportDocument(doc);
+    }
+
+    private int saveFinalDocument(String filePath) throws SQLException {
+        FinalDocument doc = new FinalDocument();
+        doc.setName(currentDelivery.getName());
+        doc.setFilePath(filePath);
+        doc.setDate(new Date());
+        doc.setDelivered(true);
+        doc.setStatus("EN_REVISION");
+        doc.setObservations(taObservations.getText());
+        if (!tfGrade.getText().trim().isEmpty()) {
+            doc.setGrade(new BigDecimal(tfGrade.getText()));
+        }
+        return documentDAO.saveFinalDocument(doc);
+    }
+
+    private boolean validateDynamicFields() {
+        if (selectedFile == null) {
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Archivo no seleccionado", "Debes adjuntar un archivo antes de entregar.");
+            return false;
+        }
+
+        if ("REPORT".equals(currentDelivery.getDeliveryType())) {
+            if (tfReportedHours.getText().trim().isEmpty() || tfGrade.getText().trim().isEmpty()) {
+                Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Obligatorios", "Para un reporte, las horas y la calificación son obligatorias.");
+                return false;
+            }
+            try {
+                Integer.parseInt(tfReportedHours.getText().trim());
+                new BigDecimal(tfGrade.getText().trim());
+            } catch (NumberFormatException e) {
+                Utils.showSimpleAlert(Alert.AlertType.WARNING, "Datos Inválidos", "Las horas y la calificación deben ser números válidos.");
+                return false;
+            }
+        }
+        return true;
+    }
+
     private File copyFileToDeliveriesFolder(File sourceFile) throws IOException {
-        // Creates a directory structure like "deliveries/INITIAL DOCUMENT/"
         String directoryPathStr = "deliveries/" + currentDelivery.getDeliveryType().replace(" ", "_");
         Path directoryPath = Paths.get(directoryPathStr);
         if (Files.notExists(directoryPath)) {
             Files.createDirectories(directoryPath);
         }
-
-        // Creates a unique filename to avoid conflicts, e.g., "162381238_Reporte.pdf"
         String uniqueFileName = System.currentTimeMillis() + "_" + sourceFile.getName();
         Path destinationPath = directoryPath.resolve(uniqueFileName);
-
         Files.copy(sourceFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
-
         return destinationPath.toFile();
     }
 

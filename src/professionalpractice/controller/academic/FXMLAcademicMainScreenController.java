@@ -13,6 +13,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
+import professionalpractice.model.SesionUsuario;
 import professionalpractice.model.pojo.Academic; // Asegúrate de tener este POJO
 import professionalpractice.utils.Utils;
 
@@ -60,6 +61,7 @@ public class FXMLAcademicMainScreenController implements Initializable {
     @FXML
     private void btnClickLogOut(ActionEvent event) {
         try {
+            SesionUsuario.getInstancia().cerrarSesion();
             Stage baseStage = (Stage) lbFullName.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/FXMLLogIn.fxml"));
             Parent viewLogIn = loader.load();

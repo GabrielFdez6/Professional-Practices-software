@@ -184,7 +184,7 @@
          </children>
       </AnchorPane>
 
-      <AnchorPane layoutX="280.0" layoutY="295.0" prefHeight="149.0" prefWidth="241.0" style="-fx-background-color: white; -fx-background-radius: 9; -fx-border-color: #e0e0e0; -fx-border-radius: 9;">
+      <AnchorPane layoutX="280.0" layoutY="295.0" prefHeight="149.0" prefWidth="241.0" style="-fx-background-color: white; -fx-background-radius: 9;">
          <effect>
             <DropShadow height="20.51" offsetY="2.0" radius="9.7575" width="20.52">
                <color>
@@ -192,6 +192,30 @@
                </color>
             </DropShadow>
          </effect>
+         <children>
+            <Button contentDisplay="CENTER" layoutX="28.0" layoutY="109.0" mnemonicParsing="false" onAction="#btnScheduleDelivery" prefHeight="26.0" prefWidth="185.0" style="-fx-background-color: #146cd0;" text="Programar Entregas" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="14.0" />
+               </font>
+               <effect>
+                  <DropShadow offsetY="2.0" radius="9.75" width="20.0">
+                     <color>
+                        <Color opacity="0.23999999463558197" />
+                     </color>
+                  </DropShadow>
+               </effect>
+            </Button>
+            <Label layoutX="52.0" layoutY="51.0" text="Programar Entregas">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="45.0" fitWidth="45.0" layoutX="98.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../resource/coordinator/schedule.png" />
+               </image>
+            </ImageView>
+         </children>
       </AnchorPane>
       <AnchorPane layoutX="535.0" layoutY="295.0" prefHeight="149.0" prefWidth="241.0" style="-fx-background-color: white; -fx-background-radius: 9; -fx-border-color: #e0e0e0; -fx-border-radius: 9;">
          <effect>
