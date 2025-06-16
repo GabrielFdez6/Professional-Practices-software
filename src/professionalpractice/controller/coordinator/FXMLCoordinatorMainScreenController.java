@@ -68,7 +68,7 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
             Parent view = loader.load();
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
-            baseStage.setTitle("Seleccionar Organización Vinculada");
+            baseStage.setTitle("Asignar estudiantes");
             baseStage.show();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
@@ -79,19 +79,15 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
     @FXML
     void btnRegisterProject(ActionEvent event) {
         try {
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(Utils.getSceneComponent(lbFullName));
-
+            Stage baseStage = (Stage) lbFullName.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOVRegisterProject.fxml"));
             Parent view = loader.load();
-            Scene scene = new Scene(view);
-
-            modalStage.setTitle("Programar Entrega de Documentos");
-            modalStage.setScene(scene);
-            modalStage.showAndWait();
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Lista Organización Vinculada");
+            baseStage.show();
         } catch (IOException ex) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de programación.");
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
             ex.printStackTrace();
         }
     }
