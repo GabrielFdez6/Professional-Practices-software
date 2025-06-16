@@ -31,9 +31,9 @@
                </columnResizePolicy>
             </TableView>
          </children></AnchorPane>
-      <Button layoutX="713.0" layoutY="511.0" mnemonicParsing="false" style="-fx-background-color: #f3f4f6;" text="Cancelar">
+      <Button layoutX="661.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
          <effect>
-            <DropShadow blurType="GAUSSIAN" height="19.7" offsetY="2.0" radius="9.425" width="20.0">
+            <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
                <color>
                   <Color opacity="0.13610388338565826" />
                </color>
@@ -42,16 +42,29 @@
          <font>
             <Font name="Arial Bold" size="14.0" />
          </font></Button>
-      <Button layoutX="599.0" layoutY="511.0" mnemonicParsing="false" style="-fx-background-color: #146cd0;" text="Seleccionar" textFill="WHITE">
+      <Button layoutX="547.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnSelectStudent" style="-fx-background-color: #146cd0;" text="Seleccionar" textFill="WHITE">
          <font>
             <Font name="Arial Bold" size="14.0" />
          </font>
          <effect>
-            <DropShadow height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
+            <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
                <color>
                   <Color opacity="0.38675323128700256" />
                </color>
             </DropShadow>
          </effect></Button>
+      <AnchorPane prefHeight="27.0" prefWidth="800.0" style="-fx-background-color: white;">
+         <effect>
+            <DropShadow height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
+               <color>
+                  <Color opacity="0.18000000715255737" />
+               </color></DropShadow>
+         </effect>
+         <children>
+            <Label layoutX="648.0" layoutY="6.0" text="Universidad Veracruzana">
+               <font>
+                  <Font name="Arial Bold" size="12.0" />
+               </font></Label>
+         </children></AnchorPane>
    </children>
 </AnchorPane>

@@ -1,6 +1,8 @@
 package professionalpractice.utils;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 
 public class Utils {
 
@@ -10,5 +12,18 @@ public class Utils {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public static boolean showConfirmationAlert(String title, String message) {
+        Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        alertConfirmation.setTitle(title);
+        alertConfirmation.setHeaderText(null);
+        alertConfirmation.setContentText(message);
+
+        ButtonType acceptButton = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButton = new ButtonType("Regresar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alertConfirmation.getButtonTypes().setAll(acceptButton, cancelButton);
+
+        return alertConfirmation.showAndWait().orElse(cancelButton) == acceptButton;
     }
 }

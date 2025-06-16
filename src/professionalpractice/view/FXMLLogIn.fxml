@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="524.0" prefWidth="603.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.FXMLLogInController">
@@ -54,6 +56,13 @@
             <Label fx:id="lbErrorUsername" layoutX="88.0" layoutY="177.0" textFill="#e45555" />
             <Label fx:id="lbErrorPassword" layoutX="88.0" layoutY="261.0" textFill="#e45555" />
          </children>
+         <effect>
+            <DropShadow height="16.36" offsetY="2.0" radius="6.52" width="11.72">
+               <color>
+                  <Color opacity="0.31168830394744873" />
+               </color>
+            </DropShadow>
+         </effect>
       </AnchorPane>
    </children>
 </AnchorPane>

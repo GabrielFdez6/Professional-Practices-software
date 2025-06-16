@@ -30,9 +30,9 @@
                </font></Button>
          </children>
          <effect>
-            <DropShadow blurType="GAUSSIAN" height="27.45" offsetY="1.0" radius="6.3625" width="0.0">
+            <DropShadow blurType="GAUSSIAN" height="19.17" offsetY="1.0" radius="4.2925" width="0.0">
                <color>
-                  <Color opacity="0.18441557884216309" />
+                  <Color opacity="0.18008658289909363" />
                </color></DropShadow>
          </effect>
       </AnchorPane>
