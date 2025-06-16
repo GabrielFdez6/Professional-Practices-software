@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
+import professionalpractice.model.pojo.Student;
 import professionalpractice.utils.Utils;
 
 public class FXMLEvaluatorMainScreenController implements Initializable {
@@ -23,17 +24,19 @@ public class FXMLEvaluatorMainScreenController implements Initializable {
     @FXML
     private Label lbWelcome;
 
+    private Student loggedInStudent;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }
 
-    public void initializeInformation() {
-        loadUserInformation();
-    }
 
-    public void loadUserInformation() {
-        lbWelcome.setText("BIENVENIDO(A), ");
+    public void loadUserInformation(Student student) {
+        this.loggedInStudent = student;
+        if (student != null) {
+            lbWelcome.setText("BIENVENIDO(A), " + student.getFirstName().toUpperCase());
+            lbFullName.setText(student.getFullName());
+        }
     }
 
     @FXML

@@ -75,9 +75,9 @@ public class FXMLLogInController implements Initializable {
             UserAccount user = userAccountDAO.getUserByUsername(username);
 
             // La librería BCrypt debe estar en tu classpath para que esto funcione.
-            System.out.println(user.getPassword());
-            System.out.println(password);
             if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+                System.out.println(user.getPassword());
+                System.out.println(password);
                 System.out.println(user.getUsername());
 
                 String role = user.getRole();
@@ -137,19 +137,27 @@ public class FXMLLogInController implements Initializable {
         }
     }
 
-    // Los métodos goCoordinatorHomeScreen y goEvaluatorHomeScreen permanecen iguales...
-    // ...
-    private void goEvaluatorHomeScreen() {
+    private void goEvaluatorHomeScreen(int userid) {
         try {
+            Student student = studentDAO.getStudentByUserId(userid);
+            if (student == null) {
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del evaluador asociada a esta cuenta.");
+                return;
+            }
+
             Stage baseStage = (Stage) tfUsername.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
             Parent view = loader.load();
+
             FXMLEvaluatorMainScreenController controller = loader.getController();
-            controller.initializeInformation();
+            controller.loadUserInformation();
+
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
             baseStage.setTitle("Página Principal Evaluador");
             baseStage.show();
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana.");
         }
