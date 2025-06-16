@@ -33,16 +33,18 @@
             <TextField fx:id="tfUsername" layoutX="89.0" layoutY="145.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent; -fx-padding: 5 0 2 0;">
                <font>
                   <Font size="15.0" />
-               </font></TextField>
+               </font>
+            </TextField>
             <Label layoutX="89.0" layoutY="208.0" text="Contraseña" textFill="#000000b7">
                <font>
                   <Font size="13.0" />
                </font>
             </Label>
-            <TextField fx:id="tfPassword" layoutX="89.0" layoutY="229.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent; -fx-padding: 5 0 2 0;">
+            <PasswordField fx:id="tfPassword" layoutX="89.0" layoutY="229.0" style="-fx-background-color: transparent; -fx-border-color: transparent transparent black transparent; -fx-padding: 5 0 2 0;">
                <font>
                   <Font size="15.0" />
-               </font></TextField>
+               </font>
+            </PasswordField>
             <Label layoutX="93.0" layoutY="409.0" text="Universidad Veracruzana" textAlignment="CENTER">
                <font>
                   <Font size="14.0" />

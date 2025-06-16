@@ -1,103 +1,55 @@
+// Ubicación: src/professionalpractice/model/ConectionBD.java
 package professionalpractice.model;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class ConectionBD {
-    private Connection conn;
-    private String host;
-    private String db;
-    private String username;
-    private String password;
 
-    private static ConectionBD conection;
-    public ConectionBD()
-    {
-        host = "localhost:3306";
-    	db = "tintoreria";
-    	username = "tinto"; //LO MEJOR ES INCLUIR OTRO USUARIO
-    	password = "G1212";
-        try
-        {
-  		Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
-		System.out.println("Conectando a la base...");
-		String url ="jdbc:mysql://"+host+"/"+db;
-                conn = DriverManager.getConnection(url,username, password);
-		System.out.println("Conexion a BD establecida");
-  	} catch(SQLException ex) {
-                System.out.println("SQLException: " + ex.getMessage());
-                System.out.println("SQLState: " + ex.getSQLState());
-                System.out.println("VendorError: " + ex.getErrorCode());
-	} catch (ClassNotFoundException e) {
-                e.printStackTrace();
-	} catch(Exception e) {
-		System.out.println("Se produjo un error inesperado: "+e.getMessage());
-	}
-	conection = this;
-    }
+    private static final String HOST = "localhost:3306";
+    private static final String DB = "professionalpractices";
+    private static final String USER = "root";
+    private static final String PASSWORD = "Monte1324.";
 
-    public ConectionBD(String host, String db, String username, String password) throws ClassNotFoundException, SQLException
-    {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            this.host = host;
-            this.db = db;
-            this.username = username;
-            this.password = password;
-            conn = DriverManager.getConnection ("jdbc:mysql://" + host +"/"+db,username,password);
-            conection = this;
+    private static Connection conn;
+
+    // El constructor privado previene la instanciación desde otras clases (Singleton)
+    private ConectionBD() {}
+
+    /**
+     * Devuelve la instancia única de la conexión. Si no existe o está cerrada,
+     * crea una nueva.
+     * @return La conexión a la base de datos.
+     * @throws SQLException si ocurre un error al conectar.
+     */
+    public static Connection getConnection() throws SQLException {
+        if (conn == null || conn.isClosed()) {
+            try {
+                // La carga del driver con Class.forName ya no es necesaria en JDBC 4.0+
+                String url = "jdbc:mysql://" + HOST + "/" + DB+"?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
+                conn = DriverManager.getConnection(url, USER, PASSWORD);
+                System.out.println("Conexion a BD establecida");
+            } catch (SQLException e) {
+                // Relanzamos la excepción para que la capa superior la maneje.
+                System.err.println("Error de conexión a la BD: " + e.getMessage());
+                throw e;
+            }
+        }
+        return conn;
     }
 
-    public String getHost() {
- 	   return host;
-    }
-
-    public void setHost(String host) {
- 	   this.host = host;
-    }
-
-    public String getDb() {
- 	   return db;
-    }
-
-    public void setDb(String db) {
- 	   this.db = db;
-    }
-
-    public String getUsername() {
- 	   return username;
-    }
-
-    public void setUsername(String username) {
- 	   this.username = username;
-    }
-
-    public String getPassword() {
- 	   return password;
-    }
-
-    public void setPassword(String password) {
- 	   this.password = password;
-    }
-
-    public Connection getConnection() {
- 	       return conn;
-    }
-
-    public void close() {
- 	   try
- 	   {
- 		   conn.close();
- 	   }
- 	   catch (SQLException e)
- 	   {
- 	       System.err.println ("Error: " + e.getMessage () + "\n" + e.getErrorCode ());
- 	   }
-    }
-    
-    public static ConectionBD getConection() {
-        return conection;
-    }
-    
-    public static void setConection(ConectionBD conection) {
-        ConectionBD.conection = conection;
+    /**
+     * Cierra la conexión a la base de datos al final de la vida de la aplicación.
+     */
+    public static void close() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+                System.out.println("Conexión a BD cerrada.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al cerrar la conexión: " + e.getMessage());
+        }
     }
 }
