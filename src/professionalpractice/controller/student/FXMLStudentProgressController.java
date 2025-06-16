@@ -37,7 +37,7 @@ public class FXMLStudentProgressController implements Initializable {
 
     public void configureView(Student student) {
         try{
-            StudentProgress progress = studentDAO.getStudentProgress(student.getStudentId());
+            StudentProgress progress = studentDAO.getStudentProgress(student.getIdStudent());
 
             if (progress != null) {
                 populateData(progress);
@@ -63,9 +63,9 @@ public class FXMLStudentProgressController implements Initializable {
         Student studentInfo = progress.getStudent();
 
         lbFullName.setText(studentInfo.getFullName());
-        lbStudentNumber.setText(studentInfo.getStudentNumber());
+        lbStudentNumber.setText(studentInfo.getEnrollment());
         lbSemester.setText(studentInfo.getSemester());
-        lbFinalGrade.setText(String.format("%.2f", studentInfo.getFinalGrade()));
+        lbFinalGrade.setText(String.format("%.2f", studentInfo.getGrade()));
         lbProjectName.setText(progress.getProjectName());
 
         int accumulated = progress.getAccumulatedHours();

@@ -2,73 +2,43 @@ package professionalpractice.model.pojo;
 
 public class Student {
 
-    private int studentId;
-    private String studentNumber;
-    private String semester;
-    private String email;
+    private int idStudent;
     private String firstName;
-    private String maternalLastName;
-    private String paternalLastName;
+    private String lastNameFather;
+    private String lastNameMother;
+    private String enrollment;
+    private String email;
     private String phone;
     private int credits;
-    private boolean assignedToProject;
-    private String projectSelection;
-    private double finalGrade;
-    private int statusId;
-    private int userId;
+    private String semester;
+    private boolean isAssignedToProject;
+    private double grade;
+    private int idUser;
 
     public Student() {
     }
 
-    public Student(int studentId, String studentNumber, String semester, String email, String firstName, String maternalLastName, String paternalLastName, String phone, int credits, boolean assignedToProject, String projectSelection, double finalGrade, int statusId, int userId) {
-        this.studentId = studentId;
-        this.studentNumber = studentNumber;
-        this.semester = semester;
-        this.email = email;
+    public Student(int idStudent, String firstName, String lastNameFather, String lastNameMother, String enrollment, String email, String phone, int credits, String semester, boolean isAssignedToProject, double grade, int idUser) {
+        this.idStudent = idStudent;
         this.firstName = firstName;
-        this.maternalLastName = maternalLastName;
-        this.paternalLastName = paternalLastName;
+        this.lastNameFather = lastNameFather;
+        this.lastNameMother = lastNameMother;
+        this.enrollment = enrollment;
+        this.email = email;
         this.phone = phone;
         this.credits = credits;
-        this.assignedToProject = assignedToProject;
-        this.projectSelection = projectSelection;
-        this.finalGrade = finalGrade;
-        this.statusId = statusId;
-        this.userId = userId;
-    }
-
-    // Getters y Setters
-
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getStudentNumber() {
-        return studentNumber;
-    }
-
-    public void setStudentNumber(String studentNumber) {
-        this.studentNumber = studentNumber;
-    }
-
-    public String getSemester() {
-        return semester;
-    }
-
-    public void setSemester(String semester) {
         this.semester = semester;
+        this.isAssignedToProject = isAssignedToProject;
+        this.grade = grade;
+        this.idUser = idUser;
     }
 
-    public String getEmail() {
-        return email;
+    public int getIdStudent() {
+        return idStudent;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setIdStudent(int idStudent) {
+        this.idStudent = idStudent;
     }
 
     public String getFirstName() {
@@ -79,20 +49,36 @@ public class Student {
         this.firstName = firstName;
     }
 
-    public String getMaternalLastName() {
-        return maternalLastName;
+    public String getLastNameFather() {
+        return lastNameFather;
     }
 
-    public void setMaternalLastName(String maternalLastName) {
-        this.maternalLastName = maternalLastName;
+    public void setLastNameFather(String lastNameFather) {
+        this.lastNameFather = lastNameFather;
     }
 
-    public String getPaternalLastName() {
-        return paternalLastName;
+    public String getLastNameMother() {
+        return lastNameMother;
     }
 
-    public void setPaternalLastName(String paternalLastName) {
-        this.paternalLastName = paternalLastName;
+    public void setLastNameMother(String lastNameMother) {
+        this.lastNameMother = lastNameMother;
+    }
+
+    public String getEnrollment() {
+        return enrollment;
+    }
+
+    public void setEnrollment(String enrollment) {
+        this.enrollment = enrollment;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPhone() {
@@ -111,48 +97,40 @@ public class Student {
         this.credits = credits;
     }
 
+    public String getSemester() {
+        return semester;
+    }
+
+    public void setSemester(String semester) {
+        this.semester = semester;
+    }
+
     public boolean isAssignedToProject() {
-        return assignedToProject;
+        return isAssignedToProject;
     }
 
     public void setAssignedToProject(boolean assignedToProject) {
-        this.assignedToProject = assignedToProject;
+        isAssignedToProject = assignedToProject;
     }
 
-    public String getProjectSelection() {
-        return projectSelection;
+    public double getGrade() {
+        return grade;
     }
 
-    public void setProjectSelection(String projectSelection) {
-        this.projectSelection = projectSelection;
+    public void setGrade(double grade) {
+        this.grade = grade;
     }
 
-    public double getFinalGrade() {
-        return finalGrade;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public void setFinalGrade(double finalGrade) {
-        this.finalGrade = finalGrade;
-    }
-
-    public int getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(int statusId) {
-        this.statusId = statusId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
     }
 
     // Método de utilidad para obtener el nombre completo
     public String getFullName() {
-        return this.firstName + " " + this.paternalLastName + (this.maternalLastName != null ? " " + this.maternalLastName : "");
+        return this.firstName + " " + this.lastNameFather + (this.lastNameMother != null ? " " + this.lastNameMother : "");
     }
 }
