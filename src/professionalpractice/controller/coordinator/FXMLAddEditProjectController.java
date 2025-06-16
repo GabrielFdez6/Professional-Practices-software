@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.utils.Utils;
@@ -17,24 +18,32 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class FXMLListOVController implements Initializable {
-
+public class FXMLAddEditProjectController implements Initializable {
     @FXML
-    private TableView tvLinkedOrganizations;
+    private TableColumn colPhoneNumber;
     @FXML
-    private TableColumn colAddress;
+    private TableView tvProjects;
     @FXML
-    private TableColumn colCompanyName;
+    private TableColumn colDescription;
+    @FXML
+    private TableColumn colProjectName;
+    @FXML
+    private TableColumn colMethodology;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
 
     @FXML
+    public void btnEditProject(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
     public void btnCancel(ActionEvent actionEvent) {
         try {
             if (Utils.showConfirmationAlert("Salir de la proyectos", "¿Estás seguro que quieres cancelar?")) {
-                Stage stageStudentsList = (Stage) tvLinkedOrganizations.getScene().getWindow();
+                Stage stageStudentsList = (Stage) tvProjects.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
                 Parent viewLogIn = loader.load();
                 Scene mainScene = new Scene(viewLogIn);
@@ -48,15 +57,21 @@ public class FXMLListOVController implements Initializable {
     }
 
     @FXML
-    public void btnSelectOV(ActionEvent actionEvent) {
+    public void btnAddProject(ActionEvent actionEvent) {
+        goProjectForm(false, null);
+    }
+
+    public void goProjectForm(boolean edit, ActionEvent actionEvent) {
         try {
-            Stage baseStage = (Stage) tvLinkedOrganizations.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagersList.fxml"));
+            Stage baseStage = new Stage();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectForm.fxml"));
             Parent viewLogIn = loader.load();
+
             Scene LogInScene = new Scene(viewLogIn);
             baseStage.setScene(LogInScene);
-            baseStage.setTitle("Lista de responsables de proyectos");
-            baseStage.show();
+            baseStage.setTitle("Formulario de Proyecto");
+            baseStage.initModality(Modality.APPLICATION_MODAL);
+            baseStage.showAndWait();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");
         }

@@ -37,6 +37,18 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
 
     @FXML
     public void btnRegisterProject(ActionEvent actionEvent) {
+        try {
+            Stage baseStage = (Stage) lbFullName.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOV.fxml"));
+            Parent view = loader.load();
+
+            Scene mainScene = new Scene(view);
+            baseStage.setScene(mainScene);
+            baseStage.setTitle("Listas de Organización Vinculadas");
+            baseStage.show();
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos por el momento no se pudo mostrar la ventana");
+        }
     }
 
     @FXML
