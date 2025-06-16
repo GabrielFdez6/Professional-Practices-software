@@ -56,7 +56,7 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
             modalStage.initModality(Modality.APPLICATION_MODAL);
             modalStage.initOwner(Utils.getSceneComponent(lbFullName));
 
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOV.fxml"));
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOVRegisterProject.fxml"));
             Parent view = loader.load();
             Scene scene = new Scene(view);
 
