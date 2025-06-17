@@ -36,7 +36,6 @@ public class AcademicDAO implements IAcademicDAO {
             }
         } catch (SQLException e) {
             System.err.println("DAO Error - getAcademicByUserId: " + e.getMessage());
-            // Relanzamos la excepción para que el controlador la maneje y muestre una alerta.
             throw e;
         }
         return academic;

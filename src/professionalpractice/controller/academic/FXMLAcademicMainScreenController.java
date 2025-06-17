@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.SesionUsuario;
-import professionalpractice.model.pojo.Academic; // Asegúrate de tener este POJO
+import professionalpractice.model.pojo.Academic;
 import professionalpractice.utils.Utils;
 
 public class FXMLAcademicMainScreenController implements Initializable {
@@ -45,9 +45,7 @@ public class FXMLAcademicMainScreenController implements Initializable {
             Parent view = loader.load();
 
             FXMLAcademicProgressStudentsController controller = loader.getController();
-            // Pasamos el ID del académico y el ID del periodo actual a la siguiente ventana
-            controller.initData(loggedInAcademic.getIdAcademic(), 1); // Usando idTerm = 1 como ejemplo
-
+            controller.initData(loggedInAcademic.getIdAcademic(), 1);
             Scene scene = new Scene(view);
             stage.setScene(scene);
             stage.setTitle("Avance Académico de Estudiantes");

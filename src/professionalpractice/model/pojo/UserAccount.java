@@ -3,13 +3,12 @@ package professionalpractice.model.pojo;
 public class UserAccount {
     private int userId;
     private String username;
-    private String password; // Almacenará el hash de la contraseña
+    private String password;
     private String role;
 
     public UserAccount() {
     }
 
-    // Getters y Setters
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
     public String getUsername() { return username; }

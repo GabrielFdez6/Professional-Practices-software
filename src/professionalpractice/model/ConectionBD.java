@@ -1,4 +1,3 @@
-// Ubicación: src/professionalpractice/model/ConectionBD.java
 package professionalpractice.model;
 
 import java.io.IOException;

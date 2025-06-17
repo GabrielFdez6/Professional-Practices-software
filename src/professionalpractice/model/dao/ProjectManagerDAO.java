@@ -17,8 +17,6 @@ public class ProjectManagerDAO implements IProjectManagerDAO {
     @Override
     public List<ProjectManager> getAllProjectManagers() throws SQLException {
         List<ProjectManager> managers = new ArrayList<>();
-        // Asegúrate de que los nombres de las columnas en tu base de datos son correctos.
-        // Aquí utilizo 'lastNameFather' y 'lastNameMother' según tu código.
         String sql = "SELECT idProjectManager, idLinkedOrganization, firstName, lastNameFather, lastNameMother, position, email, phone FROM projectmanager";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -29,8 +27,8 @@ public class ProjectManagerDAO implements IProjectManagerDAO {
                 manager.setIdProjectManager(rs.getInt("idProjectManager"));
                 manager.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
                 manager.setFirstName(rs.getString("firstName"));
-                manager.setLastNameFather(rs.getString("lastNameFather")); // Usando lastNameFather
-                manager.setLastNameMother(rs.getString("lastNameMother")); // Usando lastNameMother
+                manager.setLastNameFather(rs.getString("lastNameFather"));
+                manager.setLastNameMother(rs.getString("lastNameMother"));
                 manager.setPosition(rs.getString("position"));
                 manager.setEmail(rs.getString("email"));
                 manager.setPhone(rs.getString("phone"));
@@ -61,6 +59,7 @@ public class ProjectManagerDAO implements IProjectManagerDAO {
 
     @Override
     public int updateProjectManager(ProjectManager manager) throws SQLException {
+        System.out.println(manager.getIdProjectManager());
         String sql = "UPDATE projectmanager SET firstName = ?, lastNameFather = ?, lastNameMother = ?, position = ?, email = ?, phone = ? WHERE idProjectManager = ?";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -84,9 +83,6 @@ public class ProjectManagerDAO implements IProjectManagerDAO {
         String sql = "SELECT pm.idProjectManager, pm.idLinkedOrganization, pm.firstName, pm.lastNameFather, " +
                 "pm.lastNameMother, pm.position, pm.email, pm.phone " +
                 "FROM projectmanager pm " +
-                // Asumo que tu tabla 'project' tiene 'idLinkedOrganization' y 'idProject'
-                // y que la relación es por 'idLinkedOrganization'.
-                // Si 'ProjectManager' tiene 'idProject' directamente, la unión podría ser diferente.
                 "JOIN project p ON pm.idLinkedOrganization = p.idLinkedOrganization " +
                 "WHERE p.idProject = ?";
         try (Connection conn = ConectionBD.getConnection();

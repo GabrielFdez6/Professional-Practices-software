@@ -84,6 +84,8 @@ public class FXMLProjectManagerListRegController implements Initializable {
                 if (managers.isEmpty()) {
                     Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Sin Responsables",
                             "No hay responsables de proyecto registrados para la organización: " + selectedLinkedOrganization.getName());
+                    regresarPantallaAnterior();
+                    return;
                 }
             } else if (currentProject != null) {
                 List<ProjectManager> managers = projectManagerDAO.getAllProjectManagersByProjectId(currentProject.getIdProject());
@@ -91,6 +93,8 @@ public class FXMLProjectManagerListRegController implements Initializable {
                 if (managers.isEmpty()) {
                     Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Sin Responsables",
                             "No hay responsables de proyecto registrados para el proyecto: " + currentProject.getName());
+                    regresarPantallaAnterior();
+                    return;
                 }
             } else {
                 projectManagers.clear();
@@ -115,8 +119,6 @@ public class FXMLProjectManagerListRegController implements Initializable {
         }
     }
 
-    // --- Manejo de botones ---
-
     @FXML
     public void btnCancel(ActionEvent actionEvent) {
         try {
@@ -124,7 +126,7 @@ public class FXMLProjectManagerListRegController implements Initializable {
             Parent view = null;
             String title = "";
 
-            if (callingContextType == 1) { // Si venimos de la lista de OVs
+            if (callingContextType == 1) {
                 view = FXMLLoader.load(ProfessionalPractices.class.getResource("view/coordinator/FXMLListOVRegisterProjectController.fxml"));
                 title = "Organizaciones Vinculadas";
             } else {
@@ -140,6 +142,22 @@ public class FXMLProjectManagerListRegController implements Initializable {
             ex.printStackTrace();
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación", "No se pudo regresar a la pantalla anterior.");
         }
+    }
+
+    private void regresarPantallaAnterior(){
+        Stage stage = (Stage) tvProjectManagers.getScene().getWindow();
+        Parent view = null;
+        try {
+            view = FXMLLoader.load(ProfessionalPractices.class.getResource("view/coordinator/FXMLSelectProject.fxml"));
+            String title = "Seleccionar Proyecto";
+            Scene scene = new Scene(view);
+            stage.setScene(scene);
+            stage.setTitle(title);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @FXML
@@ -191,7 +209,6 @@ public class FXMLProjectManagerListRegController implements Initializable {
                 e.printStackTrace();
             }
         } else {
-            // Manejo si no hay contexto claro o no se selecciona un responsable
             Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Acción Inválida", "No se pudo determinar la acción para el responsable seleccionado.");
         }
     }

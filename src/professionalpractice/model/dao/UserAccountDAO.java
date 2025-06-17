@@ -1,4 +1,3 @@
-// Ubicación: src/professionalpractice/model/dao/UserAccountDAO.java
 package professionalpractice.model.dao;
 
 import java.sql.Connection;
@@ -15,7 +14,6 @@ public class UserAccountDAO implements IUserAccountDAO {
         UserAccount user = null;
         String query = "SELECT idUser, username, password, role FROM UserAccount WHERE username = ?";
 
-        // Usar la conexión especial de login
         try (Connection connection = ConectionBD.getLoginConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 

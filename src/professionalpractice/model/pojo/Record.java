@@ -11,7 +11,6 @@ public class Record {
 
         public Record() {}
 
-        // Getters y Setters para todos los campos
         public int getIdRecord() {
             return idRecord;
         }

@@ -10,7 +10,7 @@ public class ReportDocument {
     private BigDecimal grade;
     private String name;
     private boolean delivered;
-    private String status; // ENUM('ENTREGADO','NO_ENTREGADO','EN_REVISION')
+    private String status;
     private String filePath;
 
     public ReportDocument() {}

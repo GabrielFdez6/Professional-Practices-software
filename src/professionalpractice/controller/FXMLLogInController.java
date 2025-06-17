@@ -1,4 +1,3 @@
-// Ubicación: src/professionalpractice/controller/FXMLLogInController.java
 package professionalpractice.controller;
 
 import java.io.IOException;
@@ -118,7 +117,7 @@ public class FXMLLogInController implements Initializable {
 
     private void goTeacherHomeScreen(int userId) {
         try {
-            Academic academic = academicDAO.getAcademicByUserId(userId); // Necesitarás crear este método en AcademicDAO
+            Academic academic = academicDAO.getAcademicByUserId(userId);
             if (academic == null) {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "No se pudo encontrar la información del académico asociada a esta cuenta.");
                 return;

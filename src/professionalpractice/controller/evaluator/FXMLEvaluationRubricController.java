@@ -254,8 +254,8 @@ public class FXMLEvaluationRubricController implements Initializable {
             if (response == 200) {
                 Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Evaluación guardada",
                         "La evaluación se ha guardado exitosamente.");
-                Stage currentStage = (Stage) lbStudentName.getScene().getWindow();
-                currentStage.close();
+
+                goMainMenu();
             } else {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al guardar", "Ocurrió un error al guardar la evaluación.");
             }
@@ -266,6 +266,19 @@ public class FXMLEvaluationRubricController implements Initializable {
         } catch (NumberFormatException e) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en calificación", "El promedio no es un número válido.");
             e.printStackTrace();
+        }
+    }
+
+    private void goMainMenu(){
+        try {
+            Stage stage = (Stage) tfContentScore.getScene().getWindow();
+            Parent view = FXMLLoader.load(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
+            Scene scene = new Scene(view);
+            stage.setScene(scene);
+            stage.setTitle("Página Principal Evaluador");
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

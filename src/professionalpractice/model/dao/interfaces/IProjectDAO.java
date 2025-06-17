@@ -2,7 +2,7 @@ package professionalpractice.model.dao.interfaces;
 
 import professionalpractice.model.pojo.Project;
 import java.sql.SQLException;
-import java.util.List; // Importar List
+import java.util.List;
 
 public interface IProjectDAO {
     public List<Project> getAllProjects() throws SQLException;

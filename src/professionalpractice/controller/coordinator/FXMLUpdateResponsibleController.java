@@ -32,7 +32,6 @@ public class FXMLUpdateResponsibleController {
 
     public void initData(ProjectManager manager) {
         this.managerToUpdate = manager;
-        // Llenamos el formulario con los datos existentes
         tfFirstName.setText(manager.getFirstName());
         tfLastNameFather.setText(manager.getLastNameFather());
         tfLastNameMother.setText(manager.getLastNameMother());
@@ -44,7 +43,6 @@ public class FXMLUpdateResponsibleController {
     @FXML
     void btnActualizarClick(ActionEvent event) {
         if (validateFields()) {
-            // Creamos un nuevo objeto para no modificar el original hasta que la BD confirme
             ProjectManager updatedManager = new ProjectManager();
             updatedManager.setIdProjectManager(managerToUpdate.getIdProjectManager());
             updatedManager.setFirstName(tfFirstName.getText().trim());

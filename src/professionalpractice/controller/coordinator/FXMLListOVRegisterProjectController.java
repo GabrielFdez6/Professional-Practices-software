@@ -70,21 +70,16 @@ public class FXMLListOVRegisterProjectController implements Initializable {
         }
 
         try {
-            // 1. Cargar el FXML de la siguiente ventana (que ahora es FXMLProjectManagerList.fxml)
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerList.fxml")); // <-- ¡CAMBIO AQUÍ!
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerList.fxml"));
             Parent view = loader.load();
 
-            // 2. Obtener el controlador de la siguiente ventana (que ahora es FXMLProjectManagerListController)
-            FXMLProjectManagerListController nextController = loader.getController(); // <-- ¡CAMBIO AQUÍ!
+            FXMLProjectManagerListController nextController = loader.getController();
 
-            // 3. Pasar la OV seleccionada al siguiente controlador
-            nextController.setLinkedOrganization(selectedOV); // Este método ya existe en FXMLProjectManagerListController
+            nextController.setLinkedOrganization(selectedOV);
 
-            // 4. Mostrar la nueva ventana
             Stage baseStage = (Stage) tvLinkedOrganizations.getScene().getWindow();
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);
-            // El título dinámico lo maneja el FXMLProjectManagerListController
             baseStage.setTitle("Seleccionar Responsable de Proyecto");
             baseStage.show();
 

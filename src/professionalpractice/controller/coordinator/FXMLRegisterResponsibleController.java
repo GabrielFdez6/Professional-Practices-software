@@ -2,10 +2,15 @@ package professionalpractice.controller.coordinator;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.dao.ProjectManagerDAO;
 import professionalpractice.model.dao.interfaces.IProjectManagerDAO;
 import professionalpractice.model.pojo.LinkedOrganization;
@@ -13,6 +18,7 @@ import professionalpractice.model.pojo.ProjectManager;
 import professionalpractice.utils.Constants;
 import professionalpractice.utils.Utils;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class FXMLRegisterResponsibleController {
@@ -25,6 +31,9 @@ public class FXMLRegisterResponsibleController {
     @FXML private TextField tfEmail;
     @FXML private TextField tfPhone;
 
+    private boolean isEdit;
+    private ProjectManager projectManager;
+
     private LinkedOrganization selectedOrganization;
     private IProjectManagerDAO projectManagerDAO;
 
@@ -33,16 +42,39 @@ public class FXMLRegisterResponsibleController {
         projectManagerDAO = new ProjectManagerDAO();
     }
 
+    private void configureTable() {
+        if (isEdit) {
+            tfFirstName.setText(projectManager.getFirstName());
+            tfLastNameFather.setText(projectManager.getLastNameFather());
+            tfLastNameMother.setText(projectManager.getLastNameMother());
+            tfPosition.setText(projectManager.getPosition());
+            tfEmail.setText(projectManager.getEmail());
+            tfPhone.setText(projectManager.getPhone());
+        }
+
+    }
+
     public void initData(LinkedOrganization organization) {
         this.selectedOrganization = organization;
         lblOrganizationName.setText("Organización: " + organization.getName());
+        this.isEdit = false;
+        configureTable();
+
+    }
+
+    public void initData(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+        lblOrganizationName.setText("");
+        this.isEdit = true;
+        configureTable();
+
     }
 
     @FXML
     void btnGuardarClick(ActionEvent event) {
         if (validateFields()) {
+
             ProjectManager newManager = new ProjectManager();
-            newManager.setIdLinkedOrganization(selectedOrganization.getIdLinkedOrganization());
             newManager.setFirstName(tfFirstName.getText().trim());
             newManager.setLastNameFather(tfLastNameFather.getText().trim());
             newManager.setLastNameMother(tfLastNameMother.getText().trim());
@@ -50,16 +82,35 @@ public class FXMLRegisterResponsibleController {
             newManager.setEmail(tfEmail.getText().trim());
             newManager.setPhone(tfPhone.getText().trim());
 
-            try {
-                if (projectManagerDAO.registerProjectManager(newManager) == Constants.OPERATION_SUCCESFUL) {
-                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Registro Exitoso", "El responsable ha sido guardado.");
-                    closeWindow();
-                } else {
-                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en el Registro", "No se pudo registrar al responsable.");
+            if(isEdit) {
+                try {
+                    newManager.setIdProjectManager(projectManager.getIdProjectManager());
+                    if (projectManagerDAO.updateProjectManager(newManager) == Constants.OPERATION_SUCCESFUL) {
+                        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Actualizacion Exitoso", "El responsable ha sido actualizado.");
+                        goMainMenu();
+                    } else {
+                        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en la actualizacion", "No se pudo actualizar al responsable.");
+                    }
+                } catch (SQLException e) {
+                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar con la base de datos.");
                 }
-            } catch (SQLException e) {
-                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar con la base de datos.");
+            }else {
+                newManager.setIdLinkedOrganization(selectedOrganization.getIdLinkedOrganization());
+
+                try {
+                    if (projectManagerDAO.registerProjectManager(newManager) == Constants.OPERATION_SUCCESFUL) {
+                        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Registro Exitoso", "El responsable ha sido guardado.");
+                        goMainMenu();
+                    } else {
+                        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en el Registro", "No se pudo registrar al responsable.");
+                    }
+                } catch (SQLException e) {
+                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo conectar con la base de datos.");
+                }
             }
+
+
+
         }
     }
 
@@ -73,11 +124,19 @@ public class FXMLRegisterResponsibleController {
 
     @FXML
     void btnCancelarClick(ActionEvent event) {
-        closeWindow();
+        goMainMenu();
     }
 
-    private void closeWindow() {
-        Stage stage = (Stage) lblOrganizationName.getScene().getWindow();
-        stage.close();
+    private void goMainMenu() {
+        try {
+            Stage stage = (Stage) tfLastNameFather.getScene().getWindow();
+            Parent view = FXMLLoader.load(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
+            Scene scene = new Scene(view);
+            stage.setScene(scene);
+            stage.setTitle("Página Principal Coordinador");
+            stage.show();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -7,7 +7,7 @@ public class Project {
     private int idLinkedOrganization;
     private int idCoordinator;
     private String name;
-    private String department; // Campo existente
+    private String department;
     private String description;
     private String methodology;
     private int availability;
@@ -107,7 +107,6 @@ public class Project {
         this.availability = availability;
     }
 
-    // Opcional: toString() para depuración
     @Override
     public String toString() {
         return "Project{" +

@@ -86,17 +86,17 @@ public class DeliveryDAO implements IDeliveryDAO {
     public int scheduleDeliveryForAllRecords(Delivery delivery) throws SQLException {
         int rowsAffected = 0;
         String query = "INSERT INTO delivery (name, deliveryType, startDate, endDate, description, idRecord) VALUES (?, ?, ?, ?, ?, ?)";
-        Connection conn = null; // Declare connection outside the try block
+        Connection conn = null;
 
         try {
             conn = ConectionBD.getConnection();
-            conn.setAutoCommit(false); // Start transaction
+            conn.setAutoCommit(false);
 
             IRecordDAO recordDAO = new RecordDAO();
             List<Integer> recordIds = recordDAO.getAllActiveRecordIds();
 
             if (recordIds.isEmpty()) {
-                return Constants.OPERATION_SUCCESFUL; // Nothing to do
+                return Constants.OPERATION_SUCCESFUL;
             }
 
             try (PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -116,17 +116,17 @@ public class DeliveryDAO implements IDeliveryDAO {
                 }
             }
 
-            conn.commit(); // Commit transaction if everything was successful
+            conn.commit();
 
         } catch (SQLException e) {
             if (conn != null) {
-                conn.rollback(); // Roll back all changes if an error occurred
+                conn.rollback();
             }
-            throw e; // Re-throw the exception to be handled by the controller
+            throw e;
         } finally {
             if (conn != null) {
-                conn.setAutoCommit(true); // Always restore default behavior
-                conn.close(); // Finally, close the connection
+                conn.setAutoCommit(true);
+                conn.close();
             }
         }
 

@@ -20,7 +20,6 @@ public class StudentProject {
         this.projectName = projectName;
     }
 
-    // Getters and Setters for all attributes
     public int getIdStudent() {
         return idStudent;
     }

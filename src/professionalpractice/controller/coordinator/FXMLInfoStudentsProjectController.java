@@ -120,7 +120,7 @@ public class FXMLInfoStudentsProjectController implements Initializable {
 
         if (Utils.showConfirmationAlert("Confirmar Asignación", confirmationMessage)) {
             try {
-                // Pasamos el nombre del proyecto como tercer argumento
+
                 int responseCode = projectDAO.assignProjectToStudent(
                         selectedProject.getIdProject(),
                         selectedStudent.getIdStudent(),
@@ -128,7 +128,7 @@ public class FXMLInfoStudentsProjectController implements Initializable {
                 );
                 if (responseCode == Constants.OPERATION_SUCCESFUL) {
                     Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Asignación Exitosa", "El estudiante ha sido asignado al proyecto correctamente.");
-                    loadData(); // Recargar los datos para reflejar los cambios en las tablas
+                    loadData();
                 } else {
                     Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en la Asignación", "No se pudo completar la asignación del proyecto.");
                 }

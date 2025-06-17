@@ -16,13 +16,6 @@ import professionalpractice.utils.Constants;
 
 public class StudentDAO implements IStudentDAO {
 
-    /**
-     * Obtiene el progreso de un estudiante para el CU-09.
-     * La consulta ha sido corregida para usar las tablas 'student', 'record' y 'project'
-     * y sus respectivas columnas del archivo 'proyectobebidafinal-dump.sql'.
-     * @param idStudent El ID del estudiante.
-     * @return Un objeto StudentProgress con la información, o null si ocurre un error.
-     */
     @Override
     public StudentProgress getStudentProgress(int idStudent) throws SQLException {
         StudentProgress studentProgress = null;
@@ -30,7 +23,6 @@ public class StudentDAO implements IStudentDAO {
 
         if (connection != null) {
             try {
-                // Consulta corregida para coincidir con la nueva estructura de la BD
                 String query = "SELECT " +
                         "s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, s.grade, " +
                         "p.name AS nombreProyecto, r.hoursCount AS horasAcumuladas " +
@@ -46,17 +38,17 @@ public class StudentDAO implements IStudentDAO {
                 if (resultSet.next()) {
                     Student student = new Student();
                     student.setIdStudent(resultSet.getInt("idStudent"));
-                    student.setEnrollment(resultSet.getString("enrollment")); // Corregido: enrollment
+                    student.setEnrollment(resultSet.getString("enrollment"));
                     student.setSemester(resultSet.getString("semester"));
                     student.setEmail(resultSet.getString("email"));
-                    student.setFirstName(resultSet.getString("firstName")); // Corregido: firstName
-                    student.setLastNameMother(resultSet.getString("lastNameMother")); // Corregido: lastNameMother
-                    student.setLastNameFather(resultSet.getString("lastNameFather")); // Corregido: lastNameFather
-                    student.setGrade(resultSet.getDouble("grade")); // Corregido: grade
+                    student.setFirstName(resultSet.getString("firstName"));
+                    student.setLastNameMother(resultSet.getString("lastNameMother"));
+                    student.setLastNameFather(resultSet.getString("lastNameFather"));
+                    student.setGrade(resultSet.getDouble("grade"));
 
                     studentProgress = new StudentProgress();
                     studentProgress.setProjectName(resultSet.getString("nombreProyecto"));
-                    studentProgress.setAccumulatedHours(resultSet.getInt("horasAcumuladas")); // Corregido: r.hoursCount
+                    studentProgress.setAccumulatedHours(resultSet.getInt("horasAcumuladas"));
                     studentProgress.setStudent(student);
                 }
                 connection.close();
@@ -68,12 +60,6 @@ public class StudentDAO implements IStudentDAO {
         return studentProgress;
     }
 
-    /**
-     * Obtiene un estudiante basado en su id de usuario.
-     * La consulta ha sido corregida para usar la tabla 'student' y sus columnas.
-     * @param userId El ID del usuario asociado al estudiante.
-     * @return Un objeto Student, o null si no se encuentra o hay un error.
-     */
     @Override
     public Student getStudentByUserId(int userId) throws SQLException {
         Student student = null;
@@ -81,7 +67,6 @@ public class StudentDAO implements IStudentDAO {
 
         if (connection != null) {
             try {
-                // Consulta corregida para usar la tabla 'student'
                 String query = "SELECT idStudent, enrollment, semester, email, firstName, lastNameMother, lastNameFather, idUser FROM student WHERE idUser = ?";
                 PreparedStatement ps = connection.prepareStatement(query);
                 ps.setInt(1, userId);
@@ -89,12 +74,12 @@ public class StudentDAO implements IStudentDAO {
                 if (rs.next()) {
                     student = new Student();
                     student.setIdStudent(rs.getInt("idStudent"));
-                    student.setEnrollment(rs.getString("enrollment")); // Corregido: enrollment
+                    student.setEnrollment(rs.getString("enrollment"));
                     student.setSemester(rs.getString("semester"));
                     student.setEmail(rs.getString("email"));
-                    student.setFirstName(rs.getString("firstName")); // Corregido: firstName
-                    student.setLastNameMother(rs.getString("lastNameMother")); // Corregido: lastNameMother
-                    student.setLastNameFather(rs.getString("lastNameFather")); // Corregido: lastNameFather
+                    student.setFirstName(rs.getString("firstName"));
+                    student.setLastNameMother(rs.getString("lastNameMother"));
+                    student.setLastNameFather(rs.getString("lastNameFather"));
                     student.setIdUser(rs.getInt("idUser"));
                 }
                 connection.close();
@@ -106,21 +91,10 @@ public class StudentDAO implements IStudentDAO {
         return student;
     }
 
-    /**
-     * Recupera una lista de estudiantes con sus proyectos asignados, filtrando por el profesor (academic) y el periodo (term).
-     * Este método se alinea con el Flujo Normal, paso 1 del CU-10.
-     *
-     * @param idAcademic El ID del profesor que imparte la materia.
-     * @param idTerm El ID del periodo escolar actual.
-     * @return Un HashMap que contiene un código de respuesta y, si la operación es exitosa,
-     * una lista de objetos StudentProject con la información de los estudiantes.
-     */
     public static HashMap<String, Object> getStudentsWithProjectByProfessor(int idAcademic, int idTerm) {
         HashMap<String, Object> response = new HashMap<>();
         response.put("responseCode", Constants.OPERATION_SUCCESFUL);
 
-
-        // Consulta SQL que une las tablas necesarias para obtener los datos requeridos por la vista.
         String query =
                 "SELECT s.idStudent, s.enrollment, " +
                         "CONCAT(s.firstName, ' ', s.lastNameFather, ' ', s.lastNameMother) AS studentFullName, " +
@@ -135,14 +109,12 @@ public class StudentDAO implements IStudentDAO {
         try (Connection connection = ConectionBD.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
 
-            // Se establecen los parámetros para el PreparedStatement para filtrar la búsqueda.
             pstmt.setInt(1, idAcademic);
             pstmt.setInt(2, idTerm);
 
             ArrayList<StudentProject> studentsList = new ArrayList<>();
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    // Se crea un objeto StudentProject por cada fila del resultado.
                     StudentProject studentProject = new StudentProject();
                     studentProject.setIdStudent(rs.getInt("idStudent"));
                     studentProject.setEnrollment(rs.getString("enrollment"));
@@ -152,10 +124,10 @@ public class StudentDAO implements IStudentDAO {
                     studentsList.add(studentProject);
                 }
             }
+            System.out.println(studentsList);
             response.put("students", studentsList);
 
         } catch (SQLException ex) {
-            // En caso de una excepción SQL, se cambia el código de respuesta.
             response.put("responseCode", Constants.CONNECTION_FAILED);
             ex.printStackTrace();
         }
@@ -225,6 +197,36 @@ public class StudentDAO implements IStudentDAO {
             }
         } catch (SQLException e) {
             System.err.println("Error al obtener los estudiantes no asignados: " + e.getMessage());
+            throw e;
+        }
+        return students;
+    }
+
+    public static ArrayList<Student> getStudentsWithoutEvaluation() throws SQLException {
+        ArrayList<Student> students = new ArrayList<>();
+        String query = "SELECT s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather " +
+                "FROM student s " +
+                "JOIN record r ON s.idStudent = r.idStudent " +
+                "LEFT JOIN presentationevaluation pe ON r.idRecord = pe.idRecord " +
+                "WHERE pe.idEvaluation IS NULL";
+
+        try (Connection connection = ConectionBD.getConnection();
+             PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Student student = new Student();
+                student.setIdStudent(rs.getInt("idStudent"));
+                student.setEnrollment(rs.getString("enrollment"));
+                student.setSemester(rs.getString("semester"));
+                student.setEmail(rs.getString("email"));
+                student.setFirstName(rs.getString("firstName"));
+                student.setLastNameMother(rs.getString("lastNameMother"));
+                student.setLastNameFather(rs.getString("lastNameFather"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener los estudiantes no evaluados: " + e.getMessage());
             throw e;
         }
         return students;

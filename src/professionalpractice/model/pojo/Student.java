@@ -129,7 +129,6 @@ public class Student {
         this.idUser = idUser;
     }
 
-    // Método de utilidad para obtener el nombre completo
     public String getFullName() {
         return this.firstName + " " + this.lastNameFather + (this.lastNameMother != null ? " " + this.lastNameMother : "");
     }

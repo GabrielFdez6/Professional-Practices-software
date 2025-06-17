@@ -1,4 +1,3 @@
-// Ubicación: src/professionalpractice/controller/student/FXMLStudentProgressController.java
 package professionalpractice.controller.student;
 
 import java.net.URL;
@@ -80,7 +79,6 @@ public class FXMLStudentProgressController implements Initializable {
 
     @FXML
     private void btnClickExit(ActionEvent event) {
-        // Obtenemos el Stage (la ventana) desde el origen del evento (el botón que se presionó)
         Node source = (Node) event.getSource();
         Stage currentStage = (Stage) source.getScene().getWindow();
         currentStage.close();

@@ -38,7 +38,6 @@ public class FXMLScheduleDeliveryController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         deliveryDAO = new DeliveryDAO();
-        // As per CU-06, these are the options
         cmbDeliveryType.setItems(FXCollections.observableArrayList("INITIAL DOCUMENT", "REPORT", "FINAL DOCUMENT"));
     }
 

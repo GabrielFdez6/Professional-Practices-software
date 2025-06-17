@@ -1,9 +1,8 @@
 package professionalpractice.model.pojo;
 
-// Este POJO ahora es un "ViewModel" que agrupa un Estudiante y su progreso específico.
 public class StudentProgress {
 
-    private Student student; // Contiene toda la información del estudiante
+    private Student student;
     private String projectName;
     private int accumulatedHours;
 
@@ -16,7 +15,6 @@ public class StudentProgress {
         this.accumulatedHours = accumulatedHours;
     }
 
-    // Getters y Setters
 
     public Student getStudent() {
         return student;

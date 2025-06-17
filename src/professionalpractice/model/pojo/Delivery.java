@@ -8,7 +8,7 @@ public class Delivery {
     private String name;
     private Timestamp startDate;
     private Timestamp endDate;
-    private String deliveryType; // ENUM ('INITIAL DOCUMENT','FINAL DOCUMENT','REPORT')
+    private String deliveryType;
     private int idInitialDocument;
     private int idFinalDocument;
     private int idReportDocument;

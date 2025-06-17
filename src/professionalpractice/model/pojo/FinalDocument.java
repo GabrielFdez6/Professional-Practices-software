@@ -8,7 +8,7 @@ public class FinalDocument {
     private String name;
     private Date date;
     private boolean delivered;
-    private String status; // ENUM('ENTREGADO','NO_ENTREGADO','EN_REVISION')
+    private String status;
     private String filePath;
     private String observations;
     private BigDecimal grade;
@@ -26,7 +26,6 @@ public class FinalDocument {
         this.grade = grade;
     }
 
-    // --- Getters and Setters for all attributes ---
 
     public int getIdFinalDocument() {
         return idFinalDocument;

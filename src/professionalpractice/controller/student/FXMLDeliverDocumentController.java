@@ -60,7 +60,6 @@ public class FXMLDeliverDocumentController {
         lblStartDate.setText("Fecha de Inicio: " + sdf.format(delivery.getStartDate()));
         lblEndDate.setText("Fecha de Fin: " + sdf.format(delivery.getEndDate()));
 
-        // Show dynamic fields based on delivery type
         vboxDynamicFields.setVisible(true);
         vboxDynamicFields.setManaged(true);
 
@@ -77,7 +76,7 @@ public class FXMLDeliverDocumentController {
                 tfReportedHours.setManaged(true);
                 tfGrade.setVisible(true);
                 tfGrade.setManaged(true);
-                tfGrade.setPromptText("Calificación (ej. 8.5)"); // No es opcional
+                tfGrade.setPromptText("Calificación (ej. 8.5)");
                 break;
         }
     }

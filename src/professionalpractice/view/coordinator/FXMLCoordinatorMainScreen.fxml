@@ -23,7 +23,7 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label fx:id="lbFullName" layoutX="455.0" layoutY="23.0" text="Nombre del Coordinador">
+            <Label fx:id="lbFullName" layoutX="455.0" layoutY="23.0" text="">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>

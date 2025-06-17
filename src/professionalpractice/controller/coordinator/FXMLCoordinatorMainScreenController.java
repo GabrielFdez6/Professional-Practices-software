@@ -112,7 +112,7 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
     void btnUpdateResponsible(ActionEvent event) {
         try {
             Stage baseStage = (Stage) lbFullName.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLSelectProject.fxml"));
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerListUpdate.fxml"));
             Parent view = loader.load();
             Scene mainScene = new Scene(view);
             baseStage.setScene(mainScene);

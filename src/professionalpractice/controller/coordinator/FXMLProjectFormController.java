@@ -61,6 +61,7 @@ public class FXMLProjectFormController implements Initializable {
                 tfProjectName.setText(projectToEdit.getName());
                 taDescription.setText(projectToEdit.getDescription());
                 tfMethodology.setText(projectToEdit.getMethodology());
+                tfAvailability.setText(String.valueOf(projectToEdit.getAvailability()));
             }
         } else {
             lblFormTitle.setText("REGISTRAR NUEVO PROYECTO");
@@ -95,6 +96,7 @@ public class FXMLProjectFormController implements Initializable {
                 projectToEdit.setName(name);
                 projectToEdit.setDescription(description);
                 projectToEdit.setMethodology(methodology);
+                projectToEdit.setAvailability(Integer.parseInt(tfAvailability.getText()));
 
                 response = projectDAO.updateProject(projectToEdit);
                 if (response == Constants.OPERATION_SUCCESFUL) {
@@ -109,6 +111,7 @@ public class FXMLProjectFormController implements Initializable {
                 newProject.setName(name);
                 newProject.setDescription(description);
                 newProject.setMethodology(methodology);
+                newProject.setAvailability(Integer.parseInt(tfAvailability.getText()));
 
                 if (currentOrganization == null || currentProjectManager == null) {
                     Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Contexto", "No se pudo asociar el proyecto a una organización o responsable.");

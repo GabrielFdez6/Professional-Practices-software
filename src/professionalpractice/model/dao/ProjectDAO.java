@@ -26,12 +26,12 @@ public class ProjectDAO implements IProjectDAO {
                 Project project = new Project();
                 project.setIdProject(rs.getInt("idProject"));
                 project.setName(rs.getString("name"));
-                // project.setDepartment(rs.getString("department"));
                 project.setDescription(rs.getString("description"));
                 project.setMethodology(rs.getString("methodology"));
                 project.setAvailability(rs.getInt("availability"));
                 project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
                 project.setIdProjectManager(rs.getInt("idProjectManager"));
+
                 projects.add(project);
             }
         }
@@ -49,7 +49,6 @@ public class ProjectDAO implements IProjectDAO {
                 Project project = new Project();
                 project.setIdProject(rs.getInt("idProject"));
                 project.setName(rs.getString("name"));
-                // project.setDepartment(rs.getString("department"));
                 project.setDescription(rs.getString("description"));
                 project.setAvailability(rs.getInt("availability"));
                 project.setMethodology(rs.getString("methodology"));
@@ -139,8 +138,6 @@ public class ProjectDAO implements IProjectDAO {
         }
         return responseCode;
     }
-
-    // --- NUEVOS MÉTODOS REQUERIDOS ---
 
     @Override
     public int saveProject(Project project) throws SQLException {

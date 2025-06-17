@@ -28,7 +28,6 @@ public class FXMLSelectProjectController implements Initializable {
 
     @FXML private TableView<Project> tvProjects;
     @FXML private TableColumn<Project, String> colProjectName;
-    @FXML private TableColumn<Project, String> colDepartment;
 
     private IProjectDAO projectDAO;
     private ObservableList<Project> projects;
@@ -43,7 +42,6 @@ public class FXMLSelectProjectController implements Initializable {
 
     private void configureTable() {
         colProjectName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
     }
 
     private void loadProjects() {

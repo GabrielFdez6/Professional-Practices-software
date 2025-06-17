@@ -27,9 +27,9 @@ import java.util.ResourceBundle;
 public class FXMLStudentListController implements Initializable {
 
     @FXML
-    private TableColumn<Student, String> colMatriculation; // Es buena práctica especificar los tipos
+    private TableColumn<Student, String> colMatriculation;
     @FXML
-    private TableView<Student> tvStudents; // Especificar el tipo aquí también
+    private TableView<Student> tvStudents;
     @FXML
     private TableColumn<Student, String> colStudentName;
     private ObservableList<Student> students;
@@ -48,7 +48,7 @@ public class FXMLStudentListController implements Initializable {
 
     public void loadTableInformation() {
         try {
-            ArrayList<Student> studentsFromDB = StudentDAO.getStudents();
+            ArrayList<Student> studentsFromDB = StudentDAO.getStudentsWithoutEvaluation();
             students.addAll(studentsFromDB);
             tvStudents.setItems(students);
         } catch (SQLException ex) {

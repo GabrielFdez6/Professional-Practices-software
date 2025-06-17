@@ -88,9 +88,7 @@ public class FXMLAcademicProgressStudentsController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/student/FXMLStudentProgress.fxml"));
             Parent view = loader.load();
 
-            // Usamos el controlador de la vista de progreso del estudiante que ya existe
             FXMLStudentProgressController controller = loader.getController();
-            // Creamos un objeto Student temporal solo con el ID para pasarlo
             professionalpractice.model.pojo.Student studentToConsult = new professionalpractice.model.pojo.Student();
             studentToConsult.setIdStudent(selectedStudent.getIdStudent());
 
@@ -110,13 +108,10 @@ public class FXMLAcademicProgressStudentsController implements Initializable {
 
     @FXML
     private void btnExitClick(ActionEvent event) {
-        // Regresamos a la pantalla principal del académico
         try {
             Stage stage = (Stage) tvStudents.getScene().getWindow();
-            // Aquí deberías recargar el FXMLTeacherMainScreen, pasando de nuevo los datos del académico
-            // Por simplicidad, aquí solo cerramos, pero lo ideal es navegar de vuelta.
             if (Utils.showConfirmationAlert("Confirmar salida", "¿Estás seguro que quieres salir?")) {
-                stage.close(); // Simplificado.
+                stage.close();
             }
         } catch (Exception e) {
             e.printStackTrace();

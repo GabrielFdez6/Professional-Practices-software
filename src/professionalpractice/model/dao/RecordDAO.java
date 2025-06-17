@@ -37,16 +37,14 @@ public class RecordDAO implements IRecordDAO {
     public List<Integer> getAllActiveRecordIds() throws SQLException {
         List<Integer> recordIds = new ArrayList<>();
         String query = "SELECT idRecord FROM record";
-        Connection conn = ConectionBD.getConnection(); // Get the shared connection
+        Connection conn = ConectionBD.getConnection();
 
-        // DO NOT use try-with-resources on the connection object here
         try (PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 recordIds.add(rs.getInt("idRecord"));
             }
         }
-        // DO NOT close the connection here. The calling method will handle it.
         return recordIds;
     }
 }
