@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLStudentMainScreenController">
     <children>
@@ -56,7 +54,7 @@
                 </DropShadow>
             </effect>
             <children>
-                <Button onAction="#btnClickMyProgress" contentDisplay="CENTER" layoutX="101.0" layoutY="164.0" mnemonicParsing="false" style="-fx-background-color: #146cd0;" text="Consultar" textFill="WHITE">
+                <Button contentDisplay="CENTER" layoutX="101.0" layoutY="164.0" mnemonicParsing="false" onAction="#btnClickMyProgress" style="-fx-background-color: #146cd0;" text="Consultar" textFill="WHITE">
                     <font>
                         <Font name="Arial Bold" size="14.0" />
                     </font>
@@ -68,9 +66,9 @@
                         </DropShadow>
                     </effect>
                 </Button>
-                <ImageView fitHeight="58.0" fitWidth="87.0" layoutX="128.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+                <ImageView fitHeight="65.0" fitWidth="73.0" layoutX="113.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@../../resource/student/myProgress.png" />
+                        <Image url="@../../resource/student/progess.png" />
                     </image>
                 </ImageView>
                 <Label layoutX="78.0" layoutY="102.0" text="Consultar mi Avance">
@@ -89,7 +87,7 @@
                 </DropShadow>
             </effect>
             <children>
-                <Button onAction="#btnClickManageDeliveries" contentDisplay="CENTER" layoutX="79.0" layoutY="164.0" mnemonicParsing="false" style="-fx-background-color: #146cd0;" text="Gestionar Entregas" textFill="WHITE">
+                <Button contentDisplay="CENTER" layoutX="79.0" layoutY="164.0" mnemonicParsing="false" onAction="#btnClickManageDeliveries" style="-fx-background-color: #146cd0;" text="Gestionar Entregas" textFill="WHITE">
                     <font>
                         <Font name="Arial Bold" size="14.0" />
                     </font>

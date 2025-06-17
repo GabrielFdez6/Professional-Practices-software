@@ -16,17 +16,17 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="380.0" />
             </columnConstraints>
             <children>
-                <Label text="Nombre(s):" />
+                <Label text="Nombre(s):*" />
                 <TextField fx:id="tfFirstName" GridPane.columnIndex="1" />
-                <Label text="Apellido Paterno:" GridPane.rowIndex="1" />
+                <Label text="Apellido Paterno:*" GridPane.rowIndex="1" />
                 <TextField fx:id="tfLastNameFather" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                 <Label text="Apellido Materno:" GridPane.rowIndex="2" />
                 <TextField fx:id="tfLastNameMother" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                <Label text="Cargo:" GridPane.rowIndex="3" />
+                <Label text="Cargo:*" GridPane.rowIndex="3" />
                 <TextField fx:id="tfPosition" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                <Label text="Correo Electrónico:" GridPane.rowIndex="4" />
+                <Label text="Correo Electrónico:*" GridPane.rowIndex="4" />
                 <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                <Label text="Teléfono:" GridPane.rowIndex="5" />
+                <Label text="Teléfono:*" GridPane.rowIndex="5" />
                 <TextField fx:id="tfPhone" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             </children>
          <rowConstraints>
