@@ -181,7 +181,8 @@ public class FXMLRegisterResponsibleController {
 
   @FXML
   void btnCancelarClick(ActionEvent event) {
-    goMainMenu();
+    Stage stage = (Stage) tfLastNameFather.getScene().getWindow();
+    stage.close();
   }
 
   private void goMainMenu() {

@@ -94,17 +94,18 @@ public class FXMLProjectManagerListUpdateController implements Initializable {
         }
 
         try {
-            Stage baseStage = (Stage) tvProjectManagers.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLRegisterResponsible.fxml"));
             Parent view = loader.load();
 
             FXMLRegisterResponsibleController nextController = loader.getController();
             nextController.initData(selectedManager);
 
-            Scene mainScene = new Scene(view);
-            baseStage.setScene(mainScene);
-            baseStage.setTitle("Gestión de Proyectos del Responsable");
-            baseStage.show();
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.initOwner(Utils.getSceneComponent(tvProjectManagers));
+            modalStage.setTitle("Actualizar Responsable");
+            modalStage.setScene(new Scene(view));
+            modalStage.showAndWait();
 
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de gestión de proyectos del responsable.");
