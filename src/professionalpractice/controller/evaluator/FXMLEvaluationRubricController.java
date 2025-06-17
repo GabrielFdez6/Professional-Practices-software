@@ -87,14 +87,17 @@ public class FXMLEvaluationRubricController implements Initializable {
         tfSpellingGrammarScore
     };
 
+
+
     configureTable();
     loadTableInformation();
     addNumericValidationToScoreFields();
     addScoreCalculationListeners();
     configureCharacterCounter();
-    addTitleValidation();
     calculateAndSetAverage();
   }
+
+
 
   private void configureCharacterCounter() {
     final int MAX_CHARS = 150;
@@ -106,32 +109,6 @@ public class FXMLEvaluationRubricController implements Initializable {
 
     taObservationsAndComments.setTextFormatter(
         new TextFormatter<String>(change -> change.getControlNewText().length() <= MAX_CHARS ? change : null));
-  }
-
-  /**
-   * Añade validación visual al campo de título de evaluación
-   */
-  private void addTitleValidation() {
-    tfEvaluationTitle.textProperty().addListener((obs, oldValue, newValue) -> {
-      if (newValue == null || newValue.trim().isEmpty()) {
-        tfEvaluationTitle.setStyle("-fx-border-color: #ffcccc; -fx-border-width: 2px;");
-      } else if (newValue.trim().length() < 3) {
-        tfEvaluationTitle.setStyle("-fx-border-color: #ffaa00; -fx-border-width: 2px;");
-      } else {
-        tfEvaluationTitle.setStyle("-fx-border-color: #cccccc; -fx-border-width: 1px;");
-      }
-    });
-
-    // Validación cuando pierde el foco
-    tfEvaluationTitle.focusedProperty().addListener((obs, oldValue, newValue) -> {
-      if (!newValue) { // Cuando pierde el foco
-        String text = tfEvaluationTitle.getText();
-        if (text != null && !text.trim().isEmpty() && text.trim().length() < 3) {
-          Utils.showSimpleAlert(Alert.AlertType.WARNING, "Título muy corto",
-              "El título debe tener al menos 3 caracteres.");
-        }
-      }
-    });
   }
 
   private void addScoreCalculationListeners() {
@@ -157,109 +134,27 @@ public class FXMLEvaluationRubricController implements Initializable {
     }
   }
 
-  /**
-   * Valida que todos los campos obligatorios estén completos antes de guardar la
-   * evaluación
-   * 
-   * @return true si todos los campos son válidos, false en caso contrario
-   */
-  private boolean validateRequiredFields() {
-    StringBuilder errorMessage = new StringBuilder();
-    boolean isValid = true;
-
-    // Validar que hay un estudiante seleccionado
-    if (studentToEvaluate == null) {
-      errorMessage.append("• No hay estudiante seleccionado para evaluar.\n");
-      isValid = false;
-    }
-
-    // Validar título de evaluación
-    if (tfEvaluationTitle.getText() == null || tfEvaluationTitle.getText().trim().isEmpty()) {
-      errorMessage.append("• El título de la evaluación es obligatorio.\n");
-      isValid = false;
-    } else if (tfEvaluationTitle.getText().trim().length() < 3) {
-      errorMessage.append("• El título de la evaluación debe tener al menos 3 caracteres.\n");
-      isValid = false;
-    }
-
-    // Validar campos de calificación
-    String[] fieldNames = {
-        "Uso de Métodos y Técnicas de IS",
-        "Requisitos",
-        "Seguridad y Dominio",
-        "Contenido",
-        "Ortografía y Redacción"
-    };
-
-    for (int i = 0; i < scoreFields.length; i++) {
-      TextField field = scoreFields[i];
-      String fieldValue = field.getText();
-
-      if (fieldValue == null || fieldValue.trim().isEmpty()) {
-        errorMessage.append("• El campo '").append(fieldNames[i]).append("' es obligatorio.\n");
-        isValid = false;
-      } else {
-        try {
-          int score = Integer.parseInt(fieldValue.trim());
-          if (score < 5 || score > 10) {
-            errorMessage.append("• El campo '").append(fieldNames[i])
-                .append("' debe tener una calificación entre 5 y 10.\n");
-            isValid = false;
-          }
-        } catch (NumberFormatException e) {
-          errorMessage.append("• El campo '").append(fieldNames[i])
-              .append("' debe contener un número válido.\n");
-          isValid = false;
-        }
-      }
-    }
-
-    // Validar que el promedio se haya calculado
-    if (lbScoreAverage.getText().equals("0.0")) {
-      errorMessage.append("• No se ha calculado el promedio de calificaciones.\n");
-      isValid = false;
-    }
-
-    // Validar límite de caracteres en observaciones
-    if (taObservationsAndComments.getText() != null &&
-        taObservationsAndComments.getText().length() > 150) {
-      errorMessage.append("• Las observaciones no pueden exceder 150 caracteres.\n");
-      isValid = false;
-    }
-
-    // Mostrar errores si los hay
-    if (!isValid) {
-      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos incompletos o inválidos",
-          "Por favor corrija los siguientes errores:\n\n" + errorMessage.toString());
-    }
-
-    return isValid;
-  }
-
-  /**
-   * Calcula y establece el promedio de calificaciones
-   * Solo considera campos con valores válidos (entre 5-10)
-   */
   private void calculateAndSetAverage() {
+    TextField[] scoreFields = {
+        tfISMethodsTechniquesScore,
+        tfRequirementsScore,
+        tfSecurityMasteryScore,
+        tfContentScore,
+        tfSpellingGrammarScore
+    };
     double totalScore = 0;
     int validFields = 0;
 
     for (TextField field : scoreFields) {
       String text = field.getText();
-      if (text != null && !text.trim().isEmpty()) {
+      if (text != null && !text.isEmpty() && !"1".equals(text)) {
         try {
-          double score = Double.parseDouble(text.trim());
-          // Solo considerar calificaciones válidas (5-10)
-          if (score >= 5 && score <= 10) {
-            totalScore += score;
-            validFields++;
-          }
+          totalScore += Double.parseDouble(text);
+          validFields++;
         } catch (NumberFormatException e) {
-          // Ignorar valores no numéricos
         }
       }
     }
-
     if (validFields > 0) {
       double average = totalScore / validFields;
       lbScoreAverage.setText(String.format("%.1f", average));
@@ -268,11 +163,6 @@ public class FXMLEvaluationRubricController implements Initializable {
     }
   }
 
-  /**
-   * Añade validación numérica a un campo de calificación
-   * 
-   * @param textField el campo de texto a validar
-   */
   private void addNumericValidation(TextField textField) {
     UnaryOperator<TextFormatter.Change> filter = change -> {
       String newText = change.getControlNewText();
@@ -284,37 +174,12 @@ public class FXMLEvaluationRubricController implements Initializable {
     TextFormatter<String> textFormatter = new TextFormatter<>(filter);
     textField.setTextFormatter(textFormatter);
 
-    // Validación cuando el campo pierde el foco
     textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue) { // Cuando pierde el foco
-        String text = textField.getText();
-        if (text != null && !text.trim().isEmpty()) {
-          try {
-            int score = Integer.parseInt(text.trim());
-            if (score < 5) {
-              textField.setText("");
-              Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de puntuación",
-                  "La puntuación mínima es 5. El valor ingresado ha sido eliminado.");
-            } else if (score > 10) {
-              textField.setText("");
-              Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de puntuación",
-                  "La puntuación máxima es 10. El valor ingresado ha sido eliminado.");
-            }
-          } catch (NumberFormatException e) {
-            textField.setText("");
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de formato",
-                "Solo se permiten números enteros entre 5 y 10.");
-          }
+      if (!newValue) {
+        if ("1".equals(textField.getText())) {
+          textField.setText("");
+          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de puntuación", "La puntuación mínima es 5.");
         }
-      }
-    });
-
-    // Añadir estilo visual para campos vacíos
-    textField.textProperty().addListener((obs, oldValue, newValue) -> {
-      if (newValue == null || newValue.trim().isEmpty()) {
-        textField.setStyle("-fx-border-color: #ffcccc; -fx-border-width: 1px;");
-      } else {
-        textField.setStyle("-fx-border-color: #cccccc; -fx-border-width: 1px;");
       }
     });
   }
@@ -409,8 +274,15 @@ public class FXMLEvaluationRubricController implements Initializable {
 
   @FXML
   public void btnSaveGrade(ActionEvent actionEvent) {
-    // Validar campos obligatorios
-    if (!validateRequiredFields()) {
+    if (studentToEvaluate == null || tfEvaluationTitle.getText().isEmpty() || lbScoreAverage.getText().equals("0.0")
+            || tfSpellingGrammarScore.getText().isEmpty()
+            || tfEvaluationTitle.getText().isEmpty()
+            || lbScoreAverage.getText().isEmpty()
+            || tfSpellingGrammarScore.getText().isEmpty()
+            || tfEvaluationTitle.getText().isEmpty()
+    ) {
+      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos incompletos",
+          "Debe asignar un título y calificar todos los rubros antes de guardar.");
       return;
     }
 
