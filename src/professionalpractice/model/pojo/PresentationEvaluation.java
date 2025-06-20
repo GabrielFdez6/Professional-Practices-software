@@ -5,7 +5,6 @@ import java.sql.Date;
 
 public class PresentationEvaluation {
   private int idEvaluation;
-  private String title;
   private Date date;
   private Date evaluationDate;
   private BigDecimal grade;
@@ -28,14 +27,6 @@ public class PresentationEvaluation {
 
   public void setIdEvaluation(int idEvaluation) {
     this.idEvaluation = idEvaluation;
-  }
-
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
   }
 
   public Date getDate() {

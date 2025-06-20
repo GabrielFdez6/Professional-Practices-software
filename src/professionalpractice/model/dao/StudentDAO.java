@@ -207,8 +207,8 @@ public class StudentDAO implements IStudentDAO {
         String query = "SELECT s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather " +
                 "FROM student s " +
                 "JOIN record r ON s.idStudent = r.idStudent " +
-                "LEFT JOIN presentationevaluation pe ON r.idRecord = pe.idRecord " +
-                "WHERE pe.idEvaluation IS NULL";
+                "JOIN term t ON r.idTerm = t.idTerm " +
+                "WHERE CURDATE() BETWEEN t.startDate AND t.endDate";
 
         try (Connection connection = ConectionBD.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);

@@ -24,7 +24,7 @@
             </Label>
          </children>
       </AnchorPane>
-      <TableView fx:id="tvEvaluationRubric" focusTraversable="false" layoutX="20.0" layoutY="111.0" prefHeight="421.0" prefWidth="1043.0" style="-fx-fixed-cell-size: 80; -fx-background-insets: 0;">
+      <TableView fx:id="tvEvaluationRubric" focusTraversable="false" layoutX="20.0" layoutY="62.0" prefHeight="470.0" prefWidth="1043.0" style="-fx-fixed-cell-size: 80; -fx-background-insets: 0;">
          <columns>
             <TableColumn fx:id="colCriterion" editable="false" prefWidth="111.0" resizable="false" sortable="false" style="-fx-wrap-text: true;" text="CRITERIO" />
             <TableColumn fx:id="colCompetent" editable="false" prefWidth="167.0" resizable="false" sortable="false" style="-fx-wrap-text: true;" text="COMPETENTE (9.1-10.0)" />
@@ -42,7 +42,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbStudentName" layoutX="616.0" layoutY="80.0" text="Estudiante:">
+      <Label fx:id="lbStudentName" layoutX="616.0" layoutY="40.0" text="Estudiante:">
          <font>
             <Font size="14.0" />
          </font></Label>
@@ -123,15 +123,6 @@
                   <Color opacity="0.38999998569488525" />
                </color></DropShadow>
          </effect></Button>
-      <Label layoutX="27.0" layoutY="78.0" text="Título:">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfEvaluationTitle" layoutX="72.0" layoutY="74.0" prefHeight="26.0" prefWidth="448.0" style="-fx-border-color: #dedede; -fx-background-color: white; -fx-border-radius: 4;">
-         <font>
-            <Font size="14.0" />
-         </font></TextField>
       <Label fx:id="lblCharCounter" layoutX="374.0" layoutY="703.0" />
    </children>
 </AnchorPane>

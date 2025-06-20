@@ -24,7 +24,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.controller.academic.FXMLAcademicMainScreenController;
 import professionalpractice.controller.coordinator.FXMLCoordinatorMainScreenController;
-import professionalpractice.controller.evaluator.FXMLEvaluatorMainScreenController;
 import professionalpractice.controller.student.FXMLStudentMainScreenController;
 import professionalpractice.model.SesionUsuario;
 import professionalpractice.model.dao.AcademicDAO;
@@ -59,11 +58,9 @@ public class FXMLLogInController implements Initializable {
   private IAcademicDAO academicDAO;
   private ICoordinatorDAO coordinatorDAO;
 
-  // Control de intentos de login
   private static final Map<String, Integer> loginAttempts = new HashMap<>();
   private static final Map<String, LocalDateTime> blockedUsers = new HashMap<>();
 
-  // Límites de tiempo para bloqueo temporal
   private static final int BLOCK_DURATION_MINUTES = 15;
 
   @Override
@@ -73,7 +70,6 @@ public class FXMLLogInController implements Initializable {
     academicDAO = new AcademicDAO();
     coordinatorDAO = new CoordinatorDAO();
 
-    // Limpiar mensajes de error al inicializar
     clearErrorMessages();
   }
 
@@ -150,13 +146,11 @@ public class FXMLLogInController implements Initializable {
     List<String> errors = new ArrayList<>();
     boolean isValid = true;
 
-    // Validar username con ValidationUtils
     String usernameError = ValidationUtils.validateUsername(username);
     if (!usernameError.isEmpty()) {
       lbErrorUsername.setText(usernameError);
       isValid = false;
     } else {
-      // Sanitizar el username
       tfUsername.setText(ValidationUtils.sanitizeInput(username));
     }
 
@@ -218,6 +212,7 @@ public class FXMLLogInController implements Initializable {
         // Establecer sesión
         SesionUsuario.getInstancia().setRolUsuario(user.getRole());
         SesionUsuario.getInstancia().setIdUsuario(user.getUserId());
+        SesionUsuario.getInstancia().setUsername(user.getUsername());
 
         // Validar ID de usuario
         String idValidation = ValidationUtils.validateId(user.getUserId(), "ID de usuario");
@@ -355,9 +350,6 @@ public class FXMLLogInController implements Initializable {
       FXMLLoader loader = new FXMLLoader(
           ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
       Parent view = loader.load();
-
-      FXMLEvaluatorMainScreenController controller = loader.getController();
-      controller.loadUserInformation(username);
 
       Scene mainScene = new Scene(view);
       baseStage.setScene(mainScene);

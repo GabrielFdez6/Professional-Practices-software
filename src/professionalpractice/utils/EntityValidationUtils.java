@@ -296,11 +296,6 @@ public class EntityValidationUtils {
       return errors;
     }
 
-    // Validar título de la evaluación
-    String titleError = ValidationUtils.validateEvaluationTitle(evaluation.getTitle());
-    if (!titleError.isEmpty())
-      errors.add(titleError);
-
     // Validar observaciones (opcional)
     String observationsError = ValidationUtils.validateObservations(evaluation.getObservations());
     if (!observationsError.isEmpty())

@@ -11,15 +11,14 @@ public class PresentationEvaluationDAO implements IPresentationEvaluationDAO {
 
     @Override
     public int saveEvaluation(PresentationEvaluation evaluation) throws SQLException {
-        String query = "INSERT INTO presentationevaluation (title, date, grade, observations, idRecord) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO presentationevaluation (date, grade, observations, idRecord) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, evaluation.getTitle());
-            ps.setDate(2, evaluation.getDate());
-            ps.setBigDecimal(3, evaluation.getGrade());
-            ps.setString(4, evaluation.getObservations());
-            ps.setInt(5, evaluation.getIdRecord());
+            ps.setDate(1, evaluation.getDate());
+            ps.setBigDecimal(2, evaluation.getGrade());
+            ps.setString(3, evaluation.getObservations());
+            ps.setInt(4, evaluation.getIdRecord());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {

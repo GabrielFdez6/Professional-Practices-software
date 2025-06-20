@@ -65,8 +65,7 @@ public class FXMLEvaluationRubricController implements Initializable {
   @FXML
   private TextField tfSpellingGrammarScore;
   private ObservableList<EvaluationCriterion> criteria;
-  @FXML
-  private TextField tfEvaluationTitle;
+
   private Student studentToEvaluate;
   @FXML
   private Label lblCharCounter;
@@ -86,8 +85,6 @@ public class FXMLEvaluationRubricController implements Initializable {
         tfContentScore,
         tfSpellingGrammarScore
     };
-
-
 
     configureTable();
     loadTableInformation();
@@ -164,21 +161,43 @@ public class FXMLEvaluationRubricController implements Initializable {
   }
 
   private void addNumericValidation(TextField textField) {
+    final String regex = "^($|1(0(\\.(0{1,2})?)?)?|[5-9](\\.\\d{0,2})?|[5-9]\\.)$";
     UnaryOperator<TextFormatter.Change> filter = change -> {
       String newText = change.getControlNewText();
-      if (newText.matches("($|[5-9]|1|10)")) {
+      if (newText.matches(regex)) {
         return change;
       }
       return null;
     };
+
     TextFormatter<String> textFormatter = new TextFormatter<>(filter);
     textField.setTextFormatter(textFormatter);
 
+    // El listener para cuando se pierde el foco sigue siendo igual de importante.
     textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue) {
-        if ("1".equals(textField.getText())) {
-          textField.setText("");
-          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de puntuación", "La puntuación mínima es 5.");
+      if (!newValue) { // Cuando se pierde el foco
+        String text = textField.getText();
+
+        // Limpia el punto si el usuario lo deja al final (ej. "6." o "10.")
+        if (text.endsWith(".")) {
+          textField.setText(text.substring(0, text.length() - 1));
+        }
+
+        text = textField.getText(); // Re-obtener el texto por si fue modificado
+
+        if (!text.isEmpty()) {
+          try {
+            double value = Double.parseDouble(text);
+            if (value < 5.0 || value > 10.0) {
+              Utils.showSimpleAlert(Alert.AlertType.ERROR, "Valor fuera de rango",
+                      "La calificación debe estar entre 5.0 y 10.0.");
+              textField.setText("");
+            }
+          } catch (NumberFormatException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Formato incorrecto",
+                    "El valor ingresado no es un número válido.");
+            textField.setText("");
+          }
         }
       }
     });
@@ -274,15 +293,16 @@ public class FXMLEvaluationRubricController implements Initializable {
 
   @FXML
   public void btnSaveGrade(ActionEvent actionEvent) {
-    if (studentToEvaluate == null || tfEvaluationTitle.getText().isEmpty() || lbScoreAverage.getText().equals("0.0")
-            || tfSpellingGrammarScore.getText().isEmpty()
-            || tfEvaluationTitle.getText().isEmpty()
+    if (studentToEvaluate == null|| lbScoreAverage.getText().equals("0.0")
             || lbScoreAverage.getText().isEmpty()
+            || tfISMethodsTechniquesScore.getText().isEmpty()
+            || tfRequirementsScore.getText().isEmpty()
+            || tfSecurityMasteryScore.getText().isEmpty()
+            || tfContentScore.getText().isEmpty()
             || tfSpellingGrammarScore.getText().isEmpty()
-            || tfEvaluationTitle.getText().isEmpty()
     ) {
       Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos incompletos",
-          "Debe asignar un título y calificar todos los rubros antes de guardar.");
+          "Debe calificar todos los rubros antes de guardar.");
       return;
     }
 
@@ -295,7 +315,6 @@ public class FXMLEvaluationRubricController implements Initializable {
       }
 
       PresentationEvaluation evaluation = new PresentationEvaluation();
-      evaluation.setTitle(tfEvaluationTitle.getText());
       evaluation.setObservations(taObservationsAndComments.getText());
       evaluation.setGrade(new BigDecimal(lbScoreAverage.getText()));
       evaluation.setDate(Date.valueOf(LocalDate.now()));
