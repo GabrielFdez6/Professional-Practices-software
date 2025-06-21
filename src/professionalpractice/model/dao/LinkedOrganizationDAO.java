@@ -14,7 +14,10 @@ public class LinkedOrganizationDAO implements ILinkedOrganizationDAO {
     @Override
     public List<LinkedOrganization> getAllActiveOrganizations() throws SQLException {
         List<LinkedOrganization> organizations = new ArrayList<>();
-        String query = "SELECT idLinkedOrganization, name, address FROM linkedorganization WHERE isActive = 1";
+        String query = "SELECT DISTINCT lo.idLinkedOrganization, lo.name, lo.address " +
+                "FROM linkedorganization lo " +
+                "INNER JOIN projectmanager pm ON lo.idLinkedOrganization = pm.idLinkedOrganization " +
+                "WHERE lo.isActive = 1";
         try (Connection connection = ConectionBD.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {

@@ -66,7 +66,7 @@ public class FXMLProjectManagerListController implements Initializable {
     }
 
     private void configureTable(){
-        colManagerName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        colManagerName.setCellValueFactory(new PropertyValueFactory<>("fullName"));
         colPosition.setCellValueFactory(new PropertyValueFactory<>("position"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colPhoneNumber.setCellValueFactory(new PropertyValueFactory<>("phone"));

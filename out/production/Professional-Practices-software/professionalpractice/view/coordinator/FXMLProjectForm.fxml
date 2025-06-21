@@ -25,7 +25,7 @@
 
         <Label fx:id="lblFormTitle" layoutX="144.0" layoutY="76.0" text="DATOS DEL PROYECTO">
             <font>
-                <Font name="System Bold" size="24.0" />
+                <Font name="System Bold" size="22.0" />
             </font>
         </Label>
 
@@ -81,7 +81,7 @@
                 <Font size="14.0" />
             </font>
         </Label>
-        <TextArea fx:id="taDescription" layoutX="44.0" layoutY="368.0" prefHeight="75.0" prefWidth="460.0" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4;">
+        <TextArea fx:id="taDescription" layoutX="44.0" layoutY="368.0" prefHeight="75.0" prefWidth="460.0" style="-fx-background-color: white; -fx-border-color: #dedede; -fx-border-radius: 4; -fx-wrap-text: true;">
             <font>
                 <Font size="15.0" />
             </font></TextArea>
@@ -107,5 +107,6 @@
                         <Color opacity="0.14000000059604645" />
                     </color></DropShadow>
             </effect></Button>
+      <Label fx:id="lbCharCounter" layoutX="457.0" layoutY="443.0" />
     </children>
 </AnchorPane>

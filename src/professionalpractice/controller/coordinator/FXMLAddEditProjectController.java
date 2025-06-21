@@ -8,11 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
@@ -64,6 +62,29 @@ public class FXMLAddEditProjectController implements Initializable {
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colMethodology.setCellValueFactory(new PropertyValueFactory<>("methodology"));
         colAvailability.setCellValueFactory(new PropertyValueFactory<>("availability"));
+
+        colDescription.setCellFactory(column -> {
+            return new TableCell<Project, String>() {
+                private final Text text = new Text();
+
+                {
+                    text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                    text.setStyle("-fx-padding: 5px;");
+                    setGraphic(text);
+                    setPrefHeight(Control.USE_COMPUTED_SIZE);
+                }
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        text.setText("");
+                    } else {
+                        text.setText(item);
+                    }
+                }
+            };
+        });
     }
 
     private void updateUIInfo() {
@@ -82,10 +103,6 @@ public class FXMLAddEditProjectController implements Initializable {
                 List<Project> projectList = projectDAO.getProjectsByProjectManagerId(currentProjectManager.getIdProjectManager());
                 projects.setAll(projectList);
                 tvProjects.setItems(projects);
-                if (projectList.isEmpty()) {
-                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Sin Proyectos",
-                            "No hay proyectos asignados a este responsable de proyecto.");
-                }
             } catch (SQLException e) {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudieron cargar los proyectos.");
                 e.printStackTrace();
@@ -108,19 +125,20 @@ public class FXMLAddEditProjectController implements Initializable {
         openProjectForm(true, selectedProject);
     }
 
-// ... (resto de la clase FXMLAddEditProjectController)
-
     private void openProjectForm(boolean isEdit, Project projectToEdit) {
         try {
             Stage modalStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/coordinator/FXMLProjectForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectForm.fxml"));
             Parent view = loader.load();
+
+            FXMLProjectFormController controller = loader.getController();
+            controller.initData(isEdit, currentOrganization, currentProjectManager, projectToEdit);
 
             Scene scene = new Scene(view);
             modalStage.setScene(scene);
             modalStage.setTitle(isEdit ? "Modificar Proyecto" : "Registrar Nuevo Proyecto");
             modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(tvProjects.getScene().getWindow());
+            modalStage.initOwner(Utils.getSceneComponent(tvProjects));
             modalStage.showAndWait();
 
             loadProjects();
@@ -145,6 +163,26 @@ public class FXMLAddEditProjectController implements Initializable {
             }
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana principal.");
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void btnBack(ActionEvent actionEvent) {
+        try {
+            Stage stage = (Stage) tvProjects.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerList.fxml"));
+            Parent view = loader.load();
+
+            FXMLProjectManagerListController prevController = loader.getController();
+            prevController.setLinkedOrganization(currentOrganization);
+
+            Scene scene = new Scene(view);
+            stage.setScene(scene);
+            stage.setTitle("Seleccionar Responsable de Proyecto");
+            stage.show();
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo regresar a la pantalla anterior.");
             ex.printStackTrace();
         }
     }
