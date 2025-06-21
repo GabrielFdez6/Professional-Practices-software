@@ -108,46 +108,25 @@ public class FXMLAddEditProjectController implements Initializable {
         openProjectForm(true, selectedProject);
     }
 
+// ... (resto de la clase FXMLAddEditProjectController)
+
     private void openProjectForm(boolean isEdit, Project projectToEdit) {
         try {
             Stage modalStage = new Stage();
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectForm.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/coordinator/FXMLProjectForm.fxml"));
             Parent view = loader.load();
-
-            FXMLProjectFormController controller = loader.getController();
-            controller.initData(isEdit, currentOrganization, currentProjectManager, projectToEdit);
 
             Scene scene = new Scene(view);
             modalStage.setScene(scene);
             modalStage.setTitle(isEdit ? "Modificar Proyecto" : "Registrar Nuevo Proyecto");
             modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.initOwner(Utils.getSceneComponent(tvProjects));
+            modalStage.initOwner(tvProjects.getScene().getWindow());
             modalStage.showAndWait();
 
             loadProjects();
 
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar el formulario del proyecto.");
-            ex.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void btnRegresar(ActionEvent actionEvent) {
-        try {
-            Stage stage = (Stage) tvProjects.getScene().getWindow();
-            FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLProjectManagerList.fxml"));
-            Parent view = loader.load();
-
-            FXMLProjectManagerListController prevController = loader.getController();
-            prevController.setLinkedOrganization(currentOrganization);
-
-            Scene scene = new Scene(view);
-            stage.setScene(scene);
-            stage.setTitle("Seleccionar Responsable de Proyecto");
-            stage.show();
-        } catch (IOException ex) {
-            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo regresar a la pantalla anterior.");
             ex.printStackTrace();
         }
     }

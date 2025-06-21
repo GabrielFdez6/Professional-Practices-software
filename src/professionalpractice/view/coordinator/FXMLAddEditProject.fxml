@@ -40,20 +40,7 @@
                 </TableView>
             </children></AnchorPane>
 
-        <Button layoutX="576.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnRegresar" style="-fx-background-color: #f3f4f6;" text="Regresar">
-            <effect>
-                <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
-                    <color>
-                        <Color opacity="0.13610388338565826" />
-                    </color>
-                </DropShadow>
-            </effect>
-            <font>
-                <Font name="Arial Bold" size="14.0" />
-            </font>
-        </Button>
-
-        <Button layoutX="690.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #ff4d4d;" text="Cancelar" textFill="WHITE">
+        <Button layoutX="710.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #ff4d4d;" text="Cancelar" textFill="WHITE">
             <effect>
                 <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
                     <color>
@@ -66,7 +53,7 @@
             </font>
         </Button>
 
-        <Button layoutX="462.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnEditProject" style="-fx-background-color: #146cd0;" text="Modificar" textFill="WHITE">
+        <Button layoutX="615.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnEditProject" style="-fx-background-color: #146cd0;" text="Modificar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
@@ -78,7 +65,7 @@
                 </DropShadow>
             </effect>
         </Button>
-        <Button layoutX="348.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnAddProject" style="-fx-background-color: #28a745;" text="Agregar" textFill="WHITE">
+        <Button layoutX="523.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnAddProject" style="-fx-background-color: #28a745;" text="Agregar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
@@ -106,5 +93,10 @@
                 </Label>
             </children>
         </AnchorPane>
+      <Label layoutX="62.0" layoutY="30.0" text="Paso 3 de 3">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>
