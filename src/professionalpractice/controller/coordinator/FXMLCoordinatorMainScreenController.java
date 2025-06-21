@@ -25,12 +25,25 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
 
     @FXML private Label lbWelcome;
     @FXML private Label lbFullName;
+    private ICoordinatorDAO coordinatorDAO;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.coordinatorDAO = new CoordinatorDAO();
+        int userId = SesionUsuario.getInstancia().getIdUsuario();
+
+        if (userId > 0) {
+            try {
+                Coordinator coordinator = coordinatorDAO.getCoordinatorByIdUser(userId);
+                configureScreen(coordinator);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos", "No se pudo cargar la información del coordinador.");
+            }
+        }
     }
 
-    public void configureScreen(Coordinator coordinator) {
+    private void configureScreen(Coordinator coordinator) {
         if (coordinator != null ) {
             lbFullName.setText(coordinator.getFirstName() + " " + coordinator.getLastNameFather());
             lbWelcome.setText("Bienvenido(a) "+coordinator.getFirstName() + " " + coordinator.getLastNameFather());

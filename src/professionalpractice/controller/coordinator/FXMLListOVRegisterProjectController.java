@@ -74,7 +74,6 @@ public class FXMLListOVRegisterProjectController implements Initializable {
             Parent view = loader.load();
 
             FXMLProjectManagerListController nextController = loader.getController();
-
             nextController.setLinkedOrganization(selectedOV);
 
             Stage baseStage = (Stage) tvLinkedOrganizations.getScene().getWindow();
