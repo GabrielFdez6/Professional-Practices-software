@@ -1,37 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 
-<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryController">
+<AnchorPane id="AnchorPane" prefHeight="250.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryController">
     <children>
-        <Label text="Programar Nueva Entrega" textFill="#333333">
-            <font>
-                <Font name="System Bold" size="24.0" />
-            </font>
-        </Label>
-        <TextField fx:id="tfDeliveryName" maxWidth="400.0" promptText="Nombre de la entrega" />
-        <ComboBox fx:id="cmbDeliveryType" maxWidth="400.0" prefWidth="400.0" promptText="Tipo de Entrega" />
-        <DatePicker fx:id="dpStartDate" maxWidth="400.0" prefWidth="400.0" promptText="Fecha de Inicio" />
-        <DatePicker fx:id="dpEndDate" maxWidth="400.0" prefWidth="400.0" promptText="Fecha de Fin" />
-        <TextField fx:id="tfDescription" maxWidth="400.0" promptText="Descripción (Opcional)" />
-        <VBox alignment="CENTER" spacing="10.0">
+        <Label fx:id="lblLegend" layoutX="50.0" layoutY="30.0" text="Selecciona el tipo de documento para esta entrega" style="-fx-font-size: 14px; -fx-font-weight: bold;" />
+
+        <ComboBox fx:id="cmbDeliveryType" layoutX="100.0" layoutY="80.0" prefWidth="200.0" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0">
             <children>
-                <Button fx:id="btnAccept" onAction="#btnAcceptClick" prefWidth="120.0" text="Aceptar" />
-                <Button fx:id="btnCancel" onAction="#btnCancelClick" prefWidth="120.0" style="-fx-background-color: #d9534f;" text="Cancelar" textFill="WHITE" />
+                <Button fx:id="btnContinue" onAction="#btnContinueClick" text="Continuar" />
+                <Button fx:id="btnCancel" onAction="#btnCancelClick" text="Regresar" />
             </children>
-            <VBox.margin>
-                <Insets top="20.0" />
-            </VBox.margin>
-        </VBox>
+        </HBox>
     </children>
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-</VBox>
+</AnchorPane>

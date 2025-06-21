@@ -4,6 +4,7 @@ import professionalpractice.model.pojo.FinalDocument;
 import professionalpractice.model.pojo.InitialDocument;
 import professionalpractice.model.pojo.ReportDocument;
 import java.sql.SQLException;
+import java.util.List;
 
 public interface IDocumentDAO {
 
@@ -13,4 +14,9 @@ public interface IDocumentDAO {
 
     int saveFinalDocument(FinalDocument document) throws SQLException;
 
+    List<InitialDocument> getAllInitialDocuments() throws SQLException;
+
+    List<ReportDocument> getAllReportDocuments() throws SQLException;
+
+    List<FinalDocument> getAllFinalDocuments() throws SQLException;
 }

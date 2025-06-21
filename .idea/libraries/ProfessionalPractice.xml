@@ -2,8 +2,10 @@
   <library name="ProfessionalPractice">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/dist/ProfessionalPractice.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../../Program Files/JavaFX/javafx-sdk-17.0.15/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../../../../Program Files/JavaFX/javafx-sdk-17.0.15/lib" recursive="false" />
   </library>
 </component>

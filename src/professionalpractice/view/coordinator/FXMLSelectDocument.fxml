@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="580.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLSelectDocumentController">
+    <children>
+        <Label layoutX="210.0" layoutY="15.0" text="SELECCIONAR DOCUMENTO">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="lblLegend" layoutX="40.0" layoutY="55.0" text="Selecciona el documento solicitado para esta entrega" />
+
+        <VBox layoutX="20.0" layoutY="90.0" prefHeight="350.0" prefWidth="760.0">
+            <children>
+                <TableView fx:id="tvDocuments" minHeight="200.0" minWidth="400.0">
+                    <columns>
+                        <TableColumn fx:id="colDocumentName" prefWidth="400.0" minWidth="200.0" text="Nombre del Documento" />
+                        <TableColumn fx:id="colDocumentStatus" prefWidth="360.0" minWidth="150.0" text="Estado" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="15.0">
+            <children>
+                <Button fx:id="btnContinue" onAction="#btnContinueClick" text="Continuar" style="-fx-background-color: #146cd0;" textFill="WHITE">
+                    <font><Font name="Arial Bold" size="14.0" /></font>
+                    <effect><DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0"><color><Color opacity="0.38675323128700256" /></color></DropShadow></effect>
+                </Button>
+                <Button fx:id="btnBack" onAction="#btnBackClick" text="Regresar" style="-fx-background-color: #f3f4f6;">
+                    <font><Font name="Arial Bold" size="14.0" /></font>
+                    <effect><DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0"><color><Color opacity="0.13610388338565826" /></color></DropShadow></effect>
+                </Button>
+            </children>
+        </HBox>
+
+        <Label layoutX="630.0" layoutY="10.0" text="Universidad Veracruzana" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
+            <font>
+                <Font name="Arial Bold" size="12.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>
