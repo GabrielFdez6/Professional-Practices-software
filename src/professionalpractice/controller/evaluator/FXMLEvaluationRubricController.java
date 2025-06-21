@@ -12,13 +12,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
-import professionalpractice.model.pojo.EvaluationCriterion;
-import professionalpractice.model.pojo.Student;
-import professionalpractice.utils.Constants;
-import professionalpractice.utils.EntityValidationUtils;
-import professionalpractice.utils.SecurityValidationUtils;
+import professionalpractice.model.dao.CriteriaDAO;
+import professionalpractice.model.dao.EvaluationDetailDAO;
+import professionalpractice.model.dao.interfaces.ICriteriaDAO;
+import professionalpractice.model.dao.interfaces.IEvaluationDetailDAO;
+import professionalpractice.model.pojo.*;
 import professionalpractice.utils.Utils;
-import professionalpractice.utils.ValidationUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ import java.util.ResourceBundle;
 import java.util.function.UnaryOperator;
 import professionalpractice.model.dao.PresentationEvaluationDAO;
 import professionalpractice.model.dao.StudentDAO;
-import professionalpractice.model.pojo.PresentationEvaluation;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -66,168 +65,142 @@ public class FXMLEvaluationRubricController implements Initializable {
   @FXML
   private TextField tfSpellingGrammarScore;
   private ObservableList<EvaluationCriterion> criteria;
-  @FXML
-  private TextField tfEvaluationTitle;
+
   private Student studentToEvaluate;
+  @FXML
+  private Label lblCharCounter;
+  private ICriteriaDAO criteriaDAO;
+  private IEvaluationDetailDAO evaluationDetailDAO;
+  private List<Criteria> dbCriteriaList;
+  private TextField[] scoreFields;
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
+    criteriaDAO = new CriteriaDAO();
+    evaluationDetailDAO = new EvaluationDetailDAO();
+    scoreFields = new TextField[] {
+        tfISMethodsTechniquesScore,
+        tfRequirementsScore,
+        tfSecurityMasteryScore,
+        tfContentScore,
+        tfSpellingGrammarScore
+    };
+
     configureTable();
     loadTableInformation();
-    setupValidationsAndListeners();
+    addNumericValidationToScoreFields();
+    addScoreCalculationListeners();
+    configureCharacterCounter();
     calculateAndSetAverage();
   }
 
-  private void setupValidationsAndListeners() {
-    // Configurar validaciones numéricas para campos de calificación
-    TextField[] scoreFields = {
-        tfSecurityMasteryScore, tfRequirementsScore, tfSpellingGrammarScore,
-        tfContentScore, tfISMethodsTechniquesScore
-    };
 
-    for (TextField field : scoreFields) {
-      addAdvancedNumericValidation(field);
-      field.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
-    }
 
-    // Configurar validación para el título de evaluación
-    setupEvaluationTitleValidation();
+  private void configureCharacterCounter() {
+    final int MAX_CHARS = 150;
+    lblCharCounter.setText("0/" + MAX_CHARS);
 
-    // Configurar validación para observaciones
-    setupObservationsValidation();
-  }
-
-  private void addAdvancedNumericValidation(TextField textField) {
-    UnaryOperator<TextFormatter.Change> filter = change -> {
-      String newText = change.getControlNewText();
-
-      // Permitir texto vacío temporalmente
-      if (newText.isEmpty()) {
-        return change;
-      }
-
-      // Validar que solo contenga números válidos para calificaciones (5-10)
-      if (newText.matches("^([5-9]|10)$")) {
-        return change;
-      }
-
-      // Permitir entrada gradual (como "1" antes de completar "10")
-      if (newText.matches("^[0-9]$") && newText.length() == 1) {
-        return change;
-      }
-
-      return null;
-    };
-
-    TextFormatter<String> textFormatter = new TextFormatter<>(filter);
-    textField.setTextFormatter(textFormatter);
-
-    // Validación cuando el campo pierde el foco
-    textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue) { // Cuando pierde el foco
-        validateScoreField(textField);
-      }
+    taObservationsAndComments.textProperty().addListener((obs, oldValue, newValue) -> {
+      lblCharCounter.setText(newValue.length() + "/" + MAX_CHARS);
     });
+
+    taObservationsAndComments.setTextFormatter(
+        new TextFormatter<String>(change -> change.getControlNewText().length() <= MAX_CHARS ? change : null));
   }
 
-  private void validateScoreField(TextField scoreField) {
-    String text = scoreField.getText().trim();
-
-    if (text.isEmpty()) {
-      return; // Permitir campos vacíos durante la edición
-    }
-
-    try {
-      int score = Integer.parseInt(text);
-      String validationError = ValidationUtils.validateEvaluationScore(score);
-
-      if (!validationError.isEmpty()) {
-        scoreField.setText("");
-        Utils.showSimpleAlert(Alert.AlertType.WARNING, "Calificación Inválida", validationError);
-        scoreField.requestFocus();
-      }
-    } catch (NumberFormatException e) {
-      scoreField.setText("");
-      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Formato Inválido",
-          "La calificación debe ser un número entero entre 5 y 10.");
-      scoreField.requestFocus();
-    }
+  private void addScoreCalculationListeners() {
+    tfSecurityMasteryScore.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
+    tfRequirementsScore.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
+    tfSpellingGrammarScore.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
+    tfContentScore.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
+    tfISMethodsTechniquesScore.textProperty().addListener((obs, oldV, newV) -> calculateAndSetAverage());
   }
 
-  private void setupEvaluationTitleValidation() {
-    tfEvaluationTitle.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue) {
-        String title = tfEvaluationTitle.getText();
-        if (title != null && !title.trim().isEmpty()) {
-          String titleError = ValidationUtils.validateEvaluationTitle(title);
-          if (!titleError.isEmpty()) {
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Título Inválido", titleError);
-            tfEvaluationTitle.requestFocus();
-          }
-        }
-      }
-    });
-  }
-
-  private void setupObservationsValidation() {
-    taObservationsAndComments.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue) {
-        String observations = taObservationsAndComments.getText();
-        if (observations != null && !observations.trim().isEmpty()) {
-          String observationsError = ValidationUtils.validateObservations(observations);
-          if (!observationsError.isEmpty()) {
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Observaciones Inválidas", observationsError);
-            taObservationsAndComments.requestFocus();
-          }
-        }
-      }
-    });
+  private void addNumericValidationToScoreFields() {
+    addNumericValidation(tfSecurityMasteryScore);
+    addNumericValidation(tfRequirementsScore);
+    addNumericValidation(tfSpellingGrammarScore);
+    addNumericValidation(tfContentScore);
+    addNumericValidation(tfISMethodsTechniquesScore);
   }
 
   public void initializeData(Student student) {
     this.studentToEvaluate = student;
     if (studentToEvaluate != null) {
       lbStudentName.setText("Estudiante: " + studentToEvaluate.getFullName());
-
-      // Generar título por defecto si no existe
-      if (tfEvaluationTitle.getText() == null || tfEvaluationTitle.getText().trim().isEmpty()) {
-        String defaultTitle = "Evaluación de Presentación - " + student.getFirstName() + " " +
-            student.getLastNameFather() + " - " + LocalDate.now().toString();
-        tfEvaluationTitle.setText(defaultTitle);
-      }
     }
   }
 
   private void calculateAndSetAverage() {
     TextField[] scoreFields = {
-        tfISMethodsTechniquesScore, tfRequirementsScore, tfSecurityMasteryScore,
-        tfContentScore, tfSpellingGrammarScore
+        tfISMethodsTechniquesScore,
+        tfRequirementsScore,
+        tfSecurityMasteryScore,
+        tfContentScore,
+        tfSpellingGrammarScore
     };
-
     double totalScore = 0;
     int validFields = 0;
 
     for (TextField field : scoreFields) {
-      String text = field.getText().trim();
-      if (text != null && !text.isEmpty()) {
+      String text = field.getText();
+      if (text != null && !text.isEmpty() && !"1".equals(text)) {
         try {
-          int score = Integer.parseInt(text);
-          if (score >= 5 && score <= 10) {
-            totalScore += score;
-            validFields++;
-          }
+          totalScore += Double.parseDouble(text);
+          validFields++;
         } catch (NumberFormatException e) {
-          // Ignorar campos con formato inválido
         }
       }
     }
-
     if (validFields > 0) {
       double average = totalScore / validFields;
       lbScoreAverage.setText(String.format("%.1f", average));
     } else {
       lbScoreAverage.setText("0.0");
     }
+  }
+
+  private void addNumericValidation(TextField textField) {
+    final String regex = "^($|1(0(\\.(0{1,2})?)?)?|[5-9](\\.\\d{0,2})?|[5-9]\\.)$";
+    UnaryOperator<TextFormatter.Change> filter = change -> {
+      String newText = change.getControlNewText();
+      if (newText.matches(regex)) {
+        return change;
+      }
+      return null;
+    };
+
+    TextFormatter<String> textFormatter = new TextFormatter<>(filter);
+    textField.setTextFormatter(textFormatter);
+
+    // El listener para cuando se pierde el foco sigue siendo igual de importante.
+    textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+      if (!newValue) { // Cuando se pierde el foco
+        String text = textField.getText();
+
+        // Limpia el punto si el usuario lo deja al final (ej. "6." o "10.")
+        if (text.endsWith(".")) {
+          textField.setText(text.substring(0, text.length() - 1));
+        }
+
+        text = textField.getText(); // Re-obtener el texto por si fue modificado
+
+        if (!text.isEmpty()) {
+          try {
+            double value = Double.parseDouble(text);
+            if (value < 5.0 || value > 10.0) {
+              Utils.showSimpleAlert(Alert.AlertType.ERROR, "Valor fuera de rango",
+                      "La calificación debe estar entre 5.0 y 10.0.");
+              textField.setText("");
+            }
+          } catch (NumberFormatException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Formato incorrecto",
+                    "El valor ingresado no es un número válido.");
+            textField.setText("");
+          }
+        }
+      }
+    });
   }
 
   private void configureTable() {
@@ -244,6 +217,14 @@ public class FXMLEvaluationRubricController implements Initializable {
     ArrayList<EvaluationCriterion> sourceCriteria = getCriteriaFromDataSource();
     criteria.addAll(sourceCriteria);
     tvEvaluationRubric.setItems(criteria);
+
+    try {
+      dbCriteriaList = criteriaDAO.getAllCriteria();
+    } catch (SQLException e) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión",
+          "No se pudieron cargar los criterios de evaluación.");
+      e.printStackTrace();
+    }
   }
 
   private ArrayList<EvaluationCriterion> getCriteriaFromDataSource() {
@@ -293,272 +274,93 @@ public class FXMLEvaluationRubricController implements Initializable {
 
   @FXML
   public void btnCancel(ActionEvent actionEvent) {
-    if (Utils.showConfirmationAlert("Cancelar Evaluación",
-        "¿Estás seguro que quieres cancelar esta evaluación?\n" +
-            "Se perderán todos los datos ingresados.")) {
-      goMainMenu();
+    try {
+      if (Utils.showConfirmationAlert("Salir de la evaluacion", "¿Estás seguro que quieres cancelar?")) {
+        Stage stageStudentsList = (Stage) lbStudentName.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(
+            ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
+        Parent viewLogIn = loader.load();
+        Scene mainScene = new Scene(viewLogIn);
+        stageStudentsList.setScene(mainScene);
+        stageStudentsList.setTitle("Pagina Principal");
+        stageStudentsList.show();
+      }
+    } catch (IOException ex) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar",
+          "Lo sentimos por el momento no se pudo mostrar la ventana");
     }
   }
 
   @FXML
   public void btnSaveGrade(ActionEvent actionEvent) {
-    if (performComprehensiveEvaluationValidation()) {
-      try {
-        PresentationEvaluation evaluation = createEvaluationFromForm();
+    if (studentToEvaluate == null|| lbScoreAverage.getText().equals("0.0")
+            || lbScoreAverage.getText().isEmpty()
+            || tfISMethodsTechniquesScore.getText().isEmpty()
+            || tfRequirementsScore.getText().isEmpty()
+            || tfSecurityMasteryScore.getText().isEmpty()
+            || tfContentScore.getText().isEmpty()
+            || tfSpellingGrammarScore.getText().isEmpty()
+    ) {
+      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos incompletos",
+          "Debe calificar todos los rubros antes de guardar.");
+      return;
+    }
 
-        // Validar la entidad completa
-        List<String> entityErrors = EntityValidationUtils.validatePresentationEvaluation(evaluation);
-        if (EntityValidationUtils.hasValidationErrors(entityErrors)) {
-          String formattedErrors = EntityValidationUtils.formatValidationErrors(entityErrors);
-          Utils.showSimpleAlert(Alert.AlertType.WARNING, "Errores de Validación", formattedErrors);
-          return;
-        }
-
-        // Guardar en la base de datos
-        PresentationEvaluationDAO evaluationDAO = new PresentationEvaluationDAO();
-        int result = evaluationDAO.saveEvaluation(evaluation);
-
-        if (result == Constants.OPERATION_SUCCESFUL) {
-          Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Evaluación Guardada",
-              Constants.SUCCESS_RECORD_CREATED +
-                  "\nLa evaluación ha sido registrada exitosamente.");
-          goMainMenu();
-        } else {
-          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al Guardar",
-              "No se pudo guardar la evaluación. Intente nuevamente.");
-        }
-
-      } catch (SQLException e) {
-        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos",
-            Constants.ERROR_DATABASE_CONNECTION);
-        System.err.println("Error de base de datos al guardar evaluación: " + e.getMessage());
-        e.printStackTrace();
-      } catch (Exception e) {
-        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error Inesperado",
-            "Ocurrió un error inesperado al guardar la evaluación.");
-        System.err.println("Error inesperado al guardar evaluación: " + e.getMessage());
-        e.printStackTrace();
+    try {
+      int idRecord = StudentDAO.getRecordIdByStudentId(studentToEvaluate.getIdStudent());
+      if (idRecord == -1) {
+        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de datos",
+            "No se pudo encontrar el expediente del estudiante.");
+        return;
       }
+
+      PresentationEvaluation evaluation = new PresentationEvaluation();
+      evaluation.setObservations(taObservationsAndComments.getText());
+      evaluation.setGrade(new BigDecimal(lbScoreAverage.getText()));
+      evaluation.setDate(Date.valueOf(LocalDate.now()));
+      evaluation.setIdRecord(idRecord);
+
+      PresentationEvaluationDAO dao = new PresentationEvaluationDAO();
+      int newEvaluationId = dao.saveEvaluation(evaluation);
+
+      if (newEvaluationId != -1) {
+        saveCriteriaGrades(newEvaluationId);
+
+        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Evaluación guardada",
+            "La evaluación se ha guardado exitosamente.");
+
+        goMainMenu();
+      } else {
+        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al guardar", "Ocurrió un error al guardar la evaluación.");
+      }
+    } catch (SQLException e) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de base de datos",
+          "No se pudo conectar con la base de datos para guardar la información.");
+      e.printStackTrace();
+    } catch (NumberFormatException e) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en calificación", "El promedio no es un número válido.");
+      e.printStackTrace();
     }
   }
 
-  private boolean performComprehensiveEvaluationValidation() {
-    List<String> errors = new ArrayList<>();
-
-    // Validar que hay un estudiante seleccionado
-    if (studentToEvaluate == null) {
-      errors.add("No se ha seleccionado un estudiante para evaluar.");
-      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Contexto", "No hay estudiante seleccionado.");
-      return false;
+  private void saveCriteriaGrades(int evaluationId) throws SQLException {
+    List<EvaluationDetail> details = new ArrayList<>();
+    if (dbCriteriaList == null || dbCriteriaList.size() != scoreFields.length) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Configuración",
+          "La cantidad de criterios y campos de calificación no coincide.");
+      return;
     }
 
-    // Validar título de evaluación
-    validateEvaluationTitle(errors);
-
-    // Validar calificaciones individuales
-    validateAllScoreFields(errors);
-
-    // Validar que hay al menos una calificación
-    validateMinimumScores(errors);
-
-    // Validar observaciones
-    validateObservationsContent(errors);
-
-    // Validaciones de seguridad
-    performSecurityValidationsOnEvaluation(errors);
-
-    // Mostrar errores si los hay
-    if (!errors.isEmpty()) {
-      String allErrors = String.join("\n", errors);
-      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Errores de Validación", allErrors);
-      return false;
+    for (int i = 0; i < dbCriteriaList.size(); i++) {
+      EvaluationDetail detail = new EvaluationDetail();
+      detail.setIdEvaluation(evaluationId);
+      detail.setIdCriteria(dbCriteriaList.get(i).getIdCriteria());
+      String gradeText = scoreFields[i].getText().trim();
+      detail.setGrade(Float.parseFloat(gradeText.isEmpty() ? "0" : gradeText));
+      details.add(detail);
     }
 
-    // Sanitizar campos antes de proceder
-    sanitizeEvaluationFields();
-
-    return true;
-  }
-
-  private void validateEvaluationTitle(List<String> errors) {
-    String title = tfEvaluationTitle.getText();
-    if (title == null || title.trim().isEmpty()) {
-      errors.add("El título de la evaluación es obligatorio.");
-    } else {
-      String titleError = ValidationUtils.validateEvaluationTitle(title);
-      if (!titleError.isEmpty()) {
-        errors.add(titleError);
-      }
-    }
-  }
-
-  private void validateAllScoreFields(List<String> errors) {
-    TextField[] scoreFields = {
-        tfISMethodsTechniquesScore, tfRequirementsScore, tfSecurityMasteryScore,
-        tfContentScore, tfSpellingGrammarScore
-    };
-
-    String[] fieldNames = {
-        "Métodos y Técnicas IS", "Requisitos", "Seguridad y Dominio",
-        "Contenido", "Ortografía y Gramática"
-    };
-
-    for (int i = 0; i < scoreFields.length; i++) {
-      String text = scoreFields[i].getText();
-      if (text != null && !text.trim().isEmpty()) {
-        try {
-          int score = Integer.parseInt(text.trim());
-          String scoreError = ValidationUtils.validateEvaluationScore(score);
-          if (!scoreError.isEmpty()) {
-            errors.add(fieldNames[i] + ": " + scoreError);
-          }
-        } catch (NumberFormatException e) {
-          errors.add(fieldNames[i] + ": Debe ser un número válido.");
-        }
-      }
-    }
-  }
-
-  private void validateMinimumScores(List<String> errors) {
-    TextField[] scoreFields = {
-        tfISMethodsTechniquesScore, tfRequirementsScore, tfSecurityMasteryScore,
-        tfContentScore, tfSpellingGrammarScore
-    };
-
-    long validScores = 0;
-    for (TextField field : scoreFields) {
-      String text = field.getText();
-      if (text != null && !text.trim().isEmpty()) {
-        try {
-          int score = Integer.parseInt(text.trim());
-          if (score >= 5 && score <= 10) {
-            validScores++;
-          }
-        } catch (NumberFormatException e) {
-          // Ya validado arriba
-        }
-      }
-    }
-
-    if (validScores < 3) {
-      errors.add("Se requieren al menos 3 calificaciones válidas para completar la evaluación.");
-    }
-  }
-
-  private void validateObservationsContent(List<String> errors) {
-    String observations = taObservationsAndComments.getText();
-    if (observations != null && !observations.trim().isEmpty()) {
-      String observationsError = ValidationUtils.validateObservations(observations);
-      if (!observationsError.isEmpty()) {
-        errors.add(observationsError);
-      }
-    }
-  }
-
-  private void performSecurityValidationsOnEvaluation(List<String> errors) {
-    // Validar título
-    String title = tfEvaluationTitle.getText();
-    if (title != null && !title.isEmpty()) {
-      List<String> securityErrors = SecurityValidationUtils.performComprehensiveSecurityValidation(
-          title, "Título de evaluación");
-      errors.addAll(securityErrors);
-    }
-
-    // Validar observaciones
-    String observations = taObservationsAndComments.getText();
-    if (observations != null && !observations.isEmpty()) {
-      List<String> securityErrors = SecurityValidationUtils.performComprehensiveSecurityValidation(
-          observations, "Observaciones");
-      errors.addAll(securityErrors);
-    }
-
-    // Validar campos de calificación contra inyección
-    TextField[] scoreFields = {
-        tfISMethodsTechniquesScore, tfRequirementsScore, tfSecurityMasteryScore,
-        tfContentScore, tfSpellingGrammarScore
-    };
-
-    for (TextField field : scoreFields) {
-      String text = field.getText();
-      if (text != null && !text.isEmpty()) {
-        if (SecurityValidationUtils.containsSQLInjection(text)) {
-          errors.add("Se detectaron caracteres sospechosos en las calificaciones.");
-          break;
-        }
-      }
-    }
-  }
-
-  private void sanitizeEvaluationFields() {
-    // Sanitizar título
-    if (tfEvaluationTitle.getText() != null) {
-      tfEvaluationTitle.setText(SecurityValidationUtils.advancedSanitization(tfEvaluationTitle.getText()));
-    }
-
-    // Sanitizar observaciones
-    if (taObservationsAndComments.getText() != null) {
-      taObservationsAndComments
-          .setText(SecurityValidationUtils.advancedSanitization(taObservationsAndComments.getText()));
-    }
-
-    // Sanitizar campos de calificación
-    TextField[] scoreFields = {
-        tfISMethodsTechniquesScore, tfRequirementsScore, tfSecurityMasteryScore,
-        tfContentScore, tfSpellingGrammarScore
-    };
-
-    for (TextField field : scoreFields) {
-      if (field.getText() != null) {
-        field.setText(ValidationUtils.sanitizeInput(field.getText()));
-      }
-    }
-  }
-
-  private PresentationEvaluation createEvaluationFromForm() {
-    PresentationEvaluation evaluation = new PresentationEvaluation();
-
-    evaluation.setTitle(tfEvaluationTitle.getText().trim());
-    evaluation.setEvaluationDate(Date.valueOf(LocalDate.now()));
-    evaluation.setStudentId(studentToEvaluate.getIdStudent());
-
-    // Asignar calificaciones individuales
-    setScoreIfValid(evaluation::setMethodsTechniquesScore, tfISMethodsTechniquesScore);
-    setScoreIfValid(evaluation::setRequirementsScore, tfRequirementsScore);
-    setScoreIfValid(evaluation::setSecurityMasteryScore, tfSecurityMasteryScore);
-    setScoreIfValid(evaluation::setContentScore, tfContentScore);
-    setScoreIfValid(evaluation::setSpellingGrammarScore, tfSpellingGrammarScore);
-
-    // Calcular y asignar promedio
-    String averageText = lbScoreAverage.getText();
-    if (averageText != null && !averageText.equals("0.0")) {
-      try {
-        evaluation.setAverageScore(new BigDecimal(averageText));
-      } catch (NumberFormatException e) {
-        evaluation.setAverageScore(BigDecimal.ZERO);
-      }
-    }
-
-    // Asignar observaciones
-    String observations = taObservationsAndComments.getText();
-    if (observations != null && !observations.trim().isEmpty()) {
-      evaluation.setObservations(observations.trim());
-    }
-
-    return evaluation;
-  }
-
-  private void setScoreIfValid(java.util.function.Consumer<BigDecimal> setter, TextField field) {
-    String text = field.getText();
-    if (text != null && !text.trim().isEmpty()) {
-      try {
-        int score = Integer.parseInt(text.trim());
-        if (score >= 5 && score <= 10) {
-          setter.accept(new BigDecimal(score));
-        }
-      } catch (NumberFormatException e) {
-        // Ignorar calificaciones inválidas
-      }
-    }
+    evaluationDetailDAO.saveEvaluationDetails(details);
   }
 
   private void goMainMenu() {

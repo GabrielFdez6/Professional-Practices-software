@@ -1,8 +1,7 @@
 package professionalpractice.model.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+
 import professionalpractice.model.ConectionBD;
 import professionalpractice.model.dao.interfaces.IPresentationEvaluationDAO;
 import professionalpractice.model.pojo.PresentationEvaluation;
@@ -12,21 +11,24 @@ public class PresentationEvaluationDAO implements IPresentationEvaluationDAO {
 
     @Override
     public int saveEvaluation(PresentationEvaluation evaluation) throws SQLException {
-        String query = "INSERT INTO presentationevaluation (title, date, grade, observations, idRecord) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO presentationevaluation (date, grade, observations, idRecord) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConectionBD.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+             PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, evaluation.getTitle());
-            ps.setDate(2, evaluation.getDate());
-            ps.setBigDecimal(3, evaluation.getGrade());
-            ps.setString(4, evaluation.getObservations());
-            ps.setInt(5, evaluation.getIdRecord());
+            ps.setDate(1, evaluation.getDate());
+            ps.setBigDecimal(2, evaluation.getGrade());
+            ps.setString(3, evaluation.getObservations());
+            ps.setInt(4, evaluation.getIdRecord());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
-                return Constants.OPERATION_SUCCESFUL;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        return rs.getInt(1);
+                    }
+                }
             }
         }
-        return Constants.CONNECTION_FAILED;
+        return -1;
     }
 }

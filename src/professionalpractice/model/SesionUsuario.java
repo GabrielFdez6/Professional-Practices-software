@@ -5,6 +5,7 @@ public class SesionUsuario {
     private static SesionUsuario instancia;
     private String rolUsuario;
     private int idUsuario;
+    private String username;
 
     private SesionUsuario() {}
 
@@ -16,7 +17,7 @@ public class SesionUsuario {
     }
 
     public static void setInstancia(SesionUsuario instancia) {
-        SesionUsuario.instancia = instancia;
+        SesionUsuario.setInstancia(instancia);
     }
 
     public int getIdUsuario() {
@@ -35,7 +36,16 @@ public class SesionUsuario {
         this.rolUsuario = rolUsuario;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public void cerrarSesion() {
         this.rolUsuario = null;
+        this.username = null;
     }
 }

@@ -15,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.SesionUsuario;
-import professionalpractice.model.pojo.Student;
 import professionalpractice.utils.Utils;
 
 public class FXMLEvaluatorMainScreenController implements Initializable {
@@ -25,9 +24,7 @@ public class FXMLEvaluatorMainScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-    }
-
-    public void loadUserInformation(String username) {
+        String username = SesionUsuario.getInstancia().getUsername();
         if (username != null && !username.isEmpty()) {
             lbUsername.setText(username);
         }

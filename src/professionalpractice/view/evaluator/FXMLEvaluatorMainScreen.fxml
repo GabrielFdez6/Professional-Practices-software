@@ -15,7 +15,7 @@
                <image>
                   <Image url="@../../resource/logoUV.png" />
                </image></ImageView>
-            <Label fx:id="lbUsername" layoutX="604.0" layoutY="26.0">
+            <Label fx:id="lbUsername" layoutX="578.0" layoutY="26.0">
                <font>
                   <Font name="Arial" size="15.0" />
                </font></Label>
