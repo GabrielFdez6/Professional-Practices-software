@@ -19,4 +19,10 @@ public interface IDocumentDAO {
     List<ReportDocument> getAllReportDocuments() throws SQLException;
 
     List<FinalDocument> getAllFinalDocuments() throws SQLException;
+
+    List<String> getDistinctInitialDocumentNames() throws SQLException;
+
+    List<String> getDistinctReportDocumentNames() throws SQLException;
+
+    List<String> getDistinctFinalDocumentNames() throws SQLException;
 }

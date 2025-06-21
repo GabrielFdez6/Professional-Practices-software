@@ -9,8 +9,12 @@ import professionalpractice.model.pojo.ReportDocument;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class DocumentDAO implements IDocumentDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(DocumentDAO.class.getName());
 
     @Override
     public int saveInitialDocument(InitialDocument document) throws SQLException {
@@ -159,5 +163,56 @@ public class DocumentDAO implements IDocumentDAO {
             System.out.println("Total de Documentos Finales encontrados en DB: " + documents.size());
         }
         return documents;
+    }
+
+    @Override
+    public List<String> getDistinctInitialDocumentNames() throws SQLException {
+        List<String> names = new ArrayList<>();
+        String query = "SELECT DISTINCT name FROM initialdocument";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                names.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error fetching distinct initial document names", e);
+            throw e; // Propaga la excepción para que el controlador la maneje
+        }
+        return names;
+    }
+
+    @Override
+    public List<String> getDistinctReportDocumentNames() throws SQLException {
+        List<String> names = new ArrayList<>();
+        String query = "SELECT DISTINCT name FROM reportdocument";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                names.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error fetching distinct report document names", e);
+            throw e; // Propaga la excepción para que el controlador la maneje
+        }
+        return names;
+    }
+
+    @Override
+    public List<String> getDistinctFinalDocumentNames() throws SQLException {
+        List<String> names = new ArrayList<>();
+        String query = "SELECT DISTINCT name FROM finaldocument";
+        try (Connection conn = ConectionBD.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                names.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Error fetching distinct final document names", e);
+            throw e; // Propaga la excepción para que el controlador la maneje
+        }
+        return names;
     }
 }

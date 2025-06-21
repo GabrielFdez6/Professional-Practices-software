@@ -1,135 +1,210 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package professionalpractice.model.dao;
 
-import professionalpractice.model.ConectionBD;
-import professionalpractice.model.dao.interfaces.IDeliveryDAO;
-import professionalpractice.model.dao.interfaces.IRecordDAO;
-import professionalpractice.model.pojo.Delivery;
-import professionalpractice.utils.Constants;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
+import professionalpractice.model.ConectionBD;
+import professionalpractice.model.pojo.Delivery;
 
-public class DeliveryDAO implements IDeliveryDAO {
+/**
+ *
+ * @author Dell
+ */
+public class DeliveryDAO {
+    public static ArrayList<Delivery> obtenerEntregasPorGrupo(int idGrupo, String tabla) throws SQLException {
+        ArrayList<Delivery> entregas = new ArrayList<>();
+        Connection conexionBD = ConectionBD.getConnection();
+        if (conexionBD != null) {
+            String sql = String.format("SELECT * FROM %s WHERE grupoEE_idgrupoEE = ?", tabla);
 
-    @Override
-    public int scheduleDelivery(Delivery delivery) throws SQLException {
-        String query = "INSERT INTO delivery (name, deliveryType, startDate, endDate, description) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConectionBD.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            PreparedStatement sentencia = conexionBD.prepareStatement(sql);
+            sentencia.setInt(1, idGrupo);
+            ResultSet resultado = sentencia.executeQuery();
 
-            pstmt.setString(1, delivery.getName());
-            pstmt.setString(2, delivery.getDeliveryType());
-            pstmt.setTimestamp(3, delivery.getStartDate());
-            pstmt.setTimestamp(4, delivery.getEndDate());
-            pstmt.setString(5, delivery.getDescription());
+            while(resultado.next()){
+                Delivery entrega = new Delivery();
+                // El nombre del campo ID es diferente en cada tabla
+                if (tabla.equals("entregadocumentoinicio")) {
+                    entrega.setIdDelivery(resultado.getInt("idEntregaDocumentoInicio"));
+                } else if (tabla.equals("entregareporte")) {
+                    entrega.setIdDelivery(resultado.getInt("idEntregaReporte"));
+                } else {
+                    entrega.setIdDelivery(resultado.getInt("idEntregaDocumentoFinal"));
+                }
+                entrega.setName(resultado.getString("nombre"));
+                entrega.setDescription(resultado.getString("descripcion"));
+                entrega.setStartDate(Timestamp.valueOf(resultado.getString("fechaInicio")));
+                entrega.setEndDate(Timestamp.valueOf(resultado.getString("fechaFin")));
+                entregas.add(entrega);
+            }
 
-            int rowsAffected = pstmt.executeUpdate();
-            return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : 0;
+            conexionBD.close();
+            sentencia.close();
+            resultado.close();
+        } else {
+            throw new SQLException("Error: Sin conexión a la Base de Datos");
         }
+        return entregas;
     }
 
-    @Override
-    public List<Delivery> getDeliveriesByRecord(int idRecord) throws SQLException {
-        List<Delivery> deliveries = new ArrayList<>();
-        String query = "SELECT idDelivery, name, deliveryType, startDate, endDate, description FROM delivery WHERE idRecord = ?";
-        try (Connection conn = ConectionBD.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+    public static ArrayList<Delivery> obtenerTodasLasEntregas(String tabla) throws SQLException {
+        ArrayList<Delivery> entregas = new ArrayList<>();
+        Connection conexionBD = ConectionBD.getConnection();
+        if (conexionBD != null) {
+            String sql = String.format("SELECT * FROM %s", tabla);
+            PreparedStatement sentencia = conexionBD.prepareStatement(sql);
+            ResultSet resultado = sentencia.executeQuery();
 
-            pstmt.setInt(1, idRecord);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    Delivery delivery = new Delivery();
-                    delivery.setIdDelivery(rs.getInt("idDelivery"));
-                    delivery.setName(rs.getString("name"));
-                    delivery.setDeliveryType(rs.getString("deliveryType"));
-                    delivery.setStartDate(rs.getTimestamp("startDate"));
-                    delivery.setEndDate(rs.getTimestamp("endDate"));
-                    delivery.setDescription(rs.getString("description"));
-                    deliveries.add(delivery);
+            while(resultado.next()){
+                Delivery entrega = new Delivery();
+                if (tabla.equals("entregadocumentoinicio")) {
+                    entrega.setIdDelivery(resultado.getInt("idEntregaDocumentoInicio"));
+                } else if (tabla.equals("entregareporte")) {
+                    entrega.setIdDelivery(resultado.getInt("idEntregaReporte"));
+                } else {
+                    entrega.setIdDelivery(resultado.getInt("idEntregaDocumentoFinal"));
                 }
+                entrega.setName(resultado.getString("nombre"));
+                entrega.setDescription(resultado.getString("descripcion"));
+                entrega.setStartDate(Timestamp.valueOf(resultado.getString("fechaInicio")));
+                entrega.setEndDate(Timestamp.valueOf(resultado.getString("fechaFin")));
+                entregas.add(entrega);
             }
+
+            conexionBD.close();
+            sentencia.close();
+            resultado.close();
+        } else {
+            throw new SQLException("Error: Sin conexión a la Base de Datos");
         }
-        return deliveries;
+        return entregas;
     }
 
-    public int linkDocumentToDelivery(int idDelivery, int documentId, String deliveryType) throws SQLException {
-        String columnToUpdate;
-        switch (deliveryType) {
-            case "INITIAL DOCUMENT":
-                columnToUpdate = "idInitialDocument";
-                break;
-            case "FINAL DOCUMENT":
-                columnToUpdate = "idFinalDocument";
-                break;
-            case "REPORT":
-                columnToUpdate = "idReportDocument";
-                break;
-            default:
-                throw new SQLException("Invalid delivery type provided: " + deliveryType);
-        }
+    public static ArrayList<Delivery> obtenerEntregasPendientesEstudiante(int idGrupo, int idExpediente, String tablaEntrega) throws SQLException {
+        ArrayList<Delivery> entregas = new ArrayList<>();
+        Connection conexionBD = ConectionBD.getConnection();
+        if (conexionBD != null) {
 
-        String query = String.format("UPDATE delivery SET %s = ? WHERE idDelivery = ?", columnToUpdate);
-        try (Connection conn = ConectionBD.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, documentId);
-            pstmt.setInt(2, idDelivery);
-            int rowsAffected = pstmt.executeUpdate();
-            return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : 0;
+            // --- LÓGICA PARA CONSTRUIR LA CONSULTA DINÁMICA ---
+            String tablaDocumento;
+            String campoIdEntregaFK;
+            String campoIdEntregaPK;
+            String campoIdDocumentoPK;
+
+            if (tablaEntrega.equals("entregadocumentoinicio")) {
+                tablaDocumento = "documentoinicio";
+                campoIdEntregaPK = "idEntregaDocumentoInicio";
+                campoIdDocumentoPK = "idDocumentoInicio";
+                campoIdEntregaFK = "EntregaDocumentoInicio_idEntregaDocumentoInicio";
+            } else if (tablaEntrega.equals("entregareporte")) {
+                tablaDocumento = "reporte";
+                campoIdEntregaPK = "idEntregaReporte";
+                campoIdDocumentoPK = "idReporte";
+                campoIdEntregaFK = "EntregaReporte_idEntregaReporte";
+            } else { // entregadocumentofinal
+                tablaDocumento = "documentofinal";
+                campoIdEntregaPK = "idEntregaDocumentoFinal";
+                campoIdDocumentoPK = "idDocumentoFinal";
+                campoIdEntregaFK = "EntregaDocumentoFinal_idEntregaDocumentoFinal";
+            }
+
+            String sql = String.format(
+                    "SELECT e.*, d.%s AS documento_id " +
+                            "FROM %s e " +
+                            "LEFT JOIN %s d ON e.%s = d.%s AND d.Expediente_idExpediente = ? " +
+                            "WHERE e.grupoEE_idgrupoEE = ?",
+                    campoIdDocumentoPK, tablaEntrega, tablaDocumento, campoIdEntregaPK, campoIdEntregaFK
+            );
+            // --- FIN DE LA LÓGICA DE CONSTRUCCIÓN ---
+
+            PreparedStatement sentencia = conexionBD.prepareStatement(sql);
+            sentencia.setInt(1, idExpediente); // El idExpediente para el JOIN
+            sentencia.setInt(2, idGrupo);      // El idGrupo para el WHERE
+
+            ResultSet resultado = sentencia.executeQuery();
+
+            while(resultado.next()){
+                Delivery entrega = new Delivery();
+                entrega.setIdDelivery(resultado.getInt(campoIdEntregaPK));
+                entrega.setName(resultado.getString("nombre"));
+                entrega.setDescription(resultado.getString("descripcion"));
+                entrega.setStartDate(Timestamp.valueOf(resultado.getString("fechaInicio")));
+                entrega.setStartDate(Timestamp.valueOf(resultado.getString("fechaFin")));
+
+                // Determinar el estado basado en si se encontró un documento
+                if (resultado.getObject("documento_id") != null) {
+                    entrega.setStatus("Entregado");
+                } else {
+                    entrega.setStatus("Sin Entregar");
+                }
+
+                entregas.add(entrega);
+            }
+
+            conexionBD.close();
         }
+        return entregas;
     }
 
-    @Override
-    public int scheduleDeliveryForAllRecords(Delivery delivery) throws SQLException {
-        int rowsAffected = 0;
-        String query = "INSERT INTO delivery (name, deliveryType, startDate, endDate, description, idRecord) VALUES (?, ?, ?, ?, ?, ?)";
-        Connection conn = null;
+    public static ArrayList<Delivery> obtenerEntregasPorTipo(int idTipoDocumento, int idAcademico) throws SQLException {
+        ArrayList<Delivery> entregas = new ArrayList<>();
+        Connection conexion = ConectionBD.getConnection();
 
-        try {
-            conn = ConectionBD.getConnection();
-            conn.setAutoCommit(false);
+        if (conexion != null) {
+            String nombreTabla = "";
+            String nombreColumnaId = "";
 
-            IRecordDAO recordDAO = new RecordDAO();
-            List<Integer> recordIds = recordDAO.getAllActiveRecordIds();
-
-            if (recordIds.isEmpty()) {
-                return Constants.OPERATION_SUCCESFUL;
+            switch (idTipoDocumento) {
+                case 1:
+                    nombreTabla = "entregadocumentoinicio";
+                    nombreColumnaId = "idEntregaDocumentoInicio";
+                    break;
+                case 2:
+                    nombreTabla = "entregareporte";
+                    nombreColumnaId = "idEntregaReporte";
+                    break;
+                case 3:
+                    nombreTabla = "entregadocumentofinal";
+                    nombreColumnaId = "idEntregaDocumentoFinal";
+                    break;
+                default:
+                    conexion.close();
+                    return entregas;
             }
 
-            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                for (Integer recordId : recordIds) {
-                    pstmt.setString(1, delivery.getName());
-                    pstmt.setString(2, delivery.getDeliveryType());
-                    pstmt.setTimestamp(3, delivery.getStartDate());
-                    pstmt.setTimestamp(4, delivery.getEndDate());
-                    pstmt.setString(5, delivery.getDescription());
-                    pstmt.setInt(6, recordId);
-                    pstmt.addBatch();
+            // Consulta modificada con JOIN para filtrar por el idAcademico
+            String consulta = String.format("SELECT t.%s, t.nombre, t.descripcion, t.fechaInicio, t.fechaFin " +
+                            "FROM %s t " +
+                            "JOIN grupoee g ON t.grupoEE_idgrupoEE = g.idgrupoEE " +
+                            "WHERE g.Academico_idAcademico = ?",
+                    nombreColumnaId, nombreTabla);
+
+            try (PreparedStatement sentencia = conexion.prepareStatement(consulta)) {
+                // Se establece el parámetro del idAcademico en la consulta
+                sentencia.setInt(1, idAcademico);
+
+                ResultSet resultado = sentencia.executeQuery();
+                while (resultado.next()) {
+                    Delivery entrega = new Delivery();
+                    entrega.setIdDelivery(resultado.getInt(nombreColumnaId));
+                    entrega.setName(resultado.getString("nombre"));
+                    entrega.setDescription(resultado.getString("descripcion"));
+                    // La corrección del tipo de dato que hicimos antes se mantiene
+                    entrega.setStartDate(Timestamp.valueOf(resultado.getTimestamp("fechaInicio").toLocalDateTime().toLocalDate().toString()));
+                    entrega.setEndDate(Timestamp.valueOf(resultado.getTimestamp("fechaFin").toLocalDateTime().toLocalDate().toString()));
+                    entregas.add(entrega);
                 }
-
-                int[] batchResults = pstmt.executeBatch();
-                for (int result : batchResults) {
-                    rowsAffected += (result > 0) ? result : 0;
-                }
-            }
-
-            conn.commit();
-
-        } catch (SQLException e) {
-            if (conn != null) {
-                conn.rollback();
-            }
-            throw e;
-        } finally {
-            if (conn != null) {
-                conn.setAutoCommit(true);
-                conn.close();
+            } finally {
+                conexion.close();
             }
         }
+        return entregas;
+    }
 
-        return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : 0;
+    public int linkDocumentToDelivery(int idDelivery, int documentId, String deliveryType) {
+        return 0;
     }
 }

@@ -13,6 +13,7 @@ public class Delivery {
     private int idFinalDocument;
     private int idReportDocument;
     private String description;
+    private String status;
 
     public Delivery() {}
 
@@ -27,6 +28,7 @@ public class Delivery {
         this.idFinalDocument = idFinalDocument;
         this.idReportDocument = idReportDocument;
         this.description = description;
+        this.status = status;
     }
 
     public int getIdDelivery() {
@@ -53,16 +55,16 @@ public class Delivery {
         this.name = name;
     }
 
-    public Timestamp getStartDate() {
-        return startDate;
+    public CharSequence getStartDate() {
+        return (CharSequence) startDate;
     }
 
     public void setStartDate(Timestamp startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
-        return endDate;
+    public CharSequence getEndDate() {
+        return (CharSequence) endDate;
     }
 
     public void setEndDate(Timestamp endDate) {
@@ -108,4 +110,11 @@ public class Delivery {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) { this.status = status; }
+
 }

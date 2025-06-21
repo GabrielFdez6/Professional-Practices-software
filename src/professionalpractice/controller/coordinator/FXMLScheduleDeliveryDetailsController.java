@@ -1,104 +1,104 @@
 package professionalpractice.controller.coordinator;
 
+import java.net.URL;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
-import javafx.stage.Stage;
-
-import professionalpractice.model.dao.DeliveryDAO;
-import professionalpractice.model.dao.interfaces.IDeliveryDAO;
+import javafx.scene.control.TextField;
+import professionalpractice.model.dao.ScheduleDeliveryDAO;
 import professionalpractice.model.pojo.Delivery;
-import professionalpractice.utils.Constants;
+import professionalpractice.model.pojo.OperationResult;
 import professionalpractice.utils.Utils;
-
-import java.net.URL;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ResourceBundle;
 
 public class FXMLScheduleDeliveryDetailsController implements Initializable {
 
-    @FXML private TextField tfDeliveryName;
-    @FXML private TextArea taDescription;
-    @FXML private DatePicker dpStartDate;
-    @FXML private DatePicker dpEndDate;
-    @FXML private Button btnProgram;
-    @FXML private Button btnBack;
+    @FXML
+    private TextField tfNombre;
+    @FXML
+    private TextArea taDescripcion;
+    @FXML
+    private DatePicker dpFechaInicio;
+    @FXML
+    private DatePicker dpFechaFin;
+    private String tipoEntrega;
 
-    private String selectedDocumentName;
-    private String selectedDeliveryType;
-    private IDeliveryDAO deliveryDAO;
-
+    /**
+     * Initializes the controller class.
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        deliveryDAO = new DeliveryDAO();
+        // TODO
     }
 
-    public void initData(String documentName, String deliveryType) {
-        this.selectedDocumentName = documentName;
-        this.selectedDeliveryType = deliveryType;
-        tfDeliveryName.setText(documentName);
+    public void inicializarInformacion(String tipoEntrega, String nombreDocumento){
+        this.tipoEntrega = tipoEntrega;
+        this.tfNombre.setText(nombreDocumento);
     }
 
-    @FXML
-    private void btnProgramClick(ActionEvent event) {
-        if (validateFields()) {
-            Delivery newDelivery = new Delivery();
-            newDelivery.setName(tfDeliveryName.getText().trim());
-            newDelivery.setDescription(taDescription.getText().trim());
-            newDelivery.setDeliveryType(selectedDeliveryType);
-
-            LocalDate startDate = dpStartDate.getValue();
-            LocalDate endDate = dpEndDate.getValue();
-            newDelivery.setStartDate(Timestamp.valueOf(startDate.atStartOfDay()));
-            newDelivery.setEndDate(Timestamp.valueOf(endDate.atTime(23, 59, 59)));
-
-            try {
-                int response = deliveryDAO.scheduleDeliveryForAllRecords(newDelivery);
-
-                if (response == Constants.OPERATION_SUCCESFUL) {
-                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", "La entrega ha sido programada correctamente para todos los estudiantes.");
-                    closeWindow();
-                } else {
-                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en la Operación", "No se pudo programar la entrega.");
-                }
-            } catch (SQLException e) {
-                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No hay conexión con la base de datos.");
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @FXML
-    private void btnBackClick(ActionEvent event) {
-        if (Utils.showConfirmationAlert("Cancelar Proceso", "¿Estás seguro que quieres regresar? Los cambios no se guardarán.")) {
-            closeWindow();
-        }
-    }
-
-    private boolean validateFields() {
-        if (tfDeliveryName.getText().trim().isEmpty() ||
-                dpStartDate.getValue() == null ||
-                dpEndDate.getValue() == null) {
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "El nombre de la entrega y las fechas de inicio/fin son obligatorias.");
+    private boolean validarCampos(){
+        if(tfNombre.getText().isEmpty() || taDescripcion.getText().isEmpty() || dpFechaInicio.getValue() == null || dpFechaFin.getValue() == null){
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Existen campos vacíos, por favor llena todos los campos");
             return false;
         }
-        if (dpEndDate.getValue().isBefore(dpStartDate.getValue())) {
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Inválidas", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+        if(dpFechaFin.getValue().isBefore(dpFechaInicio.getValue())){
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Incorrectas", "La fecha de fin no puede ser anterior a la fecha de inicio");
             return false;
         }
         return true;
     }
 
-    private void closeWindow() {
-        Stage stage = (Stage) btnBack.getScene().getWindow();
-        stage.close();
+    @FXML
+    private void btnClicCancelar(ActionEvent event) {
+        boolean confirmado = Utils.showConfirmationAlert("Cancelar Operación",
+                "¿Estás seguro de que quieres cancelar?", "Cualquier dato no guardado se perderá.");
+        if (confirmado) {
+            cerrarVentana();
+        }
     }
+
+    private void cerrarVentana(){
+        Utils.getSceneComponent(tfNombre).close();
+    }
+
+    @FXML
+    private void btnClicAceptar(ActionEvent event) {
+        if(validarCampos()){
+            String tablaDestino = "";
+            switch(tipoEntrega){
+                case "DOCUMENTOS INICIALES": tablaDestino = "entregadocumentoinicio"; break;
+                case "REPORTES": tablaDestino = "entregareporte"; break;
+                case "DOCUMENTOS FINALES": tablaDestino = "entregadocumentofinal"; break;
+            }
+
+            Delivery nuevaEntrega = new Delivery();
+            nuevaEntrega.setName(tfNombre.getText());
+            nuevaEntrega.setDescription(taDescripcion.getText());
+            nuevaEntrega.setStartDate(Timestamp.valueOf(dpFechaInicio.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            nuevaEntrega.setEndDate(Timestamp.valueOf(dpFechaFin.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+
+            try{
+                // Se llama al nuevo método transaccional
+                OperationResult resultado = ScheduleDeliveryDAO.programarEntregaPeriodoActual(nuevaEntrega, tablaDestino);
+
+                if(!resultado.isError()){
+                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", resultado.getMensaje());
+                    cerrarVentana();
+                } else {
+                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error", resultado.getMensaje());
+                }
+
+            } catch(SQLException e){
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No fue posible conectar con la base de datos.");
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

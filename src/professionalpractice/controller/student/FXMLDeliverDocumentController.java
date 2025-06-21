@@ -62,7 +62,7 @@ public class FXMLDeliverDocumentController {
   @FXML
   public void initialize() {
     this.documentDAO = new DocumentDAO();
-    this.deliveryDAO = new DeliveryDAO();
+    this.deliveryDAO = (IDeliveryDAO) new DeliveryDAO();
   }
 
   public void initData(Delivery delivery) {
@@ -313,8 +313,8 @@ public class FXMLDeliverDocumentController {
 
   private void validateDeliveryTiming(List<String> errors) {
     Date now = new Date();
-    Date startDate = currentDelivery.getStartDate();
-    Date endDate = currentDelivery.getEndDate();
+    Date startDate = (Date) currentDelivery.getStartDate();
+    Date endDate = (Date) currentDelivery.getEndDate();
 
     if (now.before(startDate)) {
       errors.add("La entrega aún no está disponible. Fecha de inicio: " +
@@ -463,7 +463,7 @@ public class FXMLDeliverDocumentController {
 
   @FXML
   void btnCancelClick(ActionEvent event) {
-    if (Utils.showConfirmationAlert("Cancelar Proceso", "¿Estás seguro que quieres cancelar la entrega?")) {
+    if (Utils.showConfirmationAlert("Cancelar Proceso", "¿Estás seguro que quieres cancelar la entrega?", "Cualquier dato no guardado se perderá.")) {
       closeWindow();
     }
   }

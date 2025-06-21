@@ -92,7 +92,7 @@ public class FXMLProjectFormController implements Initializable {
   @FXML
   public void btnCancel(ActionEvent actionEvent) {
     if (Utils.showConfirmationAlert("Cancelar operación",
-        "¿Estás seguro que quieres cancelar? Se perderán los cambios no guardados.")) {
+        "¿Estás seguro que quieres cancelar? Se perderán los cambios no guardados.", "Cualquier dato no guardado se perderá.")) {
       Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
       stage.close();
     }

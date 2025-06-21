@@ -35,7 +35,7 @@ public class FXMLDeliveryListController {
     @FXML
     public void initialize() {
         this.deliveries = FXCollections.observableArrayList();
-        this.deliveryDAO = new DeliveryDAO();
+        this.deliveryDAO = (IDeliveryDAO) new DeliveryDAO();
         configureTable();
     }
 

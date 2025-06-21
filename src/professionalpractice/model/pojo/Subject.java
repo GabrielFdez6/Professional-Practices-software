@@ -4,6 +4,7 @@ public class Subject {
     private int idSubject;
     private String name;
     private int credits;
+    private String nrc;
 
     public Subject() {}
 
@@ -11,6 +12,7 @@ public class Subject {
         this.idSubject = idSubject;
         this.name = name;
         this.credits = credits;
+        this.nrc = nrc;
     }
 
     public int getIdSubject() {
@@ -35,5 +37,13 @@ public class Subject {
 
     public void setCredits(int credits) {
         this.credits = credits;
+    }
+
+    public String getNrc() {
+        return nrc;
+    }
+
+    public void setNrc(String nrc) {
+        this.nrc = nrc;
     }
 }
