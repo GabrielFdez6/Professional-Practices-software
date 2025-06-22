@@ -60,7 +60,7 @@ public class FXMLStudentListController implements Initializable {
     @FXML
     public void btnCancel(ActionEvent actionEvent) {
         try {
-            if (Utils.showConfirmationAlert("Salir de la evaluacion", "¿Estás seguro que quieres cancelar?")) {
+            if (Utils.showConfirmationAlert("Salir de la evaluacion", "¿Estás seguro que quieres cancelar?", "Cualquier dato no guardado se perderá.")) {
                 Stage stageStudentsList = (Stage) tvStudents.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
                 Parent viewLogIn = loader.load();

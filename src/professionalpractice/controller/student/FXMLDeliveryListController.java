@@ -16,11 +16,13 @@ import javafx.stage.Stage;
 import professionalpractice.model.dao.DeliveryDAO;
 import professionalpractice.model.dao.interfaces.IDeliveryDAO;
 import professionalpractice.model.pojo.Delivery;
+import professionalpractice.model.pojo.DeliveryDefinition; // Asegúrate de importar DeliveryDefinition
 import professionalpractice.utils.Utils;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.List; // Necesario para List<Delivery>
 
 public class FXMLDeliveryListController {
 
@@ -35,7 +37,7 @@ public class FXMLDeliveryListController {
     @FXML
     public void initialize() {
         this.deliveries = FXCollections.observableArrayList();
-        this.deliveryDAO = new DeliveryDAO();
+        this.deliveryDAO = (IDeliveryDAO) new DeliveryDAO();
         configureTable();
     }
 
@@ -44,18 +46,34 @@ public class FXMLDeliveryListController {
     }
 
     private void configureTable() {
-        colName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        colType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDeliveryType()));
-        colEndDate.setCellValueFactory(cellData -> {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-            return new SimpleStringProperty(sdf.format(cellData.getValue().getEndDate()));
+        // --- Cambios aquí: Acceder a DeliveryDefinition para los datos ---
+        colName.setCellValueFactory(cellData -> {
+            // Asegurarse de que deliveryDefinition no sea null
+            DeliveryDefinition definition = cellData.getValue().getDeliveryDefinition();
+            return new SimpleStringProperty(definition != null ? definition.getName() : "N/A");
         });
+        colType.setCellValueFactory(cellData -> {
+            DeliveryDefinition definition = cellData.getValue().getDeliveryDefinition();
+            return new SimpleStringProperty(definition != null ? definition.getDeliveryType() : "N/A");
+        });
+        colEndDate.setCellValueFactory(cellData -> {
+            DeliveryDefinition definition = cellData.getValue().getDeliveryDefinition();
+            if (definition != null && definition.getEndDate() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+                return new SimpleStringProperty(sdf.format(definition.getEndDate()));
+            }
+            return new SimpleStringProperty("N/A");
+        });
+        // --- Fin de cambios ---
+
         tvDeliveries.setItems(deliveries);
     }
 
     private void loadDeliveriesData(int idRecord) {
         try {
-            this.deliveries.setAll(deliveryDAO.getDeliveriesByRecord(idRecord));
+            // El método getDeliveriesByRecord en DeliveryDAO debe cargar DeliveryDefinition
+            List<Delivery> loadedList = deliveryDAO.getDeliveriesByRecord(idRecord);
+            this.deliveries.setAll(loadedList);
         } catch (SQLException e) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudieron cargar las entregas programadas.");
             e.printStackTrace();
@@ -70,6 +88,13 @@ public class FXMLDeliveryListController {
             return;
         }
 
+        // Asegurarse de que selectedDelivery ya tiene su DeliveryDefinition cargada.
+        // Si no la tiene, se podría cargar aquí, pero es mejor que getDeliveriesByRecord lo haga.
+        if (selectedDelivery.getDeliveryDefinition() == null) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "Los detalles de la entrega seleccionada no están disponibles.");
+            return;
+        }
+
         try {
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL);
@@ -79,10 +104,11 @@ public class FXMLDeliveryListController {
             Parent view = loader.load();
 
             FXMLDeliverDocumentController controller = loader.getController();
-            controller.initData(selectedDelivery);
+            controller.initData(selectedDelivery); // selectedDelivery ahora contiene su DeliveryDefinition
 
             Scene scene = new Scene(view);
-            modalStage.setTitle("Realizar Entrega: " + selectedDelivery.getName());
+            // Usar el nombre de la definición para el título
+            modalStage.setTitle("Realizar Entrega: " + selectedDelivery.getDeliveryDefinition().getName());
             modalStage.setScene(scene);
             modalStage.showAndWait();
 

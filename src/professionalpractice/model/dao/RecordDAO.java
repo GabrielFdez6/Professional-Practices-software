@@ -47,4 +47,44 @@ public class RecordDAO implements IRecordDAO {
         }
         return recordIds;
     }
+
+    public static ArrayList<Record> obtenerRecordsPorGrupoYPeriodo(int idSubjectGroup, int idTerm, Connection conexionBD) throws SQLException {
+        ArrayList<Record> records = new ArrayList<>();
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+
+        if (conexionBD == null) {
+            throw new SQLException("Error: La conexión a la base de datos es nula.");
+        }
+
+        try {
+            // Consulta para obtener los records que pertenecen a un grupo y un periodo específico
+            // La tabla 'record' tiene idSubjectGroup y idTerm como FK.
+            String sql = "SELECT idRecord, idStudent, idSubjectGroup, hoursCount, reportPath, presentationPath, idTerm " +
+                    "FROM record " +
+                    "WHERE idSubjectGroup = ? AND idTerm = ?";
+
+            sentencia = conexionBD.prepareStatement(sql);
+            sentencia.setInt(1, idSubjectGroup);
+            sentencia.setInt(2, idTerm);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                Record record = new Record();
+                record.setIdRecord(resultado.getInt("idRecord"));
+                record.setIdStudent(resultado.getInt("idStudent"));
+                record.setIdSubjectGroup(resultado.getInt("idSubjectGroup"));
+                record.setHoursCount(resultado.getInt("hoursCount"));
+                record.setReportPath(resultado.getString("reportPath"));
+                record.setPresentationPath(resultado.getString("presentationPath"));
+                record.setIdTerm(resultado.getInt("idTerm"));
+                records.add(record);
+            }
+        } finally {
+            if (resultado != null) { try { resultado.close(); } catch (SQLException ex) { /* Log error */ } }
+            if (sentencia != null) { try { sentencia.close(); } catch (SQLException ex) { /* Log error */ } }
+            // NO CERRAR LA CONEXIÓN AQUÍ
+        }
+        return records;
+    }
 }

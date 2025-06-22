@@ -20,7 +20,6 @@ import professionalpractice.model.pojo.LinkedOrganization;
 import professionalpractice.model.pojo.Project;
 import professionalpractice.model.pojo.ProjectManager;
 import professionalpractice.utils.Utils;
-import professionalpractice.utils.Constants;
 
 import java.io.IOException;
 import java.net.URL;
@@ -185,6 +184,24 @@ public class FXMLAddEditProjectController implements Initializable {
             stage.show();
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo regresar a la pantalla anterior.");
+            ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void btnCancel(ActionEvent actionEvent) {
+        try {
+            if (Utils.showConfirmationAlert("Salir de la gestión de proyectos", "¿Estás seguro que quieres cancelar y volver a la página principal?", "Cualquier dato no guardado se perderá.")) {
+                Stage stage = (Stage) tvProjects.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
+                Parent view = loader.load();
+                Scene mainScene = new Scene(view);
+                stage.setScene(mainScene);
+                stage.setTitle("Página Principal Coordinador");
+                stage.show();
+            }
+        } catch (IOException ex) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana principal.");
             ex.printStackTrace();
         }
     }

@@ -60,12 +60,14 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
             modalStage.initOwner(Utils.getSceneComponent(lbFullName));
 
             FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLScheduleDelivery.fxml"));
+            System.out.println(ProfessionalPractices.class.getResource("view/coordinator/FXMLScheduleDelivery.fxml"));
             Parent view = loader.load();
-            Scene scene = new Scene(view);
 
-            modalStage.setTitle("Programar Entrega de Documentos");
-            modalStage.setScene(scene);
-            modalStage.showAndWait();
+            Stage escenario = new Stage();
+            escenario.setTitle("Programar Nueva Entrega");
+            escenario.setScene(new Scene(view));
+            escenario.initModality(Modality.APPLICATION_MODAL);
+            escenario.showAndWait();
 
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de programación.");

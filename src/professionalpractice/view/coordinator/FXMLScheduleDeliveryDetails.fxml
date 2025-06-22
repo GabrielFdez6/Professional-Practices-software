@@ -1,80 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryDetailsController">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #F5F6FA;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryDetailsController">
     <children>
-        <AnchorPane layoutX="60.0" layoutY="50.0" prefHeight="310.0" prefWidth="480.0" style="-fx-background-color: white; -fx-background-radius: 9;">
-            <effect>
-                <DropShadow height="20.45" offsetY="2.0" radius="9.7425" width="20.52">
-                    <color>
-                        <Color opacity="0.1599999964237213" />
-                    </color>
-                </DropShadow>
-            </effect>
-            <children>
-                <Label layoutX="120.0" layoutY="14.0" text="PROGRAMACIÓN DE ENTREGA">
-                    <font>
-                        <Font name="System Bold" size="18.0" />
-                    </font>
-                </Label>
-
-                <Label layoutX="30.0" layoutY="60.0" text="Nombre de la Entrega:" />
-                <TextField fx:id="tfDeliveryName" editable="false" layoutX="180.0" layoutY="55.0" prefWidth="250.0" />
-
-                <Label layoutX="30.0" layoutY="100.0" text="Fecha de Inicio:" />
-                <DatePicker fx:id="dpStartDate" layoutX="180.0" layoutY="95.0" prefHeight="25.0" prefWidth="250.0" />
-
-                <Label layoutX="30.0" layoutY="140.0" text="Fecha de Fin:" />
-                <DatePicker fx:id="dpEndDate" layoutX="180.0" layoutY="135.0" prefHeight="25.0" prefWidth="250.0" />
-
-                <Label layoutX="30.0" layoutY="180.0" text="Descripción:" />
-                <TextArea fx:id="taDescription" layoutX="180.0" layoutY="175.0" prefHeight="90.0" prefWidth="250.0" wrapText="true" />
-            </children>
-        </AnchorPane>
-
-        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0">
-            <children>
-                <Button fx:id="btnProgram" onAction="#btnProgramClick" style="-fx-background-color: #146cd0;" text="Programar" textFill="WHITE">
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
-                    <effect>
-                        <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
-                            <color>
-                                <Color opacity="0.38675323128700256" />
-                            </color>
-                        </DropShadow>
-                    </effect>
-                </Button>
-                <Button fx:id="btnBack" onAction="#btnBackClick" style="-fx-background-color: #f3f4f6;" text="Regresar">
-                    <font>
-                        <Font name="Arial Bold" size="14.0" />
-                    </font>
-                    <effect>
-                        <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
-                            <color>
-                                <Color opacity="0.13610388338565826" />
-                            </color>
-                        </DropShadow>
-                    </effect>
-                </Button>
-            </children>
-        </HBox>
-
-        <Label layoutX="430.0" layoutY="10.0" text="Universidad Veracruzana" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="10.0">
-            <font>
-                <Font name="Arial Bold" size="12.0" />
-            </font>
+        <Label layoutX="211.0" layoutY="47.0" text="Programar Entrega" textFill="#333333">
+            <font><Font name="System Bold" size="20.0" /></font>
         </Label>
+
+        <Label layoutX="32.0" layoutY="110.0" text="Nombre *" />
+        <TextField fx:id="tfNombre" editable="false" layoutX="128.0" layoutY="106.0" prefHeight="25.0" prefWidth="435.0" />
+
+        <Label layoutX="32.0" layoutY="259.0" text="Descripción:" />
+        <TextArea fx:id="taDescripcion" layoutX="126.0" layoutY="254.0" prefHeight="122.0" prefWidth="435.0" />
+
+        <Label layoutX="32.0" layoutY="190.0" text="Fecha de Inicio *" />
+        <DatePicker fx:id="dpFechaInicio" editable="false" layoutX="129.0" layoutY="186.0" prefHeight="25.0" prefWidth="146.0" />
+
+        <Label layoutX="333.0" layoutY="190.0" text="Fecha de Fin *" />
+        <DatePicker fx:id="dpFechaFin" editable="false" layoutX="415.0" layoutY="186.0" prefHeight="25.0" prefWidth="146.0" />
+          <Button layoutX="470.0" layoutY="402.0" onAction="#btnClicCancelar" style="-fx-background-color: #6c757d; -fx-font-weight: bold; -fx-background-radius: 5;" text="Regresar" textFill="WHITE">
+              <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font name="Arial Bold" size="14.0" />
+         </font>
+          </Button>
+          <Button layoutX="346.0" layoutY="402.0" onAction="#btnClicProgramar" style="-fx-background-color: #007bff; -fx-font-weight: bold; -fx-background-radius: 5;" text="Programar" textFill="WHITE">
+              <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <font>
+            <Font name="Arial Bold" size="14.0" />
+         </font>
+          </Button>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+      <Label layoutX="443.0" layoutY="24.0" text="Universidad Veracruzana">
+         <font>
+            <Font name="Arial" size="12.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

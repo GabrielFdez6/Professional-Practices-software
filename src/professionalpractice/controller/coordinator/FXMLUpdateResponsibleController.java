@@ -342,7 +342,7 @@ public class FXMLUpdateResponsibleController {
   void btnCancelarClick(ActionEvent event) {
     if (Utils.showConfirmationAlert("Cancelar Actualización",
         "¿Estás seguro que quieres cancelar la actualización?\n" +
-            "Se perderán los cambios realizados.")) {
+            "Se perderán los cambios realizados.", "Cualquier dato no guardado se perderá.")) {
       closeWindow();
     }
   }

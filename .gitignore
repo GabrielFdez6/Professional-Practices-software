@@ -1,2 +1,20 @@
-./out/*
+# Directorios de salida de compilación Java
 /out/
+/build/
+
+# Archivos compilados Java
+*.class
+*.jar
+
+# Configuraciones IDE (ej. IntelliJ IDEA, Eclipse)
+.idea/
+.project
+.classpath
+.settings/
+*.iml
+*.iws
+*.ipr
+
+# Otros archivos temporales o de sistema
+.DS_Store
+Thumbs.db
