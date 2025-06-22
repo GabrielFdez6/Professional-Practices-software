@@ -26,11 +26,18 @@
                         <Font name="System Bold" size="15.0" />
                     </font>
                 </Label>
-                <Button layoutX="693.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnClickLogOut" style="-fx-background-color: white; -fx-border-radius: 3; -fx-border-color: #ff0000;" text="Cerrar Sesión" textFill="#ff0000c4">
-                    <font>
-                        <Font name="Arial" size="12.0" />
-                    </font>
-                </Button>
+                            <Button layoutX="693.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnClickLogOut" prefHeight="25.0" style="-fx-background-color: white; -fx-border-radius: 3; -fx-border-color: #ff0000;" text="Cerrar Sesión" textFill="#ff0000c4">
+                <font>
+                    <Font name="Arial Bold" size="12.0" />
+                </font>
+                <effect>
+                    <DropShadow offsetY="2.0" radius="9.75" width="20.0">
+                        <color>
+                            <Color opacity="0.23999999463558197" />
+                        </color>
+                    </DropShadow>
+                </effect>
+            </Button>
             </children>
             <effect>
                 <DropShadow blurType="GAUSSIAN" height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
@@ -55,7 +62,7 @@
                 </DropShadow>
             </effect>
             <children>
-                <Button contentDisplay="CENTER" layoutX="101.0" layoutY="164.0" mnemonicParsing="false" onAction="#btnClickConsultStudentProgress" style="-fx-background-color: #146cd0;" text="Consultar" textFill="WHITE">
+                <Button contentDisplay="CENTER" layoutX="63.0" layoutY="165.0" mnemonicParsing="false" onAction="#btnClickConsultStudentProgress" prefHeight="26.0" prefWidth="185.0" style="-fx-background-color: #146cd0;" text="Consultar" textFill="WHITE">
                     <font>
                         <Font name="Arial Bold" size="14.0" />
                     </font>

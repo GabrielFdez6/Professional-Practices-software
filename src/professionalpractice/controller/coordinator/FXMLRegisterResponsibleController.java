@@ -98,7 +98,7 @@ public class FXMLRegisterResponsibleController {
           if (projectManagerDAO.updateProjectManager(newManager) == Constants.OPERATION_SUCCESFUL) {
             Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Actualizacion Exitoso",
                 "El responsable ha sido actualizado.");
-            goMainMenu();
+            closeWindow();
           } else {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en la actualizacion",
                 "No se pudo actualizar al responsable.");
@@ -113,7 +113,7 @@ public class FXMLRegisterResponsibleController {
         try {
           if (projectManagerDAO.registerProjectManager(newManager) == Constants.OPERATION_SUCCESFUL) {
             Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Registro Exitoso", "El responsable ha sido guardado.");
-            goMainMenu();
+            closeWindow();
           } else {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en el Registro",
                 "No se pudo registrar al responsable.");
@@ -123,7 +123,6 @@ public class FXMLRegisterResponsibleController {
               "No se pudo conectar con la base de datos.");
         }
       }
-
     }
   }
 
@@ -185,17 +184,9 @@ public class FXMLRegisterResponsibleController {
     stage.close();
   }
 
-  private void goMainMenu() {
-    try {
+  private void closeWindow() {
       Stage stage = (Stage) tfLastNameFather.getScene().getWindow();
-      Parent view = FXMLLoader
-          .load(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
-      Scene scene = new Scene(view);
-      stage.setScene(scene);
-      stage.setTitle("Página Principal Coordinador");
-      stage.show();
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
+      stage.close();
+
   }
 }
