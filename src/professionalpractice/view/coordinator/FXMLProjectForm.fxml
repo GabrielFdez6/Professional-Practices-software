@@ -86,27 +86,30 @@
                 <Font size="15.0" />
             </font></TextArea>
 
-        <Button layoutX="352.0" layoutY="537.0" mnemonicParsing="false" onAction="#btnRegisterProject" style="-fx-background-color: #146cd0;" text="Guardar" textFill="WHITE">
+        <Button layoutX="352.0" layoutY="537.0" mnemonicParsing="false" onAction="#btnRegisterProject" prefHeight="25.0" style="-fx-background-color: #146cd0;" text="Guardar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
             <effect>
-                <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
+                <DropShadow offsetY="2.0" radius="9.75" width="20.0">
                     <color>
-                        <Color opacity="0.38675323128700256" />
+                        <Color opacity="0.23999999463558197" />
                     </color>
                 </DropShadow>
-            </effect></Button>
-        <Button layoutX="444.0" layoutY="537.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
+            </effect>
+        </Button>
+        <Button layoutX="444.0" layoutY="537.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="25.0" style="-fx-background-color: #6c757d;" text="Cancelar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
             <effect>
-                <DropShadow height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
+                <DropShadow offsetY="2.0" radius="9.75" width="20.0">
                     <color>
-                        <Color opacity="0.14000000059604645" />
-                    </color></DropShadow>
-            </effect></Button>
+                        <Color opacity="0.23999999463558197" />
+                    </color>
+                </DropShadow>
+            </effect>
+        </Button>
       <Label fx:id="lbCharCounter" layoutX="457.0" layoutY="494.0" />
       <Label layoutX="44.0" layoutY="340.0" text="Departamento" textFill="#000000b8">
          <font>

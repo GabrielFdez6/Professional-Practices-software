@@ -2,7 +2,10 @@ package professionalpractice.controller.student;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,11 +13,15 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import professionalpractice.model.dao.interfaces.IStudentDAO;
 import professionalpractice.model.dao.StudentDAO;
 import professionalpractice.model.pojo.Student;
 import professionalpractice.model.pojo.StudentProgress;
+import professionalpractice.model.pojo.DeliveryInfo;
 import professionalpractice.utils.Utils;
 
 public class FXMLStudentProgressController implements Initializable {
@@ -37,13 +44,45 @@ public class FXMLStudentProgressController implements Initializable {
   private ProgressBar pbHoursProgress;
   @FXML
   private Label lbProgressPercentage;
+  @FXML
+  private TableView<DeliveryInfo> tvDeliveries;
+  @FXML
+  private TableColumn<DeliveryInfo, String> colDeliveryName;
+  @FXML
+  private TableColumn<DeliveryInfo, String> colDeliveryType;
+  @FXML
+  private TableColumn<DeliveryInfo, String> colDeliveryStatus;
+  @FXML
+  private TableColumn<DeliveryInfo, String> colDeliveryDate;
+  @FXML
+  private TableColumn<DeliveryInfo, String> colDeliveryGrade;
+  @FXML
+  private TableColumn<DeliveryInfo, String> colDeliveryDueDate;
 
   private IStudentDAO studentDAO;
   private final int TOTAL_HOURS = 300;
+  private ObservableList<DeliveryInfo> deliveryList;
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
     studentDAO = new StudentDAO();
+    deliveryList = FXCollections.observableArrayList();
+    configureDeliveryTable();
+  }
+
+  private void configureDeliveryTable() {
+    colDeliveryName.setCellValueFactory(new PropertyValueFactory<>("deliveryName"));
+    colDeliveryType.setCellValueFactory(new PropertyValueFactory<>("deliveryType"));
+    colDeliveryStatus.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getStatusText()));
+    colDeliveryDate.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getFormattedDeliveryDate()));
+    colDeliveryGrade.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getFormattedGrade()));
+    colDeliveryDueDate.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getFormattedEndDate()));
+
+    tvDeliveries.setItems(deliveryList);
   }
 
   public void configureView(Student student) {
@@ -57,6 +96,7 @@ public class FXMLStudentProgressController implements Initializable {
 
       if (progress != null) {
         populateData(progress);
+        loadStudentDeliveries(student.getIdStudent());
       } else {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Consulta",
             "No se pudo recuperar tu información de progreso. Intenta más tarde.");
@@ -106,5 +146,17 @@ public class FXMLStudentProgressController implements Initializable {
     double progress = (double) currentHours / totalHours;
     pbHoursProgress.setProgress(progress);
     lbProgressPercentage.setText(String.format("%.0f%%", progress * 100));
+  }
+
+  private void loadStudentDeliveries(int studentId) {
+    try {
+      ArrayList<DeliveryInfo> deliveries = studentDAO.getStudentDeliveries(studentId);
+      deliveryList.clear();
+      deliveryList.addAll(deliveries);
+    } catch (SQLException e) {
+      System.err.println("Error al cargar las entregas del estudiante: " + e.getMessage());
+      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Advertencia",
+          "No se pudieron cargar las entregas. Algunas funciones pueden no estar disponibles.");
+    }
   }
 }

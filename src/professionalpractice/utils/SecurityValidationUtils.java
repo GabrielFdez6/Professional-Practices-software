@@ -189,37 +189,6 @@ public class SecurityValidationUtils {
     return String.join("; ", errors);
   }
 
-  // ===== VALIDACIONES DE INFORMACIÓN SENSIBLE =====
-
-  public static String validateSensitiveData(String input, String fieldName) {
-    if (input == null || input.trim().isEmpty()) {
-      return "";
-    }
-
-    String lowerInput = input.toLowerCase();
-
-    // Verificar posibles números de tarjeta de crédito
-    if (lowerInput.matches(".*\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}.*")) {
-      logSecurityViolation("POTENTIAL_CREDIT_CARD", fieldName, "***REDACTED***");
-      return fieldName + " parece contener información de tarjeta de crédito.";
-    }
-
-    // Verificar posibles números de seguro social
-    if (lowerInput.matches(".*\\d{3}[\\s-]?\\d{2}[\\s-]?\\d{4}.*")) {
-      logSecurityViolation("POTENTIAL_SSN", fieldName, "***REDACTED***");
-      return fieldName + " parece contener un número de seguro social.";
-    }
-
-    // Verificar palabras clave sospechosas
-    for (String keyword : SUSPICIOUS_KEYWORDS) {
-      if (lowerInput.contains(keyword)) {
-        logSecurityViolation("SUSPICIOUS_KEYWORD", fieldName, keyword);
-        return fieldName + " contiene términos que requieren revisión adicional.";
-      }
-    }
-
-    return "";
-  }
 
   // ===== VALIDACIÓN DE INTEGRIDAD DE DATOS =====
 
@@ -290,9 +259,6 @@ public class SecurityValidationUtils {
     if (!commandError.isEmpty())
       errors.add(commandError);
 
-    String sensitiveError = validateSensitiveData(input, fieldName);
-    if (!sensitiveError.isEmpty())
-      errors.add(sensitiveError);
 
     return errors;
   }

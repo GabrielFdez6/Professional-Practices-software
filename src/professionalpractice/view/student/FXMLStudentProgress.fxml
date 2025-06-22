@@ -7,7 +7,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="550.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLStudentProgressController">
+<AnchorPane id="AnchorPane" prefHeight="750.0" prefWidth="800.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLStudentProgressController">
     <children>
         <AnchorPane prefHeight="65.0" prefWidth="800.0" style="-fx-background-color: white;">
             <children>
@@ -21,10 +21,17 @@
                         <Font name="System Bold" size="15.0" />
                     </font>
                 </Label>
-                <Button layoutX="725.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnClickExit" style="-fx-background-color: #146cd0;" text="Salir" textFill="WHITE">
+                <Button layoutX="725.0" layoutY="20.0" mnemonicParsing="false" onAction="#btnClickExit" prefHeight="25.0" style="-fx-background-color: #146cd0;" text="Salir" textFill="WHITE">
                     <font>
                         <Font name="Arial Bold" size="14.0" />
                     </font>
+                    <effect>
+                        <DropShadow offsetY="2.0" radius="9.75" width="20.0">
+                            <color>
+                                <Color opacity="0.23999999463558197" />
+                            </color>
+                        </DropShadow>
+                    </effect>
                 </Button>
             </children>
             <effect>
@@ -40,7 +47,7 @@
                 <Font name="System Bold" size="20.0" />
             </font>
         </Label>
-        <AnchorPane layoutX="49.0" layoutY="145.0" prefHeight="356.0" prefWidth="702.0" style="-fx-background-color: white; -fx-background-radius: 9;">
+        <AnchorPane layoutX="36.0" layoutY="143.0" prefHeight="560.0" prefWidth="707.0" style="-fx-background-color: white; -fx-background-radius: 9;">
             <effect>
                 <DropShadow height="20.51" offsetY="2.0" radius="9.7575" width="20.52">
                     <color>
@@ -131,6 +138,22 @@
                         <Font name="Arial" size="15.0" />
                     </font>
                 </Label>
+                <Separator layoutX="30.0" layoutY="358.0" prefHeight="0.0" prefWidth="642.0" />
+                <Label layoutX="40.0" layoutY="372.0" text="Mis Entregas:">
+                    <font>
+                        <Font name="System Bold" size="15.0" />
+                    </font>
+                </Label>
+                <TableView fx:id="tvDeliveries" layoutX="30.0" layoutY="406.0" prefHeight="140.0" prefWidth="642.0">
+                    <columns>
+                        <TableColumn fx:id="colDeliveryName" prefWidth="150.0" text="Entrega" />
+                        <TableColumn fx:id="colDeliveryType" prefWidth="120.0" text="Tipo" />
+                        <TableColumn fx:id="colDeliveryStatus" prefWidth="100.0" text="Estado" />
+                        <TableColumn fx:id="colDeliveryDate" prefWidth="100.0" text="Fecha Entrega" />
+                        <TableColumn fx:id="colDeliveryGrade" prefWidth="80.0" text="Calificación" />
+                        <TableColumn fx:id="colDeliveryDueDate" prefWidth="92.0" text="Fecha Límite" />
+                    </columns>
+                </TableView>
             </children>
         </AnchorPane>
     </children>
