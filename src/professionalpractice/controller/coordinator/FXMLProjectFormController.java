@@ -193,6 +193,7 @@ public class FXMLProjectFormController implements Initializable {
         }
         newProject.setIdLinkedOrganization(currentOrganization.getIdLinkedOrganization());
         newProject.setIdProjectManager(currentProjectManager.getIdProjectManager());
+        newProject.setIdCoordinator(1);
 
         response = projectDAO.saveProject(newProject);
         if (response == Constants.OPERATION_SUCCESFUL) {

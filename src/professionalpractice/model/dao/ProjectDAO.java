@@ -144,16 +144,17 @@ public class ProjectDAO implements IProjectDAO {
 
     @Override
     public int saveProject(Project project) throws SQLException {
-        String sql = "INSERT INTO project (name, description, methodology, availability, idLinkedOrganization, idProjectManager, department) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO project (name, description, methodology, availability, department, idLinkedOrganization, idProjectManager, idCoordinator) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, project.getName());
             pstmt.setString(2, project.getDescription());
             pstmt.setString(3, project.getMethodology());
             pstmt.setInt(4, project.getAvailability());
-            pstmt.setInt(5, project.getIdLinkedOrganization());
-            pstmt.setInt(6, project.getIdProjectManager());
-            pstmt.setString(7, project.getDepartment());
+            pstmt.setString(5, project.getDepartment());
+            pstmt.setInt(6, project.getIdLinkedOrganization());
+            pstmt.setInt(7, project.getIdProjectManager());
+            pstmt.setInt(8, project.getIdCoordinator());
             int rowsAffected = pstmt.executeUpdate();
             return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : Constants.OPERATION_FAILED;
         }
