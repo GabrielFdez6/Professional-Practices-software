@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLUpdateResponsibleNewController">
+    <children>
+        <Label layoutX="200.0" layoutY="25.0" text="Actualizar Responsable de Proyecto">
+            <font><Font name="System Bold" size="20.0" /></font>
+        </Label>
+        
+        <!-- Paso 1: Selección de Organización -->
+        <Label layoutX="50.0" layoutY="80.0" text="Paso 1: Seleccionar Organización Vinculada">
+            <font><Font name="System Bold" size="16.0" /></font>
+        </Label>
+        <ComboBox fx:id="cbOrganizations" layoutX="50.0" layoutY="110.0" prefHeight="30.0" prefWidth="600.0" promptText="Selecciona una Organización Vinculada..." />
+        
+        <!-- Paso 2: Selección de Responsable -->
+        <Label layoutX="50.0" layoutY="170.0" text="Paso 2: Seleccionar Responsable de Proyecto">
+            <font><Font name="System Bold" size="16.0" /></font>
+        </Label>
+        <ComboBox fx:id="cbResponsibles" disable="true" layoutX="50.0" layoutY="200.0" prefHeight="30.0" prefWidth="600.0" promptText="Primero selecciona una organización..." />
+        
+        <!-- Información del responsable seleccionado -->
+        <Label fx:id="lbSelectedInfo" layoutX="50.0" layoutY="250.0" text="" style="-fx-text-fill: #606060;">
+            <font><Font size="12.0" /></font>
+        </Label>
+        
+        <!-- Campos de edición -->
+        <GridPane fx:id="gridEditFields" hgap="10" layoutX="50.0" layoutY="280.0" prefHeight="150.0" prefWidth="600.0" vgap="10" visible="false">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="10.0" prefWidth="120.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="480.0" />
+            </columnConstraints>
+            <children>
+                <Label text="Nombre(s):" />
+                <TextField fx:id="tfFirstName" GridPane.columnIndex="1" />
+                <Label text="Apellido Paterno:" GridPane.rowIndex="1" />
+                <TextField fx:id="tfLastNameFather" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <Label text="Apellido Materno:" GridPane.rowIndex="2" />
+                <TextField fx:id="tfLastNameMother" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label text="Cargo:" GridPane.rowIndex="3" />
+                <TextField fx:id="tfPosition" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label text="Correo Electrónico:" GridPane.rowIndex="4" />
+                <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label text="Teléfono:" GridPane.rowIndex="5" />
+                <TextField fx:id="tfPhone" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            </children>
+        </GridPane>
+        
+        <!-- Botones -->
+        <HBox alignment="CENTER" layoutX="200.0" layoutY="450.0" spacing="20.0">
+            <children>
+                <Button fx:id="btnActualizar" disable="true" onAction="#btnActualizarClick" prefWidth="100.0" text="Actualizar" />
+                <Button onAction="#btnCancelarClick" prefWidth="100.0" text="Cancelar" />
+            </children>
+        </HBox>
+        
+        <!-- Mensaje informativo -->
+        <Label fx:id="lbMessage" layoutX="50.0" layoutY="480.0" text="" style="-fx-text-fill: #ff6b6b;">
+            <font><Font size="11.0" /></font>
+        </Label>
+    </children>
+</AnchorPane> 
