@@ -14,44 +14,44 @@ import professionalpractice.model.pojo.LinkedOrganization;
 import professionalpractice.model.pojo.Project;
 import professionalpractice.model.pojo.ProjectManager;
 import professionalpractice.utils.Constants;
-import professionalpractice.utils.EntityValidationUtils;
-import professionalpractice.utils.SecurityValidationUtils;
 import professionalpractice.utils.Utils;
-import professionalpractice.utils.ValidationUtils;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class FXMLProjectFormController implements Initializable {
+
 
   @FXML
   private TextField tfAvailability;
   @FXML
   private TextArea taDescription;
   @FXML
-  private TextField tfProjectName;
-  @FXML
-  private TextField tfMethodology;
-
-  @FXML
   private Label lblFormTitle;
+  @FXML
+  private Label lblPMInfo;
+  @FXML
+  private TextField tfProjectName;
   @FXML
   private Label lblOrgInfo;
   @FXML
-  private Label lblPMInfo;
-
+  private TextField tfMethodology;
   private LinkedOrganization currentOrganization;
   private ProjectManager currentProjectManager;
   private Project projectToEdit;
   private boolean isEditMode;
   private IProjectDAO projectDAO;
+  @FXML
+  private Label lbCharCounter;
+  @FXML
+  private TextField tfDepartment;
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
     projectDAO = new ProjectDAO();
+    setupFieldListeners();
   }
 
   public void initData(boolean isEdit, LinkedOrganization organization, ProjectManager manager, Project project) {
@@ -64,8 +64,7 @@ public class FXMLProjectFormController implements Initializable {
       lblOrgInfo.setText("Organización: " + (organization != null ? organization.getName() : "N/A"));
     }
     if (lblPMInfo != null) {
-      lblPMInfo.setText(
-          "Responsable: " + (manager != null ? manager.getFirstName() + " " + manager.getLastNameFather() : "N/A"));
+      lblPMInfo.setText("Responsable: " + (manager != null ? manager.getFirstName() + " " + manager.getLastNameFather() : "N/A"));
     }
 
     if (isEdit) {
@@ -75,183 +74,141 @@ public class FXMLProjectFormController implements Initializable {
         taDescription.setText(projectToEdit.getDescription());
         tfMethodology.setText(projectToEdit.getMethodology());
         tfAvailability.setText(String.valueOf(projectToEdit.getAvailability()));
+        tfDepartment.setText(projectToEdit.getDepartment());
       }
     } else {
       lblFormTitle.setText("REGISTRAR NUEVO PROYECTO");
-      clearFields();
+      tfProjectName.clear();
+      taDescription.clear();
+      tfMethodology.clear();
+      tfAvailability.clear();
+      tfDepartment.clear();
     }
   }
 
-  private void clearFields() {
-    tfProjectName.clear();
-    taDescription.clear();
-    tfMethodology.clear();
-    tfAvailability.clear();
+  private void setupFieldListeners() {
+    setupDescriptionCharCounter();
+    addTextLimiter(tfProjectName, 50, "Nombre del Proyecto");
+    addTextLimiter(tfMethodology, 45, "Metodología");
+    addTextLimiter(tfDepartment, 30, "Departamento");
   }
+
+  private void setupDescriptionCharCounter() {
+    final int maxLength = 200;
+    lbCharCounter.setText("0/" + maxLength);
+
+    taDescription.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.length() > maxLength) {
+        taDescription.setText(newValue.substring(0, maxLength));
+      }
+      lbCharCounter.setText(taDescription.getText().length() + "/" + maxLength);
+    });
+  }
+
+  private void addTextLimiter(TextField textField, int maxLength, String fieldName) {
+    textField.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (newValue.length() > maxLength) {
+        String limitedText = newValue.substring(0, maxLength);
+        textField.setText(limitedText);
+
+        String alertTitle = "Límite de Caracteres Excedido";
+        String alertMessage = "El campo '" + fieldName + "' no puede exceder los " + maxLength + " caracteres.";
+        Utils.showSimpleAlert(Alert.AlertType.WARNING, alertTitle, alertMessage);
+      }
+    });
+  }
+
 
   @FXML
   public void btnCancel(ActionEvent actionEvent) {
     if (Utils.showConfirmationAlert("Cancelar operación",
-        "¿Estás seguro que quieres cancelar? Se perderán los cambios no guardados.", "Cualquier dato no guardado se perderá.")) {
-      Stage stage = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-      stage.close();
+            "¿Estás seguro que quieres cancelar? Se perderán los cambios no guardados.")) {
+      closeWindow(actionEvent);
+    }
+  }
+
+  private Optional<Integer> validateAvailability(String availabilityStr) {
+    try {
+      int availability = Integer.parseInt(availabilityStr);
+      if (availability > 0 && availability <= 5) {
+        return Optional.of(availability);
+      } else {
+        Utils.showSimpleAlert(Alert.AlertType.WARNING, "Disponibilidad Inválida", "La disponibilidad debe ser un número positivo, mayor a 0 y no mayor a 5.");
+        return Optional.empty();
+      }
+    } catch (NumberFormatException e) {
+      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Disponibilidad Inválida", "La disponibilidad debe ser un número válido entre 1 y 5.");
+      return Optional.empty();
     }
   }
 
   @FXML
   public void btnRegisterProject(ActionEvent actionEvent) {
-    if (validateProjectFields()) {
-      try {
-        Project project = createProjectFromForm();
+    String name = tfProjectName.getText().trim();
+    String description = taDescription.getText().trim();
+    String methodology = tfMethodology.getText().trim();
+    String availabilityStr = tfAvailability.getText().trim();
+    String department = tfDepartment.getText().trim();
 
-        // Validación completa de la entidad usando nuestras validaciones rigurosas
-        List<String> entityErrors = EntityValidationUtils.validateProject(project);
-        if (EntityValidationUtils.hasValidationErrors(entityErrors)) {
-          String formattedErrors = EntityValidationUtils.formatValidationErrors(entityErrors);
-          Utils.showSimpleAlert(Alert.AlertType.WARNING, "Errores de Validación", formattedErrors);
-          return;
-        }
+    if (name.isEmpty() || description.isEmpty() || methodology.isEmpty() || availabilityStr.isEmpty() || department.isEmpty()) {
+      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Por favor, completa todos los campos.");
+      return;
+    }
 
-        int response;
-        if (isEditMode) {
-          response = updateProject(project);
-        } else {
-          response = saveNewProject(project);
-        }
+    Optional<Integer> availabilityOptional = validateAvailability(availabilityStr);
+    if (!availabilityOptional.isPresent()) {
+      return;
+    }
+    int availability = availabilityOptional.get();
 
+    try {
+      int response;
+      if (isEditMode) {
+        projectToEdit.setName(name);
+        projectToEdit.setDescription(description);
+        projectToEdit.setMethodology(methodology);
+        projectToEdit.setAvailability(availability);
+        projectToEdit.setDepartment(department);
+
+        response = projectDAO.updateProject(projectToEdit);
         if (response == Constants.OPERATION_SUCCESFUL) {
-          String message = isEditMode ? Constants.SUCCESS_RECORD_UPDATED : Constants.SUCCESS_RECORD_CREATED;
-          Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", message);
+          Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Actualización Exitosa", "El proyecto ha sido actualizado correctamente.");
           closeWindow(actionEvent);
         } else {
-          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en la Operación",
-              isEditMode ? "No se pudo actualizar el proyecto." : "No se pudo registrar el proyecto.");
+          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error", "No se pudo actualizar el proyecto.");
         }
 
-      } catch (SQLException e) {
-        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos",
-            Constants.ERROR_DATABASE_CONNECTION);
-        System.err.println("Error de base de datos en formulario de proyecto: " + e.getMessage());
-        e.printStackTrace();
-      } catch (NumberFormatException e) {
-        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Formato",
-            "La disponibilidad debe ser un número válido.");
-      } catch (Exception e) {
-        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error Inesperado",
-            "Ocurrió un error inesperado. Por favor, intente más tarde.");
-        System.err.println("Error inesperado en formulario de proyecto: " + e.getMessage());
-        e.printStackTrace();
+      } else {
+        Project newProject = new Project();
+        newProject.setName(name);
+        newProject.setDescription(description);
+        newProject.setMethodology(methodology);
+        newProject.setAvailability(availability);
+        newProject.setDepartment(department);
+
+        if (currentOrganization == null || currentProjectManager == null) {
+          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Contexto", "No se pudo asociar el proyecto a una organización o responsable.");
+          return;
+        }
+        newProject.setIdLinkedOrganization(currentOrganization.getIdLinkedOrganization());
+        newProject.setIdProjectManager(currentProjectManager.getIdProjectManager());
+
+        response = projectDAO.saveProject(newProject);
+        if (response == Constants.OPERATION_SUCCESFUL) {
+          Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Registro Exitoso", "El proyecto ha sido registrado correctamente.");
+          closeWindow(actionEvent);
+        } else {
+          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error", "No se pudo registrar el proyecto.");
+        }
       }
+    } catch (SQLException e) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos", "Ocurrió un error al guardar los datos del proyecto.");
+      e.printStackTrace();
     }
-  }
-
-  private boolean validateProjectFields() {
-    List<String> errors = new ArrayList<>();
-
-    // Obtener valores de los campos
-    String name = tfProjectName.getText();
-    String description = taDescription.getText();
-    String methodology = tfMethodology.getText();
-    String availabilityText = tfAvailability.getText();
-
-    // Validar nombre del proyecto
-    String nameError = ValidationUtils.validateProjectName(name);
-    if (!nameError.isEmpty())
-      errors.add(nameError);
-
-    // Validar descripción del proyecto
-    String descriptionError = ValidationUtils.validateProjectDescription(description);
-    if (!descriptionError.isEmpty())
-      errors.add(descriptionError);
-
-    // Validar metodología
-    String methodologyError = ValidationUtils.validateMethodology(methodology);
-    if (!methodologyError.isEmpty())
-      errors.add(methodologyError);
-
-    // Validar disponibilidad
-    if (availabilityText == null || availabilityText.trim().isEmpty()) {
-      errors.add("La disponibilidad es un campo obligatorio.");
-    } else {
-      try {
-        int availability = Integer.parseInt(availabilityText.trim());
-        String availabilityError = ValidationUtils.validateAvailability(availability);
-        if (!availabilityError.isEmpty())
-          errors.add(availabilityError);
-      } catch (NumberFormatException e) {
-        errors.add("La disponibilidad debe ser un número entero válido.");
-      }
-    }
-
-    // Validaciones de seguridad avanzadas
-    List<String> securityErrors = new ArrayList<>();
-    securityErrors.addAll(SecurityValidationUtils.performComprehensiveSecurityValidation(name, "Nombre del proyecto"));
-    securityErrors.addAll(SecurityValidationUtils.performComprehensiveSecurityValidation(description, "Descripción"));
-    securityErrors.addAll(SecurityValidationUtils.performComprehensiveSecurityValidation(methodology, "Metodología"));
-
-    if (!securityErrors.isEmpty()) {
-      errors.addAll(securityErrors);
-    }
-
-    // Validaciones de contexto (verificar que tenemos organización y responsable)
-    if (currentOrganization == null || currentProjectManager == null) {
-      errors.add("Error de contexto: No se pudo asociar el proyecto a una organización o responsable.");
-    }
-
-    // Mostrar errores si los hay
-    if (!errors.isEmpty()) {
-      String allErrors = String.join("\n", errors);
-      Utils.showSimpleAlert(Alert.AlertType.WARNING, "Errores de Validación", allErrors);
-      return false;
-    }
-
-    // Sanitizar los campos antes de proceder
-    sanitizeInputFields();
-
-    return true;
-  }
-
-  private void sanitizeInputFields() {
-    tfProjectName.setText(SecurityValidationUtils.advancedSanitization(tfProjectName.getText()));
-    taDescription.setText(SecurityValidationUtils.advancedSanitization(taDescription.getText()));
-    tfMethodology.setText(SecurityValidationUtils.advancedSanitization(tfMethodology.getText()));
-    tfAvailability.setText(ValidationUtils.sanitizeInput(tfAvailability.getText()));
-  }
-
-  private Project createProjectFromForm() {
-    Project project = isEditMode ? projectToEdit : new Project();
-
-    project.setName(tfProjectName.getText().trim());
-    project.setDescription(taDescription.getText().trim());
-    project.setMethodology(tfMethodology.getText().trim());
-    project.setAvailability(Integer.parseInt(tfAvailability.getText().trim()));
-
-    if (!isEditMode) {
-      project.setIdLinkedOrganization(currentOrganization.getIdLinkedOrganization());
-      project.setIdProjectManager(currentProjectManager.getIdProjectManager());
-    }
-
-    return project;
-  }
-
-  private int updateProject(Project project) throws SQLException {
-    // Validar que tenemos permisos para actualizar
-    if (projectToEdit == null) {
-      throw new IllegalStateException("No se puede actualizar un proyecto que no existe.");
-    }
-
-    return projectDAO.updateProject(project);
-  }
-
-  private int saveNewProject(Project project) throws SQLException {
-    // Verificar que no se exceda la capacidad del sistema
-    // En un sistema real, aquí verificarías límites por organización, etc.
-
-    return projectDAO.saveProject(project);
   }
 
   private void closeWindow(ActionEvent event) {
-    Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+    Stage stage = (Stage) ((javafx.scene.Node)event.getSource()).getScene().getWindow();
     stage.close();
   }
 }

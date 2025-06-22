@@ -79,11 +79,11 @@ public class FXMLEvaluationRubricController implements Initializable {
     criteriaDAO = new CriteriaDAO();
     evaluationDetailDAO = new EvaluationDetailDAO();
     scoreFields = new TextField[] {
-        tfISMethodsTechniquesScore,
-        tfRequirementsScore,
-        tfSecurityMasteryScore,
-        tfContentScore,
-        tfSpellingGrammarScore
+            tfISMethodsTechniquesScore,
+            tfRequirementsScore,
+            tfSecurityMasteryScore,
+            tfContentScore,
+            tfSpellingGrammarScore
     };
 
     configureTable();
@@ -94,7 +94,45 @@ public class FXMLEvaluationRubricController implements Initializable {
     calculateAndSetAverage();
   }
 
+  private void configureTable() {
+    colCriterion.setCellValueFactory(new PropertyValueFactory<>("criterion"));
+    colCompetent.setCellValueFactory(new PropertyValueFactory<>("competent"));
+    colIndependent.setCellValueFactory(new PropertyValueFactory<>("independent"));
+    colAdvancedBasic.setCellValueFactory(new PropertyValueFactory<>("advancedBasic"));
+    colThresholdBasic.setCellValueFactory(new PropertyValueFactory<>("thresholdBasic"));
+    colNotCompetent.setCellValueFactory(new PropertyValueFactory<>("notCompetent"));
+  }
 
+  private void loadTableInformation() {
+    criteria = FXCollections.observableArrayList();
+    try {
+      dbCriteriaList = criteriaDAO.getAllCriteria();
+
+      if (dbCriteriaList == null || dbCriteriaList.isEmpty()) {
+        Utils.showSimpleAlert(Alert.AlertType.WARNING, "Sin Criterios", "No se encontraron criterios de evaluación en la base de datos.");
+        return;
+      }
+
+
+      for (Criteria dbCriterion : dbCriteriaList) {
+        EvaluationCriterion tableCriterion = new EvaluationCriterion(
+                dbCriterion.getCriteriaName(),
+                dbCriterion.getCompetent(),
+                dbCriterion.getIndependent(),
+                dbCriterion.getAdvancedBasic(),
+                dbCriterion.getThresholdBasic(),
+                dbCriterion.getNotCompetent()
+        );
+        criteria.add(tableCriterion);
+      }
+
+      tvEvaluationRubric.setItems(criteria);
+
+    } catch (SQLException e) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudieron cargar los criterios de evaluación desde la base de datos.");
+      e.printStackTrace();
+    }
+  }
 
   private void configureCharacterCounter() {
     final int MAX_CHARS = 150;
@@ -105,7 +143,7 @@ public class FXMLEvaluationRubricController implements Initializable {
     });
 
     taObservationsAndComments.setTextFormatter(
-        new TextFormatter<String>(change -> change.getControlNewText().length() <= MAX_CHARS ? change : null));
+            new TextFormatter<String>(change -> change.getControlNewText().length() <= MAX_CHARS ? change : null));
   }
 
   private void addScoreCalculationListeners() {
@@ -133,11 +171,11 @@ public class FXMLEvaluationRubricController implements Initializable {
 
   private void calculateAndSetAverage() {
     TextField[] scoreFields = {
-        tfISMethodsTechniquesScore,
-        tfRequirementsScore,
-        tfSecurityMasteryScore,
-        tfContentScore,
-        tfSpellingGrammarScore
+            tfISMethodsTechniquesScore,
+            tfRequirementsScore,
+            tfSecurityMasteryScore,
+            tfContentScore,
+            tfSpellingGrammarScore
     };
     double totalScore = 0;
     int validFields = 0;
@@ -173,17 +211,15 @@ public class FXMLEvaluationRubricController implements Initializable {
     TextFormatter<String> textFormatter = new TextFormatter<>(filter);
     textField.setTextFormatter(textFormatter);
 
-    // El listener para cuando se pierde el foco sigue siendo igual de importante.
     textField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue) { // Cuando se pierde el foco
+      if (!newValue) {
         String text = textField.getText();
 
-        // Limpia el punto si el usuario lo deja al final (ej. "6." o "10.")
         if (text.endsWith(".")) {
           textField.setText(text.substring(0, text.length() - 1));
         }
 
-        text = textField.getText(); // Re-obtener el texto por si fue modificado
+        text = textField.getText();
 
         if (!text.isEmpty()) {
           try {
@@ -203,82 +239,13 @@ public class FXMLEvaluationRubricController implements Initializable {
     });
   }
 
-  private void configureTable() {
-    colCriterion.setCellValueFactory(new PropertyValueFactory<>("criterion"));
-    colCompetent.setCellValueFactory(new PropertyValueFactory<>("competent"));
-    colIndependent.setCellValueFactory(new PropertyValueFactory<>("independent"));
-    colAdvancedBasic.setCellValueFactory(new PropertyValueFactory<>("advancedBasic"));
-    colThresholdBasic.setCellValueFactory(new PropertyValueFactory<>("thresholdBasic"));
-    colNotCompetent.setCellValueFactory(new PropertyValueFactory<>("notCompetent"));
-  }
-
-  private void loadTableInformation() {
-    criteria = FXCollections.observableArrayList();
-    ArrayList<EvaluationCriterion> sourceCriteria = getCriteriaFromDataSource();
-    criteria.addAll(sourceCriteria);
-    tvEvaluationRubric.setItems(criteria);
-
-    try {
-      dbCriteriaList = criteriaDAO.getAllCriteria();
-    } catch (SQLException e) {
-      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión",
-          "No se pudieron cargar los criterios de evaluación.");
-      e.printStackTrace();
-    }
-  }
-
-  private ArrayList<EvaluationCriterion> getCriteriaFromDataSource() {
-    ArrayList<EvaluationCriterion> criteriaList = new ArrayList<>();
-
-    criteriaList.add(new EvaluationCriterion(
-        "USO DE MÉTODOS Y TÉCNICAS DE LA IS",
-        "Los métodos y técnicas de la IS optimizan el aseguramiento de calidad y se han aplicado de manera correcta.",
-        "Los métodos y técnicas de la IS, son adecuados y se han aplicado de manera correcta.",
-        "Los métodos y técnicas de la IS, son adecuados, aunque se presentan algunas deficiencias en su aplicación.",
-        "Los métodos y técnicas de la IS, no son adecuados, pero se han aplicado de manera correcta.",
-        "No se han aplicado métodos y técnicas de la IS."));
-
-    criteriaList.add(new EvaluationCriterion(
-        "REQUISITOS",
-        "Cumplió con todos los requisitos. Excedió las expectativas.",
-        "Todos los requisitos fueron cumplidos.",
-        "No cumple satisfactoriamente con un requisito.",
-        "Más de un requisito no fue cumplido satisfactoriamente.",
-        "Más de dos requisitos no fueron cumplidos satisfactoriamente."));
-
-    criteriaList.add(new EvaluationCriterion(
-        "SEGURIDAD Y DOMINIO",
-        "El dominio del tema es excelente, la exposición es dada con seguridad.",
-        "Se posee un dominio adecuado y la exposición fue fluida.",
-        "Aunque con algunos fallos en el dominio, la exposición fue fluida.",
-        "Se demuestra falta de dominio y una exposición deficiente.",
-        "No existe dominio sobre el tema y la exposición es deficiente."));
-
-    criteriaList.add(new EvaluationCriterion(
-        "CONTENIDO",
-        "Cubre los temas a profundidad con detalles y ejemplos. El conocimiento del tema es excelente.",
-        "Incluye conocimiento básico sobre el tema. El contenido parece ser bueno.",
-        "Incluye información esencial sobre el tema, pero tiene 1-2 errores en los hechos.",
-        "El contenido es mínimo y tiene tres errores en los hechos.",
-        "El contenido es mínimo y tiene varios errores en los hechos."));
-
-    criteriaList.add(new EvaluationCriterion(
-        "ORTOGRAFÍA Y REDACCIÓN",
-        "No hay errores de gramática, ortografía o puntuación.",
-        "Casi no hay errores de gramática, ortografía o puntuación.",
-        "Algunos errores de gramática, ortografía o puntuación.",
-        "Varios errores de gramática, ortografía o puntuación.",
-        "Demasiados errores de gramática, ortografía o puntuación."));
-    return criteriaList;
-  }
-
   @FXML
   public void btnCancel(ActionEvent actionEvent) {
     try {
       if (Utils.showConfirmationAlert("Salir de la evaluacion", "¿Estás seguro que quieres cancelar?", "Cualquier dato no guardado se perderá.")) {
         Stage stageStudentsList = (Stage) lbStudentName.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(
-            ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
+                ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
         Parent viewLogIn = loader.load();
         Scene mainScene = new Scene(viewLogIn);
         stageStudentsList.setScene(mainScene);
@@ -287,7 +254,7 @@ public class FXMLEvaluationRubricController implements Initializable {
       }
     } catch (IOException ex) {
       Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar",
-          "Lo sentimos por el momento no se pudo mostrar la ventana");
+              "Lo sentimos por el momento no se pudo mostrar la ventana");
     }
   }
 
@@ -302,7 +269,7 @@ public class FXMLEvaluationRubricController implements Initializable {
             || tfSpellingGrammarScore.getText().isEmpty()
     ) {
       Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos incompletos",
-          "Debe calificar todos los rubros antes de guardar.");
+              "Debe calificar todos los rubros antes de guardar.");
       return;
     }
 
@@ -310,7 +277,7 @@ public class FXMLEvaluationRubricController implements Initializable {
       int idRecord = StudentDAO.getRecordIdByStudentId(studentToEvaluate.getIdStudent());
       if (idRecord == -1) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de datos",
-            "No se pudo encontrar el expediente del estudiante.");
+                "No se pudo encontrar el expediente del estudiante.");
         return;
       }
 
@@ -327,7 +294,7 @@ public class FXMLEvaluationRubricController implements Initializable {
         saveCriteriaGrades(newEvaluationId);
 
         Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Evaluación guardada",
-            "La evaluación se ha guardado exitosamente.");
+                "La evaluación se ha guardado exitosamente.");
 
         goMainMenu();
       } else {
@@ -335,7 +302,7 @@ public class FXMLEvaluationRubricController implements Initializable {
       }
     } catch (SQLException e) {
       Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de base de datos",
-          "No se pudo conectar con la base de datos para guardar la información.");
+              "No se pudo conectar con la base de datos para guardar la información.");
       e.printStackTrace();
     } catch (NumberFormatException e) {
       Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error en calificación", "El promedio no es un número válido.");
@@ -347,7 +314,7 @@ public class FXMLEvaluationRubricController implements Initializable {
     List<EvaluationDetail> details = new ArrayList<>();
     if (dbCriteriaList == null || dbCriteriaList.size() != scoreFields.length) {
       Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Configuración",
-          "La cantidad de criterios y campos de calificación no coincide.");
+              "La cantidad de criterios y campos de calificación no coincide.");
       return;
     }
 
@@ -367,7 +334,7 @@ public class FXMLEvaluationRubricController implements Initializable {
     try {
       Stage stage = (Stage) tfContentScore.getScene().getWindow();
       Parent view = FXMLLoader
-          .load(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
+              .load(ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
       Scene scene = new Scene(view);
       stage.setScene(scene);
       stage.setTitle("Página Principal Evaluador");

@@ -369,8 +369,7 @@ public class FXMLLogInController implements Initializable {
       FXMLLoader loader = new FXMLLoader(
           ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
       Parent view = loader.load();
-      FXMLCoordinatorMainScreenController controller = loader.getController();
-      controller.configureScreen(coordinator);
+
       Scene mainScene = new Scene(view);
       baseStage.setScene(mainScene);
       baseStage.setTitle("Página Principal Coordinador");

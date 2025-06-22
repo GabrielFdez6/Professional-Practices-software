@@ -378,10 +378,6 @@ public class ValidationUtils {
 
     description = description.trim();
 
-    if (description.length() < 10) {
-      return "La descripción del proyecto debe tener al menos 10 caracteres.";
-    }
-
     if (!DESCRIPTION_PATTERN.matcher(description).matches()) {
       return "La descripción contiene caracteres no válidos.";
     }

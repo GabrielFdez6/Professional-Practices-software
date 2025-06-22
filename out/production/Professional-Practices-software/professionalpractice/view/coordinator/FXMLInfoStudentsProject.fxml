@@ -6,9 +6,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="568.0" prefWidth="800.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLInfoStudentsProjectController">
+<AnchorPane prefHeight="568.0" prefWidth="915.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLInfoStudentsProjectController">
    <children>
-       <AnchorPane prefHeight="27.0" prefWidth="800.0" style="-fx-background-color: white;">
+       <AnchorPane prefHeight="27.0" prefWidth="915.0" style="-fx-background-color: white;">
            <effect>
                <DropShadow height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
                    <color>
@@ -16,7 +16,7 @@
                    </color></DropShadow>
            </effect>
            <children>
-               <Label layoutX="648.0" layoutY="6.0" text="Universidad Veracruzana">
+               <Label layoutX="752.0" layoutY="6.0" text="Universidad Veracruzana">
                    <font>
                        <Font name="Arial Bold" size="12.0" />
                    </font></Label>
@@ -33,23 +33,24 @@
       </Label>
       <TableView fx:id="tvStudents" layoutX="24.0" layoutY="69.0" prefHeight="456.0" prefWidth="363.0">
         <columns>
-          <TableColumn fx:id="colNameStudent" prefWidth="75.0" text="Nombre" />
+          <TableColumn fx:id="colNameStudent" prefWidth="75.0" style="-fx-wrap-text: true;" text="Nombre" />
           <TableColumn fx:id="colMatriculation" prefWidth="75.0" text="Matrícula" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TableView fx:id="tvProjects" layoutX="416.0" layoutY="69.0" prefHeight="456.0" prefWidth="363.0">
+      <TableView fx:id="tvProjects" layoutX="416.0" layoutY="69.0" prefHeight="456.0" prefWidth="475.0">
         <columns>
-          <TableColumn fx:id="colNameProject" prefWidth="75.0" text="Nombre del proyecto" />
-          <TableColumn fx:id="colAvailability" prefWidth="75.0" text="Disponibilidad" />
+          <TableColumn fx:id="colNameProject" prefWidth="164.0" resizable="false" style="-fx-wrap-text: true;" text="Nombre del proyecto" />
+            <TableColumn fx:id="colLinkedOrganization" prefWidth="206.0" resizable="false" style="-fx-wrap-text: true;" text="Organización Vinculada" />
+          <TableColumn fx:id="colAvailability" prefWidth="104.0" resizable="false" style="-fx-wrap-text: true;" text="Disponibilidad" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-       <Button layoutX="701.0" layoutY="533.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
+       <Button layoutX="823.0" layoutY="534.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
            <effect>
                <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
                    <color>
@@ -60,7 +61,7 @@
            <font>
                <Font name="Arial Bold" size="14.0" />
            </font></Button>
-       <Button layoutX="616.0" layoutY="533.0" mnemonicParsing="false" onAction="#btnAssign" style="-fx-background-color: #146cd0;" text="Asignar" textFill="WHITE">
+       <Button layoutX="738.0" layoutY="534.0" mnemonicParsing="false" onAction="#btnAssign" style="-fx-background-color: #146cd0;" text="Asignar" textFill="WHITE">
            <font>
                <Font name="Arial Bold" size="14.0" />
            </font>

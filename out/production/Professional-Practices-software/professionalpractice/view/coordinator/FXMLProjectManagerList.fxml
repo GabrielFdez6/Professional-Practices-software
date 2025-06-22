@@ -16,9 +16,9 @@
                     </color></DropShadow>
             </effect>
             <children>
-                <Label fx:id="lblTitle" layoutX="204.0" layoutY="14.0" text="RESPONSABLES DE PROYECTOS">
+                <Label fx:id="lblTitle" layoutX="14.0" layoutY="14.0" text="RESPONSABLES DE PROYECTOS">
                     <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font name="System Bold" size="13.0" />
                     </font>
                 </Label>
                 <TableView fx:id="tvProjectManagers" layoutY="44.0" prefHeight="403.0" prefWidth="677.0" style="-fx-background-color: white;">
@@ -70,5 +70,9 @@
                         <Font name="Arial Bold" size="12.0" />
                     </font></Label>
             </children></AnchorPane>
+      <Label layoutX="62.0" layoutY="33.0" text="Paso 2 de 3">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
     </children>
 </AnchorPane>

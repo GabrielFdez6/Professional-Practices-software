@@ -66,5 +66,10 @@
                         <Font name="Arial Bold" size="12.0" />
                     </font></Label>
             </children></AnchorPane>
+      <Label layoutX="62.0" layoutY="27.0" text="Paso 1 de 3">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
     </children>
 </AnchorPane>

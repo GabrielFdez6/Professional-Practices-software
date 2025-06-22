@@ -16,7 +16,7 @@
                     </color></DropShadow>
             </effect>
             <children>
-                <Label layoutX="204.0" layoutY="14.0" text="RESPONSABLES DE PROYECTOS">
+                <Label layoutX="194.0" layoutY="14.0" text="RESPONSABLES DE PROYECTOS">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
