@@ -199,40 +199,6 @@ public class EntityValidationUtils {
     return errors;
   }
 
-  public static List<String> validateDelivery(Delivery delivery) {
-    List<String> errors = new ArrayList<>();
-
-    if (delivery == null) {
-      errors.add("El objeto entrega no puede ser nulo");
-      return errors;
-    }
-
-    String nameError = ValidationUtils.validateDeliveryName(delivery.getName());
-    if (!nameError.isEmpty())
-      errors.add(nameError);
-
-    String descriptionError = ValidationUtils.validateDescription(delivery.getDescription());
-    if (!descriptionError.isEmpty())
-      errors.add(descriptionError);
-
-    String typeError = ValidationUtils.validateDeliveryType(delivery.getDeliveryType());
-    if (!typeError.isEmpty())
-      errors.add(typeError);
-
-    if (delivery.getEndDate() != null) {
-      String deliveryDateError = ValidationUtils.validateDate(delivery.getEndDate().toString(),
-              "Fecha de entrega");
-      if (!deliveryDateError.isEmpty())
-        errors.add(deliveryDateError);
-    }
-
-    String recordIdError = ValidationUtils.validateId(delivery.getIdRecord(), "ID de registro");
-    if (!recordIdError.isEmpty())
-      errors.add(recordIdError);
-
-    return errors;
-  }
-
   public static List<String> validatePresentationEvaluation(PresentationEvaluation evaluation) {
     List<String> errors = new ArrayList<>();
 
