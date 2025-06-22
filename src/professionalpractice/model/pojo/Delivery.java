@@ -1,120 +1,58 @@
 package professionalpractice.model.pojo;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.sql.Timestamp; // Necesario si dateDelivered es Timestamp
+import java.time.LocalDate; // Necesario si dateDelivered es LocalDate
 
 public class Delivery {
     private int idDelivery;
     private int idRecord;
-    private String name;
-    private Timestamp startDate;
-    private Timestamp endDate;
-    private String deliveryType;
-    private int idInitialDocument;
-    private int idFinalDocument;
-    private int idReportDocument;
-    private String description;
+    private Integer idDeliveryDefinition;
+    private DeliveryDefinition deliveryDefinition; // Para anidar la definición de la entrega
+
+    // --- NUEVAS COLUMNAS DE LA TABLA `delivery` ---
+    private Timestamp dateDelivered; // O LocalDate si solo necesitas la fecha
+    private Boolean delivered;
     private String status;
+    private String filePath;
+    private String observations;
+    private BigDecimal grade;
+    private Integer reportedHours;
 
     public Delivery() {}
 
-    public Delivery(int idDelivery, int idRecord, String name, Timestamp startDate, Timestamp endDate, String deliveryType, int idInitialDocument, int idFinalDocument, int idReportDocument, String description) {
-        this.idDelivery = idDelivery;
-        this.idRecord = idRecord;
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.deliveryType = deliveryType;
-        this.idInitialDocument = idInitialDocument;
-        this.idFinalDocument = idFinalDocument;
-        this.idReportDocument = idReportDocument;
-        this.description = description;
-        this.status = status;
-    }
+    // --- Getters y Setters existentes ---
+    public int getIdDelivery() { return idDelivery; }
+    public void setIdDelivery(int idDelivery) { this.idDelivery = idDelivery; }
 
-    public int getIdDelivery() {
-        return idDelivery;
-    }
+    public int getIdRecord() { return idRecord; }
+    public void setIdRecord(int idRecord) { this.idRecord = idRecord; }
 
-    public void setIdDelivery(int idDelivery) {
-        this.idDelivery = idDelivery;
-    }
+    public Integer getIdDeliveryDefinition() { return idDeliveryDefinition; }
+    public void setIdDeliveryDefinition(Integer idDeliveryDefinition) { this.idDeliveryDefinition = idDeliveryDefinition; }
 
-    public int getIdRecord() {
-        return idRecord;
-    }
+    public DeliveryDefinition getDeliveryDefinition() { return deliveryDefinition; }
+    public void setDeliveryDefinition(DeliveryDefinition deliveryDefinition) { this.deliveryDefinition = deliveryDefinition; }
 
-    public void setIdRecord(int idRecord) {
-        this.idRecord = idRecord;
-    }
+    // --- NUEVOS Getters y Setters para las columnas de entrega individual ---
+    public Timestamp getDateDelivered() { return dateDelivered; } // O LocalDate, según tu elección
+    public void setDateDelivered(Timestamp dateDelivered) { this.dateDelivered = dateDelivered; }
 
-    public String getName() {
-        return name;
-    }
+    public Boolean getDelivered() { return delivered; }
+    public void setDelivered(Boolean delivered) { this.delivered = delivered; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public CharSequence getStartDate() {
-        return (CharSequence) startDate;
-    }
-
-    public void setStartDate(Timestamp startDate) {
-        this.startDate = startDate;
-    }
-
-    public CharSequence getEndDate() {
-        return (CharSequence) endDate;
-    }
-
-    public void setEndDate(Timestamp endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(String deliveryType) {
-        this.deliveryType = deliveryType;
-    }
-
-    public int getIdInitialDocument() {
-        return idInitialDocument;
-    }
-
-    public void setIdInitialDocument(int idInitialDocument) {
-        this.idInitialDocument = idInitialDocument;
-    }
-
-    public int getIdFinalDocument() {
-        return idFinalDocument;
-    }
-
-    public void setIdFinalDocument(int idFinalDocument) {
-        this.idFinalDocument = idFinalDocument;
-    }
-
-    public int getIdReportDocument() {
-        return idReportDocument;
-    }
-
-    public void setIdReportDocument(int idReportDocument) {
-        this.idReportDocument = idReportDocument;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
+    public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
+    public String getFilePath() { return filePath; }
+    public void setFilePath(String filePath) { this.filePath = filePath; }
+
+    public String getObservations() { return observations; }
+    public void setObservations(String observations) { this.observations = observations; }
+
+    public BigDecimal getGrade() { return grade; }
+    public void setGrade(BigDecimal grade) { this.grade = grade; }
+
+    public Integer getReportedHours() { return reportedHours; }
+    public void setReportedHours(Integer reportedHours) { this.reportedHours = reportedHours; }
 }

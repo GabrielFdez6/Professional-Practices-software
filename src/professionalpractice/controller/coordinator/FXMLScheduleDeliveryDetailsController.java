@@ -3,6 +3,7 @@ package professionalpractice.controller.coordinator;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -13,7 +14,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import professionalpractice.model.dao.ScheduleDeliveryDAO;
-import professionalpractice.model.pojo.Delivery;
+// No necesitamos importar professionalpractice.model.pojo.Delivery aquí para la programación de la definición
+// import professionalpractice.model.pojo.Delivery; // Ya no se usa directamente para construir la entrega aquí
 import professionalpractice.model.pojo.OperationResult;
 import professionalpractice.utils.Utils;
 
@@ -27,14 +29,11 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     private DatePicker dpFechaInicio;
     @FXML
     private DatePicker dpFechaFin;
-    private String tipoEntrega;
+    private String tipoEntrega; // Este es el "DOCUMENTOS INICIALES", "REPORTES", etc.
 
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        // Inicialización
     }
 
     public void inicializarInformacion(String tipoEntrega, String nombreDocumento){
@@ -43,14 +42,25 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     }
 
     private boolean validarCampos(){
-        if(tfNombre.getText().isEmpty() || taDescripcion.getText().isEmpty() || dpFechaInicio.getValue() == null || dpFechaFin.getValue() == null){
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Existen campos vacíos, por favor llena todos los campos");
+        if(tfNombre.getText().isEmpty() || taDescripcion.getText().isEmpty() || dpFechaInicio.getValue() == null || dpFechaFin.getValue() == null){ // Asegúrate de validar taDescripcion también
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Existen campos vacíos, por favor llena todos los campos.");
             return false;
         }
-        if(dpFechaFin.getValue().isBefore(dpFechaInicio.getValue())){
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Incorrectas", "La fecha de fin no puede ser anterior a la fecha de inicio");
+
+        LocalDate fechaInicio = dpFechaInicio.getValue();
+        LocalDate fechaFin = dpFechaFin.getValue();
+        LocalDate fechaActual = LocalDate.now();
+
+        if(fechaInicio.isBefore(fechaActual)){
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fecha de Inicio Incorrecta", "La fecha de inicio no puede ser anterior a la fecha actual.");
             return false;
         }
+
+        if(fechaFin.isBefore(fechaInicio)){
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Incorrectas", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+            return false;
+        }
+
         return true;
     }
 
@@ -68,24 +78,24 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     }
 
     @FXML
-    private void btnClicAceptar(ActionEvent event) {
+    private void btnClicProgramar(ActionEvent event) {
         if(validarCampos()){
-            String tablaDestino = "";
-            switch(tipoEntrega){
-                case "DOCUMENTOS INICIALES": tablaDestino = "entregadocumentoinicio"; break;
-                case "REPORTES": tablaDestino = "entregareporte"; break;
-                case "DOCUMENTOS FINALES": tablaDestino = "entregadocumentofinal"; break;
-            }
-
-            Delivery nuevaEntrega = new Delivery();
-            nuevaEntrega.setName(tfNombre.getText());
-            nuevaEntrega.setDescription(taDescripcion.getText());
-            nuevaEntrega.setStartDate(Timestamp.valueOf(dpFechaInicio.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-            nuevaEntrega.setEndDate(Timestamp.valueOf(dpFechaFin.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+            // Obtener los datos directamente de los componentes de la UI para la DEFINICIÓN de la entrega
+            String nombreDefinicion = tfNombre.getText();
+            String descripcionDefinicion = taDescripcion.getText();
+            Timestamp fechaInicioDefinicion = Timestamp.valueOf(dpFechaInicio.getValue().atStartOfDay());
+            Timestamp fechaFinDefinicion = Timestamp.valueOf(dpFechaFin.getValue().atStartOfDay());
 
             try{
-                // Se llama al nuevo método transaccional
-                OperationResult resultado = ScheduleDeliveryDAO.programarEntregaPeriodoActual(nuevaEntrega, tablaDestino);
+                // Llama al DAO pasando los datos individuales para crear la definición y las instancias
+                // Ya no pasamos el POJO Delivery aquí, sino los campos de la definición.
+                OperationResult resultado = ScheduleDeliveryDAO.programarEntregaPeriodoActual(
+                        nombreDefinicion,
+                        descripcionDefinicion,
+                        fechaInicioDefinicion,
+                        fechaFinDefinicion,
+                        tipoEntrega // Este es el String "DOCUMENTOS INICIALES", "REPORTES", etc.
+                );
 
                 if(!resultado.isError()){
                     Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", resultado.getMensaje());
@@ -100,5 +110,4 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
             }
         }
     }
-
 }
