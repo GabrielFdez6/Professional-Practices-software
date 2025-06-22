@@ -40,7 +40,10 @@ public class ProjectDAO implements IProjectDAO {
 
     public ArrayList<Project> getAvailableProjects() throws SQLException {
         ArrayList<Project> projects = new ArrayList<>();
-        String query = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager FROM project WHERE availability > 0";
+        String query = "SELECT p.idProject, p.name, p.description, p.methodology, p.availability, p.idLinkedOrganization, p.idProjectManager, lo.name AS linkedOrganizationName " +
+                "FROM project p " +
+                "JOIN linkedorganization lo ON p.idLinkedOrganization = lo.idLinkedOrganization " +
+                "WHERE p.availability > 0";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
@@ -54,6 +57,7 @@ public class ProjectDAO implements IProjectDAO {
                 project.setMethodology(rs.getString("methodology"));
                 project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
                 project.setIdProjectManager(rs.getInt("idProjectManager"));
+                project.setLinkedOrganizationName(rs.getString("linkedOrganizationName"));
                 projects.add(project);
             }
         }
@@ -66,7 +70,8 @@ public class ProjectDAO implements IProjectDAO {
         int responseCode = Constants.CONNECTION_FAILED;
 
         String getRecordQuery = "SELECT idRecord FROM record WHERE idStudent = ? LIMIT 1";
-        String updateProjectQuery = "UPDATE project SET idRecord = ?, availability = availability - 1 WHERE idProject = ?";
+        String insertAssignmentQuery = "INSERT INTO projectassignment (idProject, idRecord) VALUES (?, ?)";
+        String updateAvailabilityQuery = "UPDATE project SET availability = availability - 1 WHERE idProject = ?";
         String updateStudentStatusQuery = "UPDATE student SET isAssignedToProject = 1 WHERE idStudent = ?";
         String updateStudentSelectionQuery = "UPDATE student SET projectSelection = ? WHERE idStudent = ?";
 
@@ -85,36 +90,34 @@ public class ProjectDAO implements IProjectDAO {
             }
 
             if (recordId <= 0) {
+                conn.rollback();
                 throw new SQLException("No se encontró un expediente para el estudiante. La asignación no puede proceder.");
             }
 
-            int projectRowsAffected;
-            try (PreparedStatement psUpdateProject = conn.prepareStatement(updateProjectQuery)) {
-                psUpdateProject.setInt(1, recordId);
-                psUpdateProject.setInt(2, idProject);
-                projectRowsAffected = psUpdateProject.executeUpdate();
+            try (PreparedStatement psInsertAssignment = conn.prepareStatement(insertAssignmentQuery)) {
+                psInsertAssignment.setInt(1, idProject);
+                psInsertAssignment.setInt(2, recordId);
+                psInsertAssignment.executeUpdate();
             }
 
-            int studentStatusRowsAffected;
+            try (PreparedStatement psUpdateProject = conn.prepareStatement(updateAvailabilityQuery)) {
+                psUpdateProject.setInt(1, idProject);
+                psUpdateProject.executeUpdate();
+            }
+
             try (PreparedStatement psUpdateStudent = conn.prepareStatement(updateStudentStatusQuery)) {
                 psUpdateStudent.setInt(1, idStudent);
-                studentStatusRowsAffected = psUpdateStudent.executeUpdate();
+                psUpdateStudent.executeUpdate();
             }
 
-            int studentSelectionRowsAffected;
             try (PreparedStatement psUpdateSelection = conn.prepareStatement(updateStudentSelectionQuery)) {
                 psUpdateSelection.setString(1, projectName);
                 psUpdateSelection.setInt(2, idStudent);
-                studentSelectionRowsAffected = psUpdateSelection.executeUpdate();
+                psUpdateSelection.executeUpdate();
             }
 
-            if (projectRowsAffected > 0 && studentStatusRowsAffected > 0 && studentSelectionRowsAffected > 0) {
-                conn.commit();
-                responseCode = Constants.OPERATION_SUCCESFUL;
-            } else {
-                conn.rollback();
-                throw new SQLException("La asignación falló, una de las operaciones no afectó a ninguna fila.");
-            }
+            conn.commit();
+            responseCode = Constants.OPERATION_SUCCESFUL;
 
         } catch (SQLException e) {
             System.err.println("Error en la transacción de asignación: " + e.getMessage());
@@ -141,7 +144,7 @@ public class ProjectDAO implements IProjectDAO {
 
     @Override
     public int saveProject(Project project) throws SQLException {
-        String sql = "INSERT INTO project (name, description, methodology, availability, idLinkedOrganization, idProjectManager) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO project (name, description, methodology, availability, idLinkedOrganization, idProjectManager, department) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, project.getName());
@@ -150,6 +153,7 @@ public class ProjectDAO implements IProjectDAO {
             pstmt.setInt(4, project.getAvailability());
             pstmt.setInt(5, project.getIdLinkedOrganization());
             pstmt.setInt(6, project.getIdProjectManager());
+            pstmt.setString(7, project.getDepartment());
             int rowsAffected = pstmt.executeUpdate();
             return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : Constants.OPERATION_FAILED;
         }
@@ -157,7 +161,7 @@ public class ProjectDAO implements IProjectDAO {
 
     @Override
     public int updateProject(Project project) throws SQLException {
-        String sql = "UPDATE project SET name = ?, description = ?, methodology = ?, availability = ?, idLinkedOrganization = ?, idProjectManager = ? WHERE idProject = ?";
+        String sql = "UPDATE project SET name = ?, description = ?, methodology = ?, availability = ?, idLinkedOrganization = ?, idProjectManager = ?, department = ? WHERE idProject = ?";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, project.getName());
@@ -166,7 +170,8 @@ public class ProjectDAO implements IProjectDAO {
             pstmt.setInt(4, project.getAvailability());
             pstmt.setInt(5, project.getIdLinkedOrganization());
             pstmt.setInt(6, project.getIdProjectManager());
-            pstmt.setInt(7, project.getIdProject());
+            pstmt.setString(7, project.getDepartment());
+            pstmt.setInt(8, project.getIdProject());
             int rowsAffected = pstmt.executeUpdate();
             return (rowsAffected > 0) ? Constants.OPERATION_SUCCESFUL : Constants.OPERATION_FAILED;
         }
@@ -175,7 +180,7 @@ public class ProjectDAO implements IProjectDAO {
     @Override
     public List<Project> getProjectsByProjectManagerId(int projectManagerId) throws SQLException {
         List<Project> projects = new ArrayList<>();
-        String sql = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager " +
+        String sql = "SELECT idProject, name, description, methodology, availability, idLinkedOrganization, idProjectManager, department " +
                 "FROM project " +
                 "WHERE idProjectManager = ?";
 
@@ -192,6 +197,7 @@ public class ProjectDAO implements IProjectDAO {
                     project.setAvailability(rs.getInt("availability"));
                     project.setIdLinkedOrganization(rs.getInt("idLinkedOrganization"));
                     project.setIdProjectManager(rs.getInt("idProjectManager"));
+                    project.setDepartment(rs.getString("department"));
                     projects.add(project);
                 }
             }

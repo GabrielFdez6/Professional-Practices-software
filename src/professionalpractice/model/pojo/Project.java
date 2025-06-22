@@ -2,7 +2,6 @@ package professionalpractice.model.pojo;
 
 public class Project {
     private int idProject;
-    private int idRecord;
     private int idProjectManager;
     private int idLinkedOrganization;
     private int idCoordinator;
@@ -11,12 +10,12 @@ public class Project {
     private String description;
     private String methodology;
     private int availability;
+    private String linkedOrganizationName;
 
     public Project() {}
 
-    public Project(int idProject, int idRecord, int idProjectManager, int idLinkedOrganization, int idCoordinator, String name, String department, String description, String methodology, String status, int availability) {
+    public Project(int idProject, int idProjectManager, int idLinkedOrganization, int idCoordinator, String name, String department, String description, String methodology, int availability, String linkedOrganizationName) {
         this.idProject = idProject;
-        this.idRecord = idRecord;
         this.idProjectManager = idProjectManager;
         this.idLinkedOrganization = idLinkedOrganization;
         this.idCoordinator = idCoordinator;
@@ -25,6 +24,7 @@ public class Project {
         this.description = description;
         this.methodology = methodology;
         this.availability = availability;
+        this.linkedOrganizationName = linkedOrganizationName;
     }
 
     public int getIdProject() {
@@ -33,14 +33,6 @@ public class Project {
 
     public void setIdProject(int idProject) {
         this.idProject = idProject;
-    }
-
-    public int getIdRecord() {
-        return idRecord;
-    }
-
-    public void setIdRecord(int idRecord) {
-        this.idRecord = idRecord;
     }
 
     public int getIdProjectManager() {
@@ -105,6 +97,14 @@ public class Project {
 
     public void setAvailability(int availability) {
         this.availability = availability;
+    }
+
+    public String getLinkedOrganizationName() {
+        return linkedOrganizationName;
+    }
+
+    public void setLinkedOrganizationName(String linkedOrganizationName) {
+        this.linkedOrganizationName = linkedOrganizationName;
     }
 
     @Override

@@ -9,9 +9,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Control;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import professionalpractice.ProfessionalPractices;
 import professionalpractice.model.dao.ProjectDAO;
@@ -37,19 +40,20 @@ public class FXMLInfoStudentsProjectController implements Initializable {
     private TableColumn<Student, String> colMatriculation;
     @FXML
     private TableColumn<Student, String> colNameStudent;
-
     @FXML
     private TableView<Project> tvProjects;
     @FXML
     private TableColumn<Project, String> colNameProject;
     @FXML
     private TableColumn<Project, Integer> colAvailability;
+    @FXML
+    private TableColumn<Project, String> colLinkedOrganization;
 
     private IStudentDAO studentDAO;
     private IProjectDAO projectDAO;
-
     private ObservableList<Student> unassignedStudents;
     private ObservableList<Project> availableProjects;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -68,10 +72,27 @@ public class FXMLInfoStudentsProjectController implements Initializable {
 
         colNameProject.setCellValueFactory(new PropertyValueFactory<>("name"));
         colAvailability.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        colLinkedOrganization.setCellValueFactory(new PropertyValueFactory<>("linkedOrganizationName"));
         tvProjects.setItems(availableProjects);
+
+        setColumnWrapping(colNameStudent);
+        setColumnWrapping(colNameProject);
+        setColumnWrapping(colLinkedOrganization);
     }
 
-    private void    loadData() {
+    private <T> void setColumnWrapping(TableColumn<T, String> column) {
+        column.setCellFactory(tc -> {
+            TableCell<T, String> cell = new TableCell<>();
+            Text text = new Text();
+            cell.setGraphic(text);
+            cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+            text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+            text.textProperty().bind(cell.itemProperty());
+            return cell;
+        });
+    }
+
+    private void loadData() {
         try {
             unassignedStudents.clear();
             availableProjects.clear();

@@ -101,7 +101,8 @@ public class StudentDAO implements IStudentDAO {
                         "s.semester, p.name AS projectName " +
                         "FROM student s " +
                         "JOIN record r ON s.idStudent = r.idStudent " +
-                        "JOIN project p ON r.idRecord = p.idRecord " +
+                        "JOIN project_assignment pa ON r.idRecord = pa.idRecord " +
+                        "JOIN project p ON pa.idProject = p.idProject " +
                         "JOIN subjectgroup sg ON r.idSubjectGroup = sg.idSubjectGroup " +
                         "JOIN teachingassignment ta ON sg.idSubjectGroup = ta.idSubjectGroup " +
                         "WHERE ta.idAcademic = ? AND sg.idTerm = ? AND s.isAssignedToProject = 1;";

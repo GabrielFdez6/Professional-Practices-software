@@ -37,6 +37,7 @@ public class FXMLAddEditProjectController implements Initializable {
     @FXML private TableColumn<Project, String> colDescription;
     @FXML private TableColumn<Project, String> colMethodology;
     @FXML private TableColumn<Project, Integer> colAvailability;
+    @FXML private TableColumn<Project, String> colDepartment;
 
     private LinkedOrganization currentOrganization;
     private ProjectManager currentProjectManager;
@@ -62,6 +63,7 @@ public class FXMLAddEditProjectController implements Initializable {
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colMethodology.setCellValueFactory(new PropertyValueFactory<>("methodology"));
         colAvailability.setCellValueFactory(new PropertyValueFactory<>("availability"));
+        colDepartment.setCellValueFactory(new PropertyValueFactory<>("department"));
 
         colDescription.setCellFactory(column -> {
             return new TableCell<Project, String>() {

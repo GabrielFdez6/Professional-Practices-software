@@ -45,6 +45,8 @@ public class FXMLProjectFormController implements Initializable {
   private IProjectDAO projectDAO;
   @FXML
   private Label lbCharCounter;
+  @FXML
+  private TextField tfDepartment;
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
@@ -72,6 +74,7 @@ public class FXMLProjectFormController implements Initializable {
         taDescription.setText(projectToEdit.getDescription());
         tfMethodology.setText(projectToEdit.getMethodology());
         tfAvailability.setText(String.valueOf(projectToEdit.getAvailability()));
+        tfDepartment.setText(projectToEdit.getDepartment());
       }
     } else {
       lblFormTitle.setText("REGISTRAR NUEVO PROYECTO");
@@ -79,6 +82,7 @@ public class FXMLProjectFormController implements Initializable {
       taDescription.clear();
       tfMethodology.clear();
       tfAvailability.clear();
+      tfDepartment.clear();
     }
   }
 
@@ -86,6 +90,7 @@ public class FXMLProjectFormController implements Initializable {
     setupDescriptionCharCounter();
     addTextLimiter(tfProjectName, 50, "Nombre del Proyecto");
     addTextLimiter(tfMethodology, 45, "Metodología");
+    addTextLimiter(tfDepartment, 30, "Departamento");
   }
 
   private void setupDescriptionCharCounter() {
@@ -143,8 +148,9 @@ public class FXMLProjectFormController implements Initializable {
     String description = taDescription.getText().trim();
     String methodology = tfMethodology.getText().trim();
     String availabilityStr = tfAvailability.getText().trim();
+    String department = tfDepartment.getText().trim();
 
-    if (name.isEmpty() || description.isEmpty() || methodology.isEmpty() || availabilityStr.isEmpty()) {
+    if (name.isEmpty() || description.isEmpty() || methodology.isEmpty() || availabilityStr.isEmpty() || department.isEmpty()) {
       Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Por favor, completa todos los campos.");
       return;
     }
@@ -162,6 +168,7 @@ public class FXMLProjectFormController implements Initializable {
         projectToEdit.setDescription(description);
         projectToEdit.setMethodology(methodology);
         projectToEdit.setAvailability(availability);
+        projectToEdit.setDepartment(department);
 
         response = projectDAO.updateProject(projectToEdit);
         if (response == Constants.OPERATION_SUCCESFUL) {
@@ -177,6 +184,7 @@ public class FXMLProjectFormController implements Initializable {
         newProject.setDescription(description);
         newProject.setMethodology(methodology);
         newProject.setAvailability(availability);
+        newProject.setDepartment(department);
 
         if (currentOrganization == null || currentProjectManager == null) {
           Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Contexto", "No se pudo asociar el proyecto a una organización o responsable.");

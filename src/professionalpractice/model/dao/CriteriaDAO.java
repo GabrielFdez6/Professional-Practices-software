@@ -14,7 +14,7 @@ public class CriteriaDAO implements ICriteriaDAO {
     @Override
     public List<Criteria> getAllCriteria() throws SQLException {
         List<Criteria> criteriaList = new ArrayList<>();
-        String query = "SELECT idCriteria, criteriaName FROM evaluationcriteria";
+        String query = "SELECT idCriteria, criteriaName, competent, independent, advancedBasic, thresholdBasic, notCompetent FROM evaluationcriteria";
         try (Connection conn = ConectionBD.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query);
              ResultSet rs = pstmt.executeQuery()) {
@@ -22,6 +22,11 @@ public class CriteriaDAO implements ICriteriaDAO {
                 Criteria criteria = new Criteria();
                 criteria.setIdCriteria(rs.getInt("idCriteria"));
                 criteria.setCriteriaName(rs.getString("criteriaName"));
+                criteria.setCompetent(rs.getString("competent"));
+                criteria.setIndependent(rs.getString("independent"));
+                criteria.setAdvancedBasic(rs.getString("advancedBasic"));
+                criteria.setThresholdBasic(rs.getString("thresholdBasic"));
+                criteria.setNotCompetent(rs.getString("notCompetent"));
                 criteriaList.add(criteria);
             }
         }

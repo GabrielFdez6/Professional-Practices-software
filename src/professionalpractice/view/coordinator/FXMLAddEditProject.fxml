@@ -7,9 +7,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLAddEditProjectController">
+<AnchorPane prefHeight="600.0" prefWidth="976.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLAddEditProjectController">
     <children>
-        <AnchorPane layoutX="62.0" layoutY="69.0" prefHeight="474.0" prefWidth="726.0" style="-fx-background-color: white; -fx-background-radius: 9;">
+        <AnchorPane layoutX="62.0" layoutY="69.0" prefHeight="474.0" prefWidth="856.0" style="-fx-background-color: white; -fx-background-radius: 9;">
             <effect>
                 <DropShadow height="20.45" offsetY="2.0" radius="9.7425" width="20.52">
                     <color>
@@ -28,12 +28,13 @@
                     </font>
                 </Label>
 
-                <TableView fx:id="tvProjects" layoutY="70.0" prefHeight="404.0" prefWidth="726.0" style="-fx-background-color: white;">
+                <TableView fx:id="tvProjects" layoutY="70.0" prefHeight="404.0" prefWidth="856.0" style="-fx-background-color: white;">
                     <columns>
-                        <TableColumn fx:id="colProjectName" prefWidth="214.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0; -fx-wrap-text: true;" text="Nombre del Proyecto" />
-                        <TableColumn fx:id="colDescription" prefWidth="297.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0; -fx-wrap-text: true;" text="Descripción" />
-                        <TableColumn fx:id="colMethodology" minWidth="0.0" prefWidth="110.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Metodología" />
-                        <TableColumn fx:id="colAvailability" prefWidth="104.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Disponibilidad" />
+                        <TableColumn fx:id="colProjectName" prefWidth="181.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0; -fx-wrap-text: true;" text="Nombre del Proyecto" />
+                  <TableColumn fx:id="colDepartment" prefWidth="163.0" resizable="false" text="Departamento" />
+                        <TableColumn fx:id="colDescription" prefWidth="240.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0; -fx-wrap-text: true;" text="Descripción" />
+                        <TableColumn fx:id="colMethodology" minWidth="0.0" prefWidth="141.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Metodología" />
+                        <TableColumn fx:id="colAvailability" prefWidth="146.0" resizable="false" style="-fx-border-width: 0 0 1 0; -fx-border-color: #E0E0E0;" text="Disponibilidad" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -41,7 +42,7 @@
                 </TableView>
             </children></AnchorPane>
 
-        <Button layoutX="615.0" layoutY="560.0" mnemonicParsing="false" onAction="#btnEditProject" style="-fx-background-color: #146cd0;" text="Modificar" textFill="WHITE">
+        <Button layoutX="745.0" layoutY="560.0" mnemonicParsing="false" onAction="#btnEditProject" style="-fx-background-color: #146cd0;" text="Modificar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
@@ -53,7 +54,7 @@
                 </DropShadow>
             </effect>
         </Button>
-        <Button layoutX="523.0" layoutY="560.0" mnemonicParsing="false" onAction="#btnAddProject" style="-fx-background-color: #28a745;" text="Agregar" textFill="WHITE">
+        <Button layoutX="653.0" layoutY="560.0" mnemonicParsing="false" onAction="#btnAddProject" style="-fx-background-color: #28a745;" text="Agregar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
@@ -66,7 +67,7 @@
             </effect>
         </Button>
 
-        <AnchorPane prefHeight="33.0" prefWidth="850.0" style="-fx-background-color: white;">
+        <AnchorPane prefHeight="39.0" prefWidth="976.0" style="-fx-background-color: white;">
             <effect>
                 <DropShadow height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
                     <color>
@@ -74,13 +75,13 @@
                     </color></DropShadow>
             </effect>
             <children>
-                <Label layoutX="681.0" layoutY="9.0" text="Universidad Veracruzana">
+                <Label layoutX="809.0" layoutY="11.0" text="Universidad Veracruzana">
                     <font>
                         <Font name="Arial Bold" size="12.0" />
                     </font>
                 </Label>
-      
-              <Button layoutX="2.0" layoutY="4.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="26.0" prefWidth="133.0" style="-fx-background-color: #ededed; -fx-border-radius: 5;" text="Menú Principal">
+
+              <Button layoutX="12.0" layoutY="6.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="26.0" prefWidth="133.0" style="-fx-background-color: #ededed; -fx-border-radius: 5;" text="Menú Principal">
                   <font>
                       <Font name="Arial Bold" size="12.0" />
                   </font>
@@ -106,7 +107,7 @@
             <Font size="16.0" />
          </font>
       </Label>
-        <Button layoutX="709.0" layoutY="560.0" mnemonicParsing="false" onAction="#btnBack" style="-fx-background-color: #f3f4f6;" text="Regresar">
+        <Button layoutX="839.0" layoutY="560.0" mnemonicParsing="false" onAction="#btnBack" style="-fx-background-color: #f3f4f6;" text="Regresar">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
