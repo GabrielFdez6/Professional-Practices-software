@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="450.0" prefWidth="700.0" spacing="15.0" style="-fx-background-color: #f9f9f9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLDeliveryListController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLDeliveryListController">
     <children>
-        <Label text="Mis Entregas Programadas" textFill="#333333">
+        <Label layoutX="163.0" layoutY="57.0" text="Mis Entregas Programadas">
             <font>
-                <Font name="System Bold" size="24.0" />
+                <Font name="Arial Bold" size="24.0" />
             </font>
         </Label>
-        <TableView fx:id="tvDeliveries" prefHeight="300.0" prefWidth="660.0">
+        <TableView fx:id="tvDeliveries" layoutX="25.0" layoutY="106.0" prefHeight="272.0" prefWidth="550.0">
             <columns>
-                <TableColumn fx:id="colName" prefWidth="250.0" text="Nombre de la Entrega" />
-                <TableColumn fx:id="colType" prefWidth="150.0" text="Tipo" />
-                <TableColumn fx:id="colEndDate" prefWidth="150.0" text="Fecha Límite" />
+                <TableColumn fx:id="colName" prefWidth="180.0" text="Nombre de la Entrega" />
+                <TableColumn fx:id="colType" minWidth="0.0" prefWidth="145.0" text="Tipo" />
+                <TableColumn fx:id="colEndDate" minWidth="0.0" prefWidth="118.0" text="Fecha Límite" />
+                <TableColumn fx:id="colStatus" minWidth="0.0" prefWidth="106.0" text="Estado" />
             </columns>
         </TableView>
-        <Button onAction="#btnOpenDeliveryClick" prefWidth="150.0" text="Realizar Entrega" />
-        <Button onAction="#btnBackClick" prefWidth="150.0" style="-fx-background-color: #6c757d;" text="Regresar" textFill="WHITE" />
+        <Button fx:id="btnOpenDelivery" layoutX="377.0" layoutY="413.0" mnemonicParsing="false" onAction="#btnOpenDeliveryClick" style="-fx-background-color: #007bff;" text="Continuar" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnBack" layoutX="486.0" layoutY="413.0" mnemonicParsing="false" onAction="#btnBackClick" style="-fx-background-color: #6c757d;" text="Regresar" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="14.0" />
+            </font>
+        </Button>
+        <Label layoutX="447.0" layoutY="23.0" text="Universidad Veracruzana" />
     </children>
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-</VBox>
+</AnchorPane>

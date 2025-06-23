@@ -15,13 +15,12 @@ import java.util.ArrayList;
 
 public class GroupDAO {
 
-    public static ArrayList<Group> obtenerGruposPorPeriodo(int idPeriodo, Connection conexionBD) throws SQLException { // <--- ACEPTA LA CONEXIÓN
-        ArrayList<Group> grupos = new ArrayList<>();
-        PreparedStatement sentencia = null;
-        ResultSet resultado = null;
+    public static ArrayList<Group> getGroupsByTerm(int idTerm, Connection connectionBD) throws SQLException {
+        ArrayList<Group> groups = new ArrayList<>();
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
-        // ¡NO abrimos ni cerramos la conexión aquí! Solo la usamos.
-        if (conexionBD == null) { // Una validación extra por si se pasa null
+        if (connectionBD == null) {
             throw new SQLException("Error: La conexión a la base de datos es nula.");
         }
 
@@ -53,63 +52,43 @@ public class GroupDAO {
                     "WHERE " +
                     "sg.idTerm = ?";
 
-            sentencia = conexionBD.prepareStatement(sql);
-            sentencia.setInt(1, idPeriodo);
-            resultado = sentencia.executeQuery();
+            statement = connectionBD.prepareStatement(sql);
+            statement.setInt(1, idTerm);
+            resultSet = statement.executeQuery();
 
-            while (resultado.next()) {
-                grupos.add(convertirRegistroGrupo(resultado));
+            while (resultSet.next()) {
+                groups.add(convertGroupRecord(resultSet));
             }
         } finally {
-            // Solo cerramos Statement y ResultSet, NO la Connection
-            if (resultado != null) { try { resultado.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
-            if (sentencia != null) { try { sentencia.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
-            // NO conexionBD.close();
+            if (resultSet != null) { try { resultSet.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
+            if (statement != null) { try { statement.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
         }
-        return grupos;
+        return groups;
     }
 
-    private static Group convertirRegistroGrupo(ResultSet rs) throws SQLException {
-        Group grupo = new Group();
-        grupo.setIdGrupo(rs.getInt("idSubjectGroup")); // Mapea idGrupo a idSubjectGroup
+    private static Group convertGroupRecord(ResultSet rs) throws SQLException {
+        Group group = new Group();
+        group.setIdGroup(rs.getInt("idSubjectGroup")); // Changed from setIdGrupo to setIdGroup
 
-        // Asumiendo que 'seccion' y 'bloque' en tu POJO Group pueden ser llenados con el 'scheduleInfo'
-        // Si necesitas un parseo más complejo de 'scheduleInfo' para 'seccion' y 'bloque', hazlo aquí.
-        // Por ahora, simplemente tomamos la cadena completa de 'scheduleInfo'
-        // Si tu POJO tiene campos específicos para 'seccion' y 'bloque',
-        // considera si 'scheduleInfo' te da esa información o si necesitas ajustar el POJO.
-        // Por ejemplo, podrías tener un campo 'schedule' en Group y setearlo así:
-        // grupo.setSchedule(rs.getString("scheduleInfo"));
-
-        // Mapear el Académico
-        Academic academico = new Academic();
-        academico.setIdAcademic(rs.getInt("idAcademic"));
-        // Concatenar el nombre completo del académico
-        academico.setFirstName(rs.getString("academicFirstName") + " " +
+        Academic academic = new Academic();
+        academic.setIdAcademic(rs.getInt("idAcademic"));
+        academic.setFirstName(rs.getString("academicFirstName") + " " +
                 rs.getString("academicLastNameFather") + " " +
                 (rs.getString("academicLastNameMother") != null ? rs.getString("academicLastNameMother") : ""));
-        grupo.setAcademico(academico);
+        group.setAcademic(academic); // Changed from setAcademico to setAcademic
 
-        // Mapear la Experiencia Educativa (tabla 'subject')
-        Subject ee = new Subject();
-        ee.setIdSubject(rs.getInt("idSubject"));
-        ee.setName(rs.getString("subjectName"));
-        // NOTA: La tabla 'subject' en tu dump NO tiene una columna 'nrc'.
-        // Si 'nrc' es obligatorio en tu POJO EducationalExperience,
-        // deberás revisar de dónde lo obtienes o si debe ser nullable.
-        // Si no es necesario, puedes comentar o eliminar la siguiente línea:
-        // ee.setNrc(rs.getString("nrc")); // Esto podría lanzar SQLException si la columna no existe
+        Subject subject = new Subject();
+        subject.setIdSubject(rs.getInt("idSubject"));
+        subject.setName(rs.getString("subjectName"));
+        group.setEducationalExperience(subject); // Changed from setExperienciaEducativa to setEducationalExperience
 
-        grupo.setExperienciaEducativa(ee);
+        Term term = new Term();
+        term.setIdTerm(rs.getInt("idTerm"));
+        term.setName(rs.getString("termName"));
+        term.setStartDate(String.valueOf(rs.getDate("termStartDate").toLocalDate()));
+        term.setEndDate(String.valueOf(rs.getDate("termEndDate").toLocalDate()));
+        group.setTerm(term); // Changed from setPeriodo to setTerm
 
-        // Mapear el Periodo (tabla 'term')
-        Term periodo = new Term();
-        periodo.setIdTerm(rs.getInt("idTerm"));
-        periodo.setName(rs.getString("termName"));
-        periodo.setStartDate(String.valueOf(rs.getDate("termStartDate").toLocalDate()));
-        periodo.setEndDate(String.valueOf(rs.getDate("termEndDate").toLocalDate()));
-        grupo.setPeriodo(periodo);
-
-        return grupo;
+        return group;
     }
 }

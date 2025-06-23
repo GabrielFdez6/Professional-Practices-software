@@ -21,34 +21,34 @@ import professionalpractice.utils.Utils;
 public class FXMLScheduleDeliveryController implements Initializable {
 
   @FXML
-  private ListView<String> lvTipoEntrega;
+  private ListView<String> lvDeliveryType;
 
   @Override
   public void initialize(URL url, ResourceBundle rb) {
-    cargarTiposDeEntrega();
+    loadDeliveryTypes();
   }
 
-  private void cargarTiposDeEntrega(){
-    ObservableList<String> tipos = FXCollections.observableArrayList();
-    tipos.addAll("DOCUMENTOS INICIALES", "REPORTES", "DOCUMENTOS FINALES");
-    lvTipoEntrega.setItems(tipos);
+  private void loadDeliveryTypes(){
+    ObservableList<String> types = FXCollections.observableArrayList();
+    types.addAll("DOCUMENTOS INICIALES", "REPORTES", "DOCUMENTOS FINALES");
+    lvDeliveryType.setItems(types);
   }
 
   @FXML
-  private void btnClicContinuar(ActionEvent event) {
-    String tipoSeleccionado = lvTipoEntrega.getSelectionModel().getSelectedItem();
-    if(tipoSeleccionado != null){
+  private void btnClickContinue(ActionEvent event) {
+    String selectedType = lvDeliveryType.getSelectionModel().getSelectedItem();
+    if(selectedType != null){
       try {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/coordinator/FXMLSelectDocument.fxml"));
-        Parent vista = loader.load();
+        Parent view = loader.load();
         FXMLSelectDocumentController controller = loader.getController();
-        controller.inicializarInformacion(tipoSeleccionado);
+        controller.initializeInformation(selectedType);
 
-        Stage escenario = new Stage();
-        escenario.setTitle("Seleccionar Tipo de Documento");
-        escenario.setScene(new Scene(vista));
-        escenario.show();
-        cerrarVentana();
+        Stage stage = new Stage();
+        stage.setTitle("Seleccionar Tipo de Documento");
+        stage.setScene(new Scene(view));
+        stage.show();
+        closeWindow();
       } catch (IOException e) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación", "No se pudo encontrar la ventana anterior para regresar.");
       }
@@ -58,12 +58,12 @@ public class FXMLScheduleDeliveryController implements Initializable {
   }
 
   @FXML
-  private void btnClicRegresar(ActionEvent event) {
-    cerrarVentana();
+  private void btnClickBack(ActionEvent event) {
+    closeWindow();
   }
 
-  private void cerrarVentana(){
-    Utils.getSceneComponent(lvTipoEntrega).close();
+  private void closeWindow(){
+    Utils.getSceneComponent(lvDeliveryType).close();
   }
 
 }

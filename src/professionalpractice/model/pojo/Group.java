@@ -1,74 +1,70 @@
 package professionalpractice.model.pojo;
 
-// Asumo que ya existen los POJOs Academico y ExperienciaEducativa
-// import javafxapppracticasprofesionales.modelo.pojo.Academico;
-// import javafxapppracticasprofesionales.modelo.pojo.ExperienciaEducativa;
-
 import professionalpractice.model.pojo.Academic;
 import professionalpractice.model.pojo.Subject;
 import professionalpractice.model.pojo.Term;
 
 public class Group {
-    private int idGrupo;
-    private String seccion;
-    private String bloque;
-    private Academic academico;
-    private Subject experienciaEducativa;
-    private Term periodo;
+    private int idGroup;
+    private String section;
+    private String block;
+    private Academic academic;
+    private Subject educationalExperience;
+    private Term term;
 
     public Group() {
     }
 
-    public int getIdGrupo() {
-        return idGrupo;
+    public int getIdGroup() {
+        return idGroup;
     }
 
-    public void setIdGrupo(int idGrupo) {
-        this.idGrupo = idGrupo;
+    public void setIdGroup(int idGroup) {
+        this.idGroup = idGroup;
     }
 
-    public String getSeccion() {
-        return seccion;
+    public String getSection() {
+        return section;
     }
 
-    public void setSeccion(String seccion) {
-        this.seccion = seccion;
+    public void setSection(String section) {
+        this.section = section;
     }
 
-    public String getBloque() {
-        return bloque;
+    public String getBlock() {
+        return block;
     }
 
-    public void setBloque(String bloque) {
-        this.bloque = bloque;
+    public void setBlock(String block) {
+        this.block = block;
     }
 
-    public Academic getAcademico() {
-        return academico;
+    public Academic getAcademic() {
+        return academic;
     }
 
-    public void setAcademico(Academic academico) {
-        this.academico = academico;
+    public void setAcademic(Academic academic) {
+        this.academic = academic;
     }
 
-    public Subject getExperienciaEducativa() {
-        return experienciaEducativa;
+    public Subject getEducationalExperience() {
+        return educationalExperience;
     }
 
-    public void setExperienciaEducativa(Subject experienciaEducativa) {
-        this.experienciaEducativa = experienciaEducativa;
+    public void setEducationalExperience(Subject educationalExperience) {
+        this.educationalExperience = educationalExperience;
     }
 
-    public Term getPeriodo() {
-        return periodo;
+    public Term getTerm() {
+        return term;
     }
 
-    public void setPeriodo(Term periodo) {
-        this.periodo = periodo;
+    public void setTerm(Term term) {
+        this.term = term;
     }
 
     @Override
     public String toString() {
-        return "Sección " + seccion + " - NRC " + experienciaEducativa.getNrc();
+        return "Sección " + section + " - NRC " + educationalExperience.getNrc();
     }
 }

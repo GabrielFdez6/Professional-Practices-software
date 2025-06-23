@@ -20,7 +20,7 @@ public class OperationResult{
         this.isError = isError;
     }
 
-    public String getMensaje() {
+    public String getMessage() {
         return mensaje;
     }
 

@@ -48,42 +48,39 @@ public class RecordDAO implements IRecordDAO {
         return recordIds;
     }
 
-    public static ArrayList<Record> obtenerRecordsPorGrupoYPeriodo(int idSubjectGroup, int idTerm, Connection conexionBD) throws SQLException {
+    public static ArrayList<Record> getRecordsByGroupAndTerm(int idSubjectGroup, int idTerm, Connection connectionBD) throws SQLException {
         ArrayList<Record> records = new ArrayList<>();
-        PreparedStatement sentencia = null;
-        ResultSet resultado = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
-        if (conexionBD == null) {
+        if (connectionBD == null) {
             throw new SQLException("Error: La conexión a la base de datos es nula.");
         }
 
         try {
-            // Consulta para obtener los records que pertenecen a un grupo y un periodo específico
-            // La tabla 'record' tiene idSubjectGroup y idTerm como FK.
             String sql = "SELECT idRecord, idStudent, idSubjectGroup, hoursCount, reportPath, presentationPath, idTerm " +
                     "FROM record " +
                     "WHERE idSubjectGroup = ? AND idTerm = ?";
 
-            sentencia = conexionBD.prepareStatement(sql);
-            sentencia.setInt(1, idSubjectGroup);
-            sentencia.setInt(2, idTerm);
-            resultado = sentencia.executeQuery();
+            statement = connectionBD.prepareStatement(sql);
+            statement.setInt(1, idSubjectGroup);
+            statement.setInt(2, idTerm);
+            resultSet = statement.executeQuery();
 
-            while (resultado.next()) {
+            while (resultSet.next()) {
                 Record record = new Record();
-                record.setIdRecord(resultado.getInt("idRecord"));
-                record.setIdStudent(resultado.getInt("idStudent"));
-                record.setIdSubjectGroup(resultado.getInt("idSubjectGroup"));
-                record.setHoursCount(resultado.getInt("hoursCount"));
-                record.setReportPath(resultado.getString("reportPath"));
-                record.setPresentationPath(resultado.getString("presentationPath"));
-                record.setIdTerm(resultado.getInt("idTerm"));
+                record.setIdRecord(resultSet.getInt("idRecord"));
+                record.setIdStudent(resultSet.getInt("idStudent"));
+                record.setIdSubjectGroup(resultSet.getInt("idSubjectGroup"));
+                record.setHoursCount(resultSet.getInt("hoursCount"));
+                record.setReportPath(resultSet.getString("reportPath"));
+                record.setPresentationPath(resultSet.getString("presentationPath"));
+                record.setIdTerm(resultSet.getInt("idTerm"));
                 records.add(record);
             }
         } finally {
-            if (resultado != null) { try { resultado.close(); } catch (SQLException ex) { /* Log error */ } }
-            if (sentencia != null) { try { sentencia.close(); } catch (SQLException ex) { /* Log error */ } }
-            // NO CERRAR LA CONEXIÓN AQUÍ
+            if (resultSet != null) { try { resultSet.close(); } catch (SQLException ex) { /* Log error */ } }
+            if (statement != null) { try { statement.close(); } catch (SQLException ex) { /* Log error */ } }
         }
         return records;
     }

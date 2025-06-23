@@ -1,6 +1,7 @@
 package professionalpractice.controller.coordinator;
 
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -13,50 +14,91 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import professionalpractice.model.dao.ScheduleDeliveryDAO;
-// No necesitamos importar professionalpractice.model.pojo.Delivery aquí para la programación de la definición
-// import professionalpractice.model.pojo.Delivery; // Ya no se usa directamente para construir la entrega aquí
+import professionalpractice.model.dao.TermDAO;
 import professionalpractice.model.pojo.OperationResult;
+import professionalpractice.model.pojo.Term;
 import professionalpractice.utils.Utils;
 
 public class FXMLScheduleDeliveryDetailsController implements Initializable {
 
     @FXML
-    private TextField tfNombre;
+    private TextField tfName;
     @FXML
-    private TextArea taDescripcion;
+    private TextArea taDescription;
     @FXML
-    private DatePicker dpFechaInicio;
+    private DatePicker dpStartDate;
     @FXML
-    private DatePicker dpFechaFin;
-    private String tipoEntrega; // Este es el "DOCUMENTOS INICIALES", "REPORTES", etc.
+    private DatePicker dpEndDate;
+    private String deliveryType; // This is "INITIAL DOCUMENTS", "REPORTS", etc.
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Inicialización
+        // Initialization
     }
 
-    public void inicializarInformacion(String tipoEntrega, String nombreDocumento){
-        this.tipoEntrega = tipoEntrega;
-        this.tfNombre.setText(nombreDocumento);
+    public void initializeInformation(String deliveryType, String documentName){
+        this.deliveryType = deliveryType;
+        this.tfName.setText(documentName);
     }
 
-    private boolean validarCampos(){
-        if(tfNombre.getText().isEmpty() || taDescripcion.getText().isEmpty() || dpFechaInicio.getValue() == null || dpFechaFin.getValue() == null){ // Asegúrate de validar taDescripcion también
-            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Existen campos vacíos, por favor llena todos los campos.");
+    private boolean validateFields(){
+        // 1. Validate empty fields
+        if(tfName.getText().isEmpty() || dpStartDate.getValue() == null || dpEndDate.getValue() == null){
+            Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Existen campos vacíos, por favor llena los campos marcados con *");
             return false;
         }
 
-        LocalDate fechaInicio = dpFechaInicio.getValue();
-        LocalDate fechaFin = dpFechaFin.getValue();
-        LocalDate fechaActual = LocalDate.now();
+        LocalDate startDate = dpStartDate.getValue();
+        LocalDate endDate = dpEndDate.getValue();
+        LocalDate currentDate = LocalDate.now();
 
-        if(fechaInicio.isBefore(fechaActual)){
+        // 2. Validate that the start date is not before the current date
+        if(startDate.isBefore(currentDate)){
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fecha de Inicio Incorrecta", "La fecha de inicio no puede ser anterior a la fecha actual.");
             return false;
         }
 
-        if(fechaFin.isBefore(fechaInicio)){
+        // 3. Validate that the end date is not before the start date
+        if(endDate.isBefore(startDate)){
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Incorrectas", "La fecha de fin no puede ser anterior a la fecha de inicio.");
+            return false;
+        }
+
+        // 4. New validation: Delivery dates must be within the current period
+        try {
+            Connection tempCon = professionalpractice.model.ConectionBD.getConnection();
+
+            if (tempCon == null) {
+                Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Período", "No se encontró un período escolar activo en la base de datos.");
+                return false;
+            }
+
+            Term currentPeriod = TermDAO.getCurrentPeriod(tempCon); // Call with the temporary connection
+
+            try {
+                tempCon.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace(); // Log the closing error
+            }
+
+            LocalDate periodStartDate = LocalDate.parse(currentPeriod.getStartDate());
+            LocalDate periodEndDate = LocalDate.parse(currentPeriod.getEndDate());
+
+            if (startDate.isBefore(periodStartDate)) {
+                Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Fuera de Periodo",
+                        "La fecha de inicio de la entrega está fuera del periodo escolar actual (" + periodStartDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy - ")) + periodEndDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ".\nPor favor selecciona una fecha dentro del periodo escolar");
+                return false;
+            }
+
+            if (endDate.isAfter(periodEndDate)) {
+                Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Fuera de Periodo",
+                        "La fecha de inicio de la entrega está fuera del periodo escolar actual (" + periodStartDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy - ")) + periodEndDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ").\n\nPor favor selecciona una fecha dentro del periodo escolar.");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Conexión", "No se pudo verificar el período actual: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
 
@@ -64,43 +106,43 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     }
 
     @FXML
-    private void btnClicCancelar(ActionEvent event) {
-        boolean confirmado = Utils.showConfirmationAlert("Cancelar Operación",
+    private void btnClickCancel(ActionEvent event) {
+        boolean confirmed = Utils.showConfirmationAlert("Cancelar Operación",
                 "¿Estás seguro de que quieres cancelar?", "Se cerrarán todas las ventanas abiertas.");
-        if (confirmado) {
-            cerrarVentana();
+        if (confirmed) {
+            closeWindow();
         }
     }
 
-    private void cerrarVentana(){
-        Utils.getSceneComponent(tfNombre).close();
+    private void closeWindow(){
+        Utils.getSceneComponent(tfName).close();
     }
 
     @FXML
-    private void btnClicProgramar(ActionEvent event) {
-        if(validarCampos()){
-            // Obtener los datos directamente de los componentes de la UI para la DEFINICIÓN de la entrega
-            String nombreDefinicion = tfNombre.getText();
-            String descripcionDefinicion = taDescripcion.getText();
-            Timestamp fechaInicioDefinicion = Timestamp.valueOf(dpFechaInicio.getValue().atStartOfDay());
-            Timestamp fechaFinDefinicion = Timestamp.valueOf(dpFechaFin.getValue().atStartOfDay());
+    private void btnClickSchedule(ActionEvent event) {
+        if(validateFields()){
+            // Get data directly from UI components for delivery DEFINITION
+            String definitionName = tfName.getText();
+            String definitionDescription = taDescription.getText();
+            Timestamp definitionStartDate = Timestamp.valueOf(dpStartDate.getValue().atStartOfDay());
+            Timestamp definitionEndDate = Timestamp.valueOf(dpEndDate.getValue().atStartOfDay());
 
             try{
-                // Llama al DAO pasando los datos individuales para crear la definición y las instancias
-                // Ya no pasamos el POJO Delivery aquí, sino los campos de la definición.
-                OperationResult resultado = ScheduleDeliveryDAO.programarEntregaPeriodoActual(
-                        nombreDefinicion,
-                        descripcionDefinicion,
-                        fechaInicioDefinicion,
-                        fechaFinDefinicion,
-                        tipoEntrega // Este es el String "DOCUMENTOS INICIALES", "REPORTES", etc.
+                // Call the DAO passing individual data to create the definition and instances
+                // We no longer pass the Delivery POJO here, but the definition fields.
+                OperationResult result = ScheduleDeliveryDAO.scheduleDeliveryCurrentPeriod(
+                        definitionName,
+                        definitionDescription,
+                        definitionStartDate,
+                        definitionEndDate,
+                        deliveryType // This is the String "INITIAL DOCUMENTS", "REPORTS", etc.
                 );
 
-                if(!resultado.isError()){
-                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", resultado.getMensaje());
-                    cerrarVentana();
+                if(!result.isError()){
+                    Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Operación Exitosa", result.getMessage());
+                    closeWindow();
                 } else {
-                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error", resultado.getMensaje());
+                    Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error", result.getMessage());
                 }
 
             } catch(SQLException e){

@@ -2,20 +2,25 @@ package professionalpractice.controller.student;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import professionalpractice.model.dao.DeliveryDAO;
 import professionalpractice.model.dao.interfaces.IDeliveryDAO;
 import professionalpractice.model.pojo.Delivery;
 import professionalpractice.model.pojo.DeliveryDefinition;
+import professionalpractice.model.pojo.OperationResult;
 import professionalpractice.utils.SecurityValidationUtils;
-import professionalpractice.utils.Utils; // Importa tu clase Utils
+import professionalpractice.utils.Utils;
 import professionalpractice.utils.ValidationUtils;
+import professionalpractice.model.pojo.OperationResult;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,25 +34,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javafx.scene.control.Button;
 
 public class FXMLDeliverDocumentController {
 
-  @FXML
-  private Label lblDeliveryName;
-  @FXML
-  private Label lblStartDate;
-  @FXML
-  private Label lblEndDate;
-  @FXML
-  private Label lblFileName;
-  @FXML
-  private VBox vboxDynamicFields;
-  @FXML
-  private TextField tfReportedHours;
-  @FXML
-  private TextField tfGrade;
-  @FXML
-  private TextArea taObservations;
+  @FXML private Label lblDeliveryName;
+  @FXML private Label lblStartDate;
+  @FXML private Label lblEndDate;
+  @FXML private Label lblFileName;
+  @FXML private AnchorPane vboxDynamicFields;
+  @FXML private TextField tfReportedHours;
+  @FXML private TextField tfGrade;
+  @FXML private TextArea taObservations;
+  @FXML private Label lblStatus;
+  @FXML private Button btnAttachFile;
+  @FXML private Button btnDeliver;
+  @FXML private Button btnReturn;
 
   private Delivery currentDelivery;
   private File selectedFile;
@@ -63,7 +65,7 @@ public class FXMLDeliverDocumentController {
 
     if (currentDelivery.getDeliveryDefinition() == null || currentDelivery.getDeliveryDefinition().getName() == null) {
       try {
-        Delivery loadedDelivery = ((DeliveryDAO) deliveryDAO).obtenerDeliveryPorId(delivery.getIdDelivery());
+        Delivery loadedDelivery = ((DeliveryDAO) deliveryDAO).getDeliveryById(delivery.getIdDelivery());
         if (loadedDelivery != null && loadedDelivery.getDeliveryDefinition() != null) {
           this.currentDelivery = loadedDelivery;
         } else {
@@ -82,6 +84,8 @@ public class FXMLDeliverDocumentController {
     lblStartDate.setText("Fecha de Inicio: " + sdf.format(currentDelivery.getDeliveryDefinition().getStartDate()));
     lblEndDate.setText("Fecha de Fin: " + sdf.format(currentDelivery.getDeliveryDefinition().getEndDate()));
 
+    lblStatus.setText("Estado: " + currentDelivery.getStatus());
+
     configureUIBasedOnDeliveryType(currentDelivery.getDeliveryDefinition());
 
     if (currentDelivery.getFilePath() != null && !currentDelivery.getFilePath().isEmpty()) {
@@ -99,6 +103,8 @@ public class FXMLDeliverDocumentController {
     if (currentDelivery.getObservations() != null) {
       taObservations.setText(currentDelivery.getObservations());
     }
+
+    checkDeliveryAvailabilityAndSetUIState();
   }
 
   private void configureUIBasedOnDeliveryType(DeliveryDefinition definition) {
@@ -144,6 +150,11 @@ public class FXMLDeliverDocumentController {
 
   @FXML
   void btnAttachFileClick(ActionEvent event) {
+    if (btnAttachFile.isDisable()) {
+      Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Disponible", "No puedes adjuntar archivos en el estado actual de la entrega.");
+      return;
+    }
+
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Seleccionar Documento para " + currentDelivery.getDeliveryDefinition().getName());
 
@@ -174,14 +185,10 @@ public class FXMLDeliverDocumentController {
     List<String> errors = new ArrayList<>();
 
     String fileName = file.getName().toLowerCase();
-    // Reemplaza Constants.MAX_FILE_SIZE si se usaba, ahora necesitas el valor directamente
     if (!SecurityValidationUtils.isFileExtensionAllowed(fileName)) {
       errors.add("Tipo de archivo no permitido. Solo se permiten documentos PDF, Word y texto.");
     }
 
-    // Aquí, si SecurityValidationUtils.isFileSizeValid(file) dependía de Constants.MAX_FILE_SIZE
-    // asegúrate de que SecurityValidationUtils tenga el valor fijo o lo obtenga de alguna otra fuente.
-    // Por ahora, asumimos que SecurityValidationUtils ya maneja el tamaño sin Constants.
     if (!SecurityValidationUtils.isFileSizeValid(file)) {
       errors.add("El archivo excede el tamaño máximo permitido. (Ajustar mensaje si ya no hay constante MAX_FILE_SIZE)");
     }
@@ -210,24 +217,37 @@ public class FXMLDeliverDocumentController {
 
   @FXML
   void btnDeliverClick(ActionEvent event) {
+    if (btnDeliver.isDisable()) {
+      Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Permitida", "No puedes realizar la entrega en el estado actual de la tarea o fuera de fecha.");
+      return;
+    }
+
     if (performComprehensiveValidation()) {
       try {
         File savedFile = copyFileToDeliveriesFolder(selectedFile);
         String newFilePath = savedFile.getPath();
 
+        String newStatus = "ENTREGADO";
+
         int updateResult = ((DeliveryDAO) deliveryDAO).updateStudentDeliveryStatus(
                 currentDelivery.getIdDelivery(),
                 newFilePath,
                 new Date(),
-                "ENTREGADO", // O "EN_REVISION", según tu flujo
+                newStatus,
                 taObservations.getText(),
                 (tfGrade.getText() != null && !tfGrade.getText().trim().isEmpty()) ? new BigDecimal(tfGrade.getText().trim()) : null,
                 (tfReportedHours.getText() != null && !tfReportedHours.getText().trim().isEmpty()) ? Integer.parseInt(tfReportedHours.getText().trim()) : null
         );
 
-        // Ya no se usa Constants.OPERATION_SUCCESFUL
-        if (updateResult > 0) { // Si updateStudentDeliveryStatus devuelve el número de filas afectadas (>0 para éxito)
-          showSuccessAndClose();
+        if (updateResult > 0) {
+          currentDelivery.setStatus(newStatus);
+          lblStatus.setText("Estado: " + newStatus);
+          Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega Exitosa",
+                  "El documento '" + lblFileName.getText() + "' ha sido entregado correctamente.\n" +
+                          "Estado: " + newStatus);
+
+          closeWindow();
+
         } else {
           throw new SQLException("No se pudo actualizar la información de la entrega en la base de datos.");
         }
@@ -238,7 +258,6 @@ public class FXMLDeliverDocumentController {
         System.err.println("Error de E/O al guardar archivo: " + e.getMessage());
         e.printStackTrace();
       } catch (SQLException e) {
-        // Reemplaza Constants.ERROR_DATABASE_CONNECTION
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos",
                 "No fue posible conectar con la base de datos o hubo un error en la operación." + "\nDetalle: " + e.getMessage());
         System.err.println("Error de base de datos en entrega: " + e.getMessage());
@@ -337,8 +356,8 @@ public class FXMLDeliverDocumentController {
 
   private void validateDeliveryTiming(List<String> errors) {
     Date now = new Date();
-    Date startDate = currentDelivery.getDeliveryDefinition().getStartDate(); // getStartDate() ya devuelve Timestamp, que extiende Date
-    Date endDate = currentDelivery.getDeliveryDefinition().getEndDate(); // getEndDate() ya devuelve Timestamp, que extiende Date
+    Date startDate = currentDelivery.getDeliveryDefinition().getStartDate();
+    Date endDate = currentDelivery.getDeliveryDefinition().getEndDate();
 
     if (now.before(startDate)) {
       errors.add("La entrega aún no está disponible. Fecha de inicio: " +
@@ -424,9 +443,15 @@ public class FXMLDeliverDocumentController {
   }
 
   @FXML
-  void btnCancelClick(ActionEvent event) {
-    if (Utils.showConfirmationAlert("Cancelar Proceso", "¿Estás seguro que quieres cancelar la entrega?", "Se cerrarán todas las ventanas abiertas.")) {
+  private void btnClickReturn(ActionEvent event) {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/student/FXMLDeliveryList.fxml"));
+      Parent view = loader.load();
+
       closeWindow();
+    } catch (IOException e) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación", "No se pudo regresar a la ventana anterior.");
+      e.printStackTrace();
     }
   }
 
@@ -434,11 +459,69 @@ public class FXMLDeliverDocumentController {
     Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega Exitosa",
             "El documento '" + lblFileName.getText() + "' ha sido entregado correctamente.\n" +
                     "Estado: En revisión");
-    closeWindow(); // <--- Este método también debe existir
+    closeWindow();
   }
 
   private void closeWindow() {
     Stage stage = (Stage) lblFileName.getScene().getWindow();
     stage.close();
   }
+
+  private void checkDeliveryAvailabilityAndSetUIState() {
+    Date currentDate = new Date();
+    Date endDate = currentDelivery.getDeliveryDefinition().getEndDate();
+    String currentStatus = currentDelivery.getStatus();
+
+    boolean enableDeliveryUI = false;
+    String message = "";
+
+    tfReportedHours.setDisable(false);
+    tfGrade.setDisable(false);
+    taObservations.setDisable(false);
+    btnAttachFile.setDisable(false);
+    btnDeliver.setDisable(false);
+
+    if (currentDate.after(endDate)) {
+      message = "La fecha límite de entrega ha expirado (" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(endDate) + "). No se pueden realizar entregas.";
+      enableDeliveryUI = false;
+    } else {
+      switch (currentStatus) {
+        case "PENDIENTE":
+          enableDeliveryUI = true;
+          break;
+        case "ENTREGADO":
+          enableDeliveryUI = true;
+          message = "Ya entregaste una versión, puedes subir una nueva.";
+          break;
+        case "RECHAZADO":
+          enableDeliveryUI = true;
+          message = "Tu entrega fue rechazada. Puedes subir una nueva versión.";
+          break;
+        case "EN_REVISION":
+          message = "Tu entrega está actualmente en revisión. No se puede subir una nueva versión hasta que sea evaluada.";
+          enableDeliveryUI = false;
+          break;
+        case "APROBADO":
+          message = "Tu entrega ha sido aprobada. No se puede subir una nueva versión.";
+          enableDeliveryUI = false;
+          break;
+        default:
+          message = "Estado de entrega desconocido. Contacta a soporte.";
+          enableDeliveryUI = false;
+          break;
+      }
+    }
+
+    if (!enableDeliveryUI) {
+      tfReportedHours.setDisable(true);
+      tfGrade.setDisable(true);
+      taObservations.setDisable(true);
+      btnAttachFile.setDisable(true);
+      btnDeliver.setDisable(true);
+      if (!message.isEmpty()) {
+        Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Disponible", message);
+      }
+    }
+  }
+
 }

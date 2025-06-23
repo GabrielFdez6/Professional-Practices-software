@@ -17,45 +17,44 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import professionalpractice.model.dao.DocumentDAO; // Importa tu DocumentDAO
+import professionalpractice.model.dao.DocumentDAO; // Import your DocumentDAO
 import professionalpractice.utils.Utils;
 import java.util.List;
 
 public class FXMLSelectDocumentController implements Initializable {
 
     @FXML
-    private ListView<String> lvTipoDocumento; // ¡Cambiado a String!
-    private String tipoEntrega;
+    private ListView<String> lvDocumentType;
+    private String deliveryType;
 
-    private DocumentDAO documentDAO; // Instancia de tu DocumentDAO
+    private DocumentDAO documentDAO;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        documentDAO = new DocumentDAO(); // Inicializa el DAO
+        documentDAO = new DocumentDAO();
     }
 
-    public void inicializarInformacion(String tipoEntrega) {
-        this.tipoEntrega = tipoEntrega;
-        cargarDocumentos();
+    public void initializeInformation(String deliveryType) {
+        this.deliveryType = deliveryType;
+        loadDocuments();
     }
 
     @FXML
-    private void btnClicContinuar(ActionEvent event) {
-        String docSeleccionadoNombre = lvTipoDocumento.getSelectionModel().getSelectedItem();
-        if (docSeleccionadoNombre != null) {
+    private void btnClickContinue(ActionEvent event) {
+        String selectedDocumentName = lvDocumentType.getSelectionModel().getSelectedItem();
+        if (selectedDocumentName != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/coordinator/FXMLScheduleDeliveryDetails.fxml"));
-                Parent vista = loader.load();
+                Parent view = loader.load();
                 FXMLScheduleDeliveryDetailsController controller = loader.getController();
-                // Pasas el tipo de entrega original y el nombre del documento seleccionado
-                controller.inicializarInformacion(tipoEntrega, docSeleccionadoNombre);
+                controller.initializeInformation(deliveryType, selectedDocumentName);
 
-                Stage escenario = new Stage();
-                escenario.setTitle("Programar Entrega");
-                escenario.setScene(new Scene(vista));
-                escenario.initModality(Modality.APPLICATION_MODAL);
-                cerrarVentana();
-                escenario.showAndWait();
+                Stage stage = new Stage();
+                stage.setTitle("Programar Entrega");
+                stage.setScene(new Scene(view));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                closeWindow();
+                stage.showAndWait();
             } catch (IOException e) {
                 Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación", "No se pudo cargar la ventana de detalles de entrega.");
                 e.printStackTrace();
@@ -66,36 +65,36 @@ public class FXMLSelectDocumentController implements Initializable {
     }
 
     @FXML
-    private void BtnClicRegresar(ActionEvent event) {
+    private void btnClickBack(ActionEvent event) {
         try {
-            // Asegúrate de que esta ruta sea correcta para regresar
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/coordinator/FXMLScheduleDelivery.fxml"));
-            Parent vista = loader.load();
-            Stage escenario = new Stage();
-            escenario.setTitle("Seleccionar Tipo de Entrega");
-            escenario.setScene(new Scene(vista));
-            escenario.show();
-            cerrarVentana();
-        } catch (IOException e) {
+            Parent view = loader.load();
+            Stage stage = new Stage();
+            stage.setTitle("Seleccionar Tipo de Entrega");
+            stage.setScene(new Scene(view));
+            stage.show();
+            closeWindow();
+        }
+        catch (IOException e) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación", "No se pudo regresar a la ventana anterior.");
             e.printStackTrace();
         }
     }
 
-    private void cargarDocumentos() {
-        System.out.println("Cargando documentos para categoría: " + tipoEntrega);
-        List<String> nombresDocumentos = new ArrayList<>();
+    private void loadDocuments() {
+        System.out.println("Cargando documentos para categoría: " + deliveryType);
+        List<String> documentNames = new ArrayList<>();
 
         try {
-            switch (tipoEntrega) {
+            switch (deliveryType) {
                 case "DOCUMENTOS INICIALES":
-                    nombresDocumentos = documentDAO.getDistinctInitialDocumentNames();
+                    documentNames = documentDAO.getDistinctInitialDocumentNames();
                     break;
                 case "REPORTES":
-                    nombresDocumentos = documentDAO.getDistinctReportDocumentNames();
+                    documentNames = documentDAO.getDistinctReportDocumentNames();
                     break;
                 case "DOCUMENTOS FINALES":
-                    nombresDocumentos = documentDAO.getDistinctFinalDocumentNames();
+                    documentNames = documentDAO.getDistinctFinalDocumentNames();
                     break;
                 default:
                     Utils.showSimpleAlert(Alert.AlertType.WARNING, "Categoría Desconocida", "La categoría de documentos seleccionada no es válida.");
@@ -106,11 +105,11 @@ public class FXMLSelectDocumentController implements Initializable {
             ex.printStackTrace();
         }
 
-        lvTipoDocumento.setItems(FXCollections.observableArrayList(nombresDocumentos));
-        lvTipoDocumento.requestFocus();
+        lvDocumentType.setItems(FXCollections.observableArrayList(documentNames));
+        lvDocumentType.requestFocus();
     }
 
-    private void cerrarVentana() {
-        Utils.getSceneComponent(lvTipoDocumento).close();
+    private void closeWindow() {
+        Utils.getSceneComponent(lvDocumentType).close();
     }
 }

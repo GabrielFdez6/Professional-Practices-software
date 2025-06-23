@@ -67,11 +67,11 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
       System.out.println(ProfessionalPractices.class.getResource("view/coordinator/FXMLScheduleDelivery.fxml"));
       Parent view = loader.load();
 
-      Stage escenario = new Stage();
-      escenario.setTitle("Programar Nueva Entrega");
-      escenario.setScene(new Scene(view));
-      escenario.initModality(Modality.APPLICATION_MODAL);
-      escenario.showAndWait();
+      Stage stage = new Stage();
+      stage.setTitle("Programar Nueva Entrega");
+      stage.setScene(new Scene(view));
+      stage.initModality(Modality.APPLICATION_MODAL);
+      stage.showAndWait();
 
     } catch (IOException ex) {
       Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar",

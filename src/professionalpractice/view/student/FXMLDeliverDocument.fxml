@@ -1,53 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="500.0" spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #cccccc;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLDeliverDocumentController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="519.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.student.FXMLDeliverDocumentController">
     <children>
-        <Label fx:id="lblDeliveryName" text="Nombre de la Entrega" textFill="#007bff">
+        <Label fx:id="lblDeliveryName" alignment="CENTER" contentDisplay="CENTER" layoutX="22.0" layoutY="59.0" text="Nombre de la Entrega">
             <font>
-                <Font name="System Bold" size="22.0" />
+                <Font name="Arial Bold" size="24.0" />
+            </font>
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </Label>
+        <Label fx:id="lblStatus" layoutX="235.0" layoutY="165.0" text="Estado: Cargando...">
+            <font>
+                <Font name="Arial Bold" size="14.0" />
             </font>
         </Label>
-        <HBox alignment="CENTER" spacing="20.0">
+
+        <VBox alignment="CENTER" layoutX="22.0" layoutY="207.0" prefHeight="95.0" prefWidth="559.0" spacing="10.0" style="-fx-border-color: #007bff; -fx-border-style: dashed; -fx-background-color: #f8f9fa;">
             <children>
-                <Label fx:id="lblStartDate" text="Fecha de Inicio: yyyy-MM-DD" />
-                <Label fx:id="lblEndDate" text="Fecha de Fin: yyyy-MM-DD" />
-            </children>
-        </HBox>
-        <VBox alignment="CENTER" prefHeight="100.0" spacing="10.0" style="-fx-border-color: #007bff; -fx-border-style: dashed; -fx-background-color: #f8f9fa;">
-            <children>
-                <Button onAction="#btnAttachFileClick" text="Clic aquí para adjuntar archivos" />
-                <Label fx:id="lblFileName" text="Ningún archivo seleccionado" textFill="#6c757d" />
+                <Button fx:id="btnAttachFile" mnemonicParsing="false" onAction="#btnAttachFileClick" text="Clic aquí para adjuntar archivos" />
+                <Label fx:id="lblFileName" text="Ningún archivo seleccionado" />
             </children>
         </VBox>
 
-        <VBox fx:id="vboxDynamicFields" alignment="CENTER_LEFT" managed="false" spacing="10.0" visible="false">
+        <AnchorPane fx:id="vboxDynamicFields" layoutX="22.0" layoutY="310.0" managed="false" prefHeight="100.0" prefWidth="559.0" visible="false">
             <children>
-                <TextField fx:id="tfReportedHours" managed="false" promptText="Horas Reportadas (ej. 40)" visible="false" />
-                <TextField fx:id="tfGrade" managed="false" promptText="Calificación (Opcional, ej. 8.5)" visible="false" />
-                <TextArea fx:id="taObservations" managed="false" prefHeight="80.0" promptText="Observaciones (Opcional)" visible="false" />
+                <TextField fx:id="tfReportedHours" layoutX="10.0" layoutY="0.0" prefWidth="539.0" promptText="Horas Reportadas (ej. 40)" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                <TextField fx:id="tfGrade" layoutX="10.0" layoutY="40.0" prefWidth="539.0" promptText="Calificación (Opcional, ej. 8.5)" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+                <TextArea fx:id="taObservations" layoutX="10.0" layoutY="80.0" prefHeight="80.0" prefWidth="539.0" promptText="Observaciones (Opcional)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
             </children>
-        </VBox>
+        </AnchorPane>
 
-        <HBox alignment="CENTER" spacing="30.0">
+        <HBox alignment="CENTER" layoutX="293.0" layoutY="465.0" prefHeight="40.0" prefWidth="293.0" spacing="30.0">
             <children>
-                <Button onAction="#btnDeliverClick" prefWidth="100.0" style="-fx-background-color: #28a745;" text="Entregar" textFill="WHITE" />
-                <Button onAction="#btnCancelClick" prefWidth="100.0" style="-fx-background-color: #dc3545;" text="Cancelar" textFill="WHITE" />
+                <Button fx:id="btnDeliver" mnemonicParsing="false" onAction="#btnDeliverClick" prefWidth="100.0" style="-fx-background-color: #007bff;" text="Entregar" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                </Button>
+                <Button fx:id="btnReturn" mnemonicParsing="false" onAction="#btnClickReturn" prefWidth="100.0" style="-fx-background-color: #6c757d;" text="Regresar" textFill="WHITE">
+                    <font>
+                        <Font name="Arial Bold" size="14.0" />
+                    </font>
+                </Button>
             </children>
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
         </HBox>
+        <Label layoutX="445.0" layoutY="28.0" text="Universidad Veracruzana" />
+        <Label fx:id="lblStartDate" layoutX="89.0" layoutY="113.0" prefHeight="17.0" prefWidth="182.0" text="Fecha de Inicio: DD-MM-YYYY" />
+        <Label fx:id="lblEndDate" alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="351.0" layoutY="113.0" text="Fecha de Fin: DD-MM-YYYY" />
     </children>
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-    </padding>
-</VBox>
+</AnchorPane>

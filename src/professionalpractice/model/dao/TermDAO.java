@@ -10,38 +10,37 @@ import professionalpractice.model.ConectionBD;
 import professionalpractice.model.pojo.Term;
 
 public class TermDAO {
-    public static ArrayList<Term> obtenerTodosLosPeriodos() throws SQLException {
-        ArrayList<Term> periodos = new ArrayList<>();
-        Connection conexionBD = ConectionBD.getConnection();
-        if (conexionBD != null) {
+    public static ArrayList<Term> getAllTerms() throws SQLException {
+        ArrayList<Term> terms = new ArrayList<>();
+        Connection connectionBD = ConectionBD.getConnection();
+        if (connectionBD != null) {
             String sql = "SELECT idTerm, name, startDate, endDate FROM term ORDER BY startDate DESC";
-            PreparedStatement sentencia = conexionBD.prepareStatement(sql);
-            ResultSet resultado = sentencia.executeQuery();
-            while (resultado.next()) {
-                Term periodo = new Term();
-                periodo.setIdTerm(resultado.getInt("idTerm"));
-                periodo.setName(resultado.getString("name"));
-                periodo.setStartDate(resultado.getString("startDate"));
-                periodo.setEndDate(resultado.getString("endDate"));
-                periodos.add(periodo);
+            PreparedStatement statement = connectionBD.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Term term = new Term();
+                term.setIdTerm(resultSet.getInt("idTerm"));
+                term.setName(resultSet.getString("name"));
+                term.setStartDate(resultSet.getString("startDate"));
+                term.setEndDate(resultSet.getString("endDate"));
+                terms.add(term);
             }
-            conexionBD.close();
-            sentencia.close();
-            resultado.close();
+            connectionBD.close();
+            statement.close();
+            resultSet.close();
 
         } else {
             throw new SQLException("Error: Sin conexión a la Base de Datos.");
         }
-        return periodos;
+        return terms;
     }
 
-    public static Term obtenerPeriodoActual(Connection conexionBD) throws SQLException { // <--- ACEPTA LA CONEXIÓN
-        Term periodoActual = null;
-        PreparedStatement sentencia = null;
-        ResultSet resultado = null;
+    public static Term getCurrentPeriod(Connection connectionBD) throws SQLException {
+        Term currentTerm = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
 
-        // ¡NO abrimos ni cerramos la conexión aquí! Solo la usamos.
-        if (conexionBD == null) { // Una validación extra por si se pasa null
+        if (connectionBD == null) {
             throw new SQLException("Error: La conexión a la base de datos es nula.");
         }
 
@@ -49,24 +48,22 @@ public class TermDAO {
             String sql = "SELECT idTerm, name, startDate, endDate FROM term " +
                     "WHERE ? BETWEEN startDate AND endDate LIMIT 1";
 
-            sentencia = conexionBD.prepareStatement(sql);
-            sentencia.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
+            statement = connectionBD.prepareStatement(sql);
+            statement.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
 
-            resultado = sentencia.executeQuery();
+            resultSet = statement.executeQuery();
 
-            if (resultado.next()) {
-                periodoActual = new Term();
-                periodoActual.setIdTerm(resultado.getInt("idTerm"));
-                periodoActual.setName(resultado.getString("name"));
-                periodoActual.setStartDate(String.valueOf(resultado.getDate("startDate").toLocalDate()));
-                periodoActual.setEndDate(String.valueOf(resultado.getDate("endDate").toLocalDate()));
+            if (resultSet.next()) {
+                currentTerm = new Term();
+                currentTerm.setIdTerm(resultSet.getInt("idTerm"));
+                currentTerm.setName(resultSet.getString("name"));
+                currentTerm.setStartDate(String.valueOf(resultSet.getDate("startDate").toLocalDate()));
+                currentTerm.setEndDate(String.valueOf(resultSet.getDate("endDate").toLocalDate()));
             }
         } finally {
-            // Solo cerramos Statement y ResultSet, NO la Connection
-            if (resultado != null) { try { resultado.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
-            if (sentencia != null) { try { sentencia.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
-            // NO conexionBD.close();
+            if (resultSet != null) { try { resultSet.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
+            if (statement != null) { try { statement.close(); } catch (SQLException ex) { /* Manejo de error al cerrar */ } }
         }
-        return periodoActual;
+        return currentTerm;
     }
 }
