@@ -362,7 +362,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,1,1,1,'Sistema de Gestión Empresarial','Desarrollo Frontend','Desarrollo de una plataforma web para gestión integral de procesos empresariales con interfaz moderna.','Scrum',2),(2,2,2,1,'Automatización de Procesos','Backend Development','Implementación de sistema automatizado para optimización de flujos de trabajo empresariales.','Kanban',2),(3,3,3,1,'Plataforma E-commerce','Full Stack','Desarrollo completo de tienda en línea con sistema de pagos y gestión de inventarios.','Agile',1),(4,4,4,1,'Sistema de Monitoreo IoT','Desarrollo de Software','Creación de dashboard para monitoreo en tiempo real de dispositivos IoT industriales.','DevOps',2),(5,5,5,1,'App Móvil Corporativa','Mobile Development','Aplicación móvil para gestión de recursos humanos y comunicación interna empresarial.','Lean',3),(6,6,6,1,'Portal de Servicios Digitales','Web Development','Portal web para digitalización de trámites y servicios gubernamentales locales.','Waterfall',2),(12,1,1,1,'Analisis para creacion de paginas web','PruebaDepartamento','Se debe realizar un trabajo de investigacion','SCRUM',3),(14,1,1,1,'PruebaDeProyecto','PruebaDepartamento2','PruebaDescripcion','MetodologiaPrueba',3);
+INSERT INTO `project` VALUES (1,1,1,1,'Sistema de Gestión Empresarial','Desarrollo Frontend','Desarrollo de una plataforma web para gestión integral de procesos empresariales con interfaz moderna.','Scrum',1),(2,2,2,1,'Automatización de Procesos','Backend Development','Implementación de sistema automatizado para optimización de flujos de trabajo empresariales.','Kanban',1),(3,3,3,1,'Plataforma E-commerce','Full Stack','Desarrollo completo de tienda en línea con sistema de pagos y gestión de inventarios.','Agile',4),(4,4,4,1,'Sistema de Monitoreo IoT','Desarrollo de Software','Creación de dashboard para monitoreo en tiempo real de dispositivos IoT industriales.','DevOps',1),(5,5,5,1,'App Móvil Corporativa','Mobile Development','Aplicación móvil para gestión de recursos humanos y comunicación interna empresarial.','Lean',2),(6,6,6,1,'Portal de Servicios Digitales','Web Development','Portal web para digitalización de trámites y servicios gubernamentales locales.','Waterfall',1),(12,1,1,1,'Analisis para creacion de paginas web','PruebaDepartamento','Se debe realizar un trabajo de investigacion','SCRUM',2),(14,1,1,1,'PruebaDeProyecto','PruebaDepartamento2','PruebaDescripcion','MetodologiaPrueba',3);
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -389,6 +389,7 @@ CREATE TABLE `projectassignment` (
 
 LOCK TABLES `projectassignment` WRITE;
 /*!40000 ALTER TABLE `projectassignment` DISABLE KEYS */;
+INSERT INTO `projectassignment` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(12,12);
 /*!40000 ALTER TABLE `projectassignment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -522,7 +523,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'Elena','Silva','Morales','S210001','zS210001@estudiantes.uv.mx','2288765432',335,'9',1,'Sistema de Gestión Empresarial',8.85,1),(2,'Carlos','Mendoza','Rivera','S200502','zS200502@estudiantes.uv.mx','2287654321',342,'10',1,'Automatización de Procesos',9.10,5),(3,'Ana','Torres','Jiménez','S190807','zS190807@estudiantes.uv.mx','2291234567',358,'11',1,'Plataforma E-commerce',9.45,6),(4,'Miguel','Vargas','Castillo','S200156','zS200156@estudiantes.uv.mx','2299876543',348,'10',1,'Sistema de Monitoreo IoT',8.75,7),(5,'Sofía','Herrera','Delgado','S210234','zS210234@estudiantes.uv.mx','2283456789',325,'9',1,'App Móvil Corporativa',8.60,8),(6,'Diego','Ramírez','Flores','S200789','zS200789@estudiantes.uv.mx','2292345678',340,'10',1,'Portal de Servicios Digitales',9.20,9),(7,'Aldo','Antonio','Campos','s230145','zs230145@estudiantes.uv.mx','2283421934',0,'9',1,'prueba',NULL,12),(8,'Omar','Espinosa','Fernandez','s230146','zs230146@estudiantes.uv.mx','2292345678',0,'9',0,NULL,0.00,13),(9,'Carlos','Castillo','Barradas','s230147','zs230147@estudiantes.uv.mx','2292345678',0,'9',0,NULL,0.00,14),(10,'Brayan','Fernandez','Tlapa','s230148','zs230148@estudiantes.uv.mx','2292345678',0,'9',0,'',0.00,15),(11,'Gabriel','Tlapa','Fernández','s237648','s2379648@estudiantes.uv.mx','2297654678',0,'9',0,'',0.00,16);
+INSERT INTO `student` VALUES (1,'Elena','Silva','Morales','S210001','zS210001@estudiantes.uv.mx','2288765432',335,'9',1,'Sistema de Gestión Empresarial',8.85,1),(2,'Carlos','Mendoza','Rivera','S200502','zS200502@estudiantes.uv.mx','2287654321',342,'10',1,'Automatización de Procesos',9.10,5),(3,'Ana','Torres','Jiménez','S190807','zS190807@estudiantes.uv.mx','2291234567',358,'11',1,'Plataforma E-commerce',9.45,6),(4,'Miguel','Vargas','Castillo','S200156','zS200156@estudiantes.uv.mx','2299876543',348,'10',1,'Sistema de Monitoreo IoT',8.75,7),(5,'Sofía','Herrera','Delgado','S210234','zS210234@estudiantes.uv.mx','2283456789',325,'9',1,'App Móvil Corporativa',8.60,8),(6,'Diego','Ramírez','Flores','S200789','zS200789@estudiantes.uv.mx','2292345678',340,'10',1,'Portal de Servicios Digitales',9.20,9),(7,'Aldo','Antonio','Campos','s230145','zs230145@estudiantes.uv.mx','2283421934',0,'9',1,'Analisis para creacion de paginas web',NULL,12),(8,'Omar','Espinosa','Fernandez','s230146','zs230146@estudiantes.uv.mx','2292345678',0,'9',0,NULL,0.00,13),(9,'Carlos','Castillo','Barradas','s230147','zs230147@estudiantes.uv.mx','2292345678',0,'9',0,NULL,0.00,14),(10,'Brayan','Fernandez','Tlapa','s230148','zs230148@estudiantes.uv.mx','2292345678',0,'9',0,'',0.00,15),(11,'Gabriel','Tlapa','Fernández','s237648','s2379648@estudiantes.uv.mx','2297654678',0,'9',0,'',0.00,16);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -697,4 +698,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-22 15:36:03
+-- Dump completed on 2025-06-22 18:59:57
