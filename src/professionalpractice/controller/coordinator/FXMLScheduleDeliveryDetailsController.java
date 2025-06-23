@@ -29,11 +29,10 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     private DatePicker dpStartDate;
     @FXML
     private DatePicker dpEndDate;
-    private String deliveryType; // This is "INITIAL DOCUMENTS", "REPORTS", etc.
+    private String deliveryType;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Initialization
     }
 
     public void initializeInformation(String deliveryType, String documentName){
@@ -42,7 +41,6 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     }
 
     private boolean validateFields(){
-        // 1. Validate empty fields
         if(tfName.getText().isEmpty() || dpStartDate.getValue() == null || dpEndDate.getValue() == null){
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Campos Vacíos", "Existen campos vacíos, por favor llena los campos marcados con *");
             return false;
@@ -52,19 +50,16 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
         LocalDate endDate = dpEndDate.getValue();
         LocalDate currentDate = LocalDate.now();
 
-        // 2. Validate that the start date is not before the current date
         if(startDate.isBefore(currentDate)){
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fecha de Inicio Incorrecta", "La fecha de inicio no puede ser anterior a la fecha actual.");
             return false;
         }
 
-        // 3. Validate that the end date is not before the start date
         if(endDate.isBefore(startDate)){
             Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Incorrectas", "La fecha de fin no puede ser anterior a la fecha de inicio.");
             return false;
         }
 
-        // 4. New validation: Delivery dates must be within the current period
         try {
             Connection tempCon = professionalpractice.model.ConectionBD.getConnection();
 
@@ -73,12 +68,12 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
                 return false;
             }
 
-            Term currentPeriod = TermDAO.getCurrentPeriod(tempCon); // Call with the temporary connection
+            Term currentPeriod = TermDAO.getCurrentPeriod(tempCon);
 
             try {
                 tempCon.close();
             } catch (SQLException ex) {
-                ex.printStackTrace(); // Log the closing error
+                ex.printStackTrace();
             }
 
             LocalDate periodStartDate = LocalDate.parse(currentPeriod.getStartDate());
@@ -86,13 +81,13 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
 
             if (startDate.isBefore(periodStartDate)) {
                 Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Fuera de Periodo",
-                        "La fecha de inicio de la entrega está fuera del periodo escolar actual (" + periodStartDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy - ")) + periodEndDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ".\nPor favor selecciona una fecha dentro del periodo escolar");
+                        "La fecha de la entrega está fuera del periodo escolar actual (" + periodStartDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy - ")) + periodEndDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ".\nPor favor selecciona una fecha dentro del periodo escolar");
                 return false;
             }
 
             if (endDate.isAfter(periodEndDate)) {
                 Utils.showSimpleAlert(Alert.AlertType.WARNING, "Fechas Fuera de Periodo",
-                        "La fecha de inicio de la entrega está fuera del periodo escolar actual (" + periodStartDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy - ")) + periodEndDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ").\n\nPor favor selecciona una fecha dentro del periodo escolar.");
+                        "La fecha de la entrega está fuera del periodo escolar actual (" + periodStartDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy - ")) + periodEndDate.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ").\n\nPor favor selecciona una fecha dentro del periodo escolar.");
                 return false;
             }
 
@@ -121,21 +116,18 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     @FXML
     private void btnClickSchedule(ActionEvent event) {
         if(validateFields()){
-            // Get data directly from UI components for delivery DEFINITION
             String definitionName = tfName.getText();
             String definitionDescription = taDescription.getText();
             Timestamp definitionStartDate = Timestamp.valueOf(dpStartDate.getValue().atStartOfDay());
             Timestamp definitionEndDate = Timestamp.valueOf(dpEndDate.getValue().atStartOfDay());
 
             try{
-                // Call the DAO passing individual data to create the definition and instances
-                // We no longer pass the Delivery POJO here, but the definition fields.
                 OperationResult result = ScheduleDeliveryDAO.scheduleDeliveryCurrentPeriod(
                         definitionName,
                         definitionDescription,
                         definitionStartDate,
                         definitionEndDate,
-                        deliveryType // This is the String "INITIAL DOCUMENTS", "REPORTS", etc.
+                        deliveryType
                 );
 
                 if(!result.isError()){

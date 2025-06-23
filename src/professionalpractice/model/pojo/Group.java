@@ -1,9 +1,5 @@
 package professionalpractice.model.pojo;
 
-import professionalpractice.model.pojo.Academic;
-import professionalpractice.model.pojo.Subject;
-import professionalpractice.model.pojo.Term;
-
 public class Group {
     private int idGroup;
     private String section;

@@ -3,15 +3,11 @@ package professionalpractice.model.dao;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javafx.scene.control.Alert;
 import professionalpractice.model.ConectionBD;
 import professionalpractice.model.pojo.Delivery;
 import professionalpractice.model.pojo.DeliveryDefinition;
-import professionalpractice.model.pojo.Record;
-import professionalpractice.utils.Utils;
 
 public class DeliveryDAO implements professionalpractice.model.dao.interfaces.IDeliveryDAO {
 

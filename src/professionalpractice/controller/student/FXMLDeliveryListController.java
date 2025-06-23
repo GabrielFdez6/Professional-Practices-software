@@ -22,9 +22,9 @@ import professionalpractice.utils.Utils;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date; // Para la fecha actual
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors; // Para filtrar la lista
+import java.util.stream.Collectors;
 
 public class FXMLDeliveryListController {
 
@@ -32,7 +32,7 @@ public class FXMLDeliveryListController {
     @FXML private TableColumn<Delivery, String> colName;
     @FXML private TableColumn<Delivery, String> colType;
     @FXML private TableColumn<Delivery, String> colEndDate;
-    @FXML private TableColumn<Delivery, String> colStatus; // Nueva columna para el estado
+    @FXML private TableColumn<Delivery, String> colStatus;
 
     private ObservableList<Delivery> deliveries;
     private IDeliveryDAO deliveryDAO;
@@ -66,9 +66,7 @@ public class FXMLDeliveryListController {
             }
             return new SimpleStringProperty("N/A");
         });
-        // --- Configuración de la nueva columna de estado ---
         colStatus.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatus()));
-        // --- Fin de nueva columna ---
 
         tvDeliveries.setItems(deliveries);
     }
@@ -81,10 +79,10 @@ public class FXMLDeliveryListController {
                 return "DOCUMENTO FINAL";
             case "REPORT":
                 return "REPORTE";
-            case "N/A": // Si no hay definición
+            case "N/A":
                 return "No Disponible";
             default:
-                return englishType; // Devuelve el original si no se reconoce
+                return englishType;
         }
     }
 
@@ -92,9 +90,8 @@ public class FXMLDeliveryListController {
         try {
             List<Delivery> allDeliveries = deliveryDAO.getDeliveriesByRecord(idRecord);
 
-            // --- Filtrar entregas: No mostrar las que estén en estado "APROBADO" ---
             List<Delivery> filteredDeliveries = allDeliveries.stream()
-                    .filter(d -> !"APROBADO".equalsIgnoreCase(d.getStatus())) // Filtrar las "APROBADO"
+                    .filter(d -> !"APROBADO".equalsIgnoreCase(d.getStatus()))
                     .collect(Collectors.toList());
 
             this.deliveries.setAll(filteredDeliveries);
@@ -112,13 +109,11 @@ public class FXMLDeliveryListController {
             return;
         }
 
-        // Asegurarse de que selectedDelivery ya tiene su DeliveryDefinition cargada.
         if (selectedDelivery.getDeliveryDefinition() == null) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos", "Los detalles de la entrega seleccionada no están disponibles.");
             return;
         }
 
-        // --- Nueva validación de estado antes de abrir la ventana de entrega ---
         Date currentDate = new Date();
         Date endDate = selectedDelivery.getDeliveryDefinition().getEndDate();
         String currentStatus = selectedDelivery.getStatus();
@@ -128,7 +123,6 @@ public class FXMLDeliveryListController {
 
         switch (currentStatus) {
             case "PENDIENTE":
-                // Siempre se puede entregar si está pendiente, pero validamos la fecha
                 if (currentDate.after(endDate)) {
                     message = "La fecha límite de entrega para esta tarea ha expirado.";
                 } else {
@@ -136,7 +130,6 @@ public class FXMLDeliveryListController {
                 }
                 break;
             case "ENTREGADO":
-                // Se puede volver a entregar si está dentro de la fecha de fin
                 if (currentDate.after(endDate)) {
                     message = "La entrega ya fue realizada y la fecha límite ha expirado. No se puede volver a entregar.";
                 } else {
@@ -145,7 +138,6 @@ public class FXMLDeliveryListController {
                 }
                 break;
             case "RECHAZADO":
-                // Se puede volver a entregar si está dentro de la fecha de fin
                 if (currentDate.after(endDate)) {
                     message = "La entrega fue rechazada y la fecha límite ha expirado. No se puede volver a entregar.";
                 } else {
@@ -166,9 +158,8 @@ public class FXMLDeliveryListController {
 
         if (!canDeliver) {
             Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Disponible", message);
-            return; // No abrir la ventana de entrega
+            return;
         }
-        // --- Fin de nueva validación de estado ---
 
 
         try {
@@ -187,7 +178,6 @@ public class FXMLDeliveryListController {
             modalStage.setScene(scene);
             modalStage.showAndWait();
 
-            // Después de cerrar la ventana de entrega, recargar la lista para reflejar los cambios
             loadDeliveriesData(selectedDelivery.getIdRecord());
 
         } catch (IOException e) {

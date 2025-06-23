@@ -1,7 +1,6 @@
 package professionalpractice.model.pojo;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
 
 public class DeliveryDefinition {
     private int idDeliveryDefinition;
@@ -9,12 +8,12 @@ public class DeliveryDefinition {
     private String description;
     private Timestamp startDate;
     private Timestamp endDate;
-    private String deliveryType; // Mapea a ENUM en la BD
+    private String deliveryType;
     private Integer idInitialDocumentTemplate;
     private Integer idFinalDocumentTemplate;
     private Integer idReportDocumentTemplate;
     private Integer idTerm;
-    private Integer idSubjectGroup; // Descomenta si lo agregaste a la tabla
+    private Integer idSubjectGroup;
 
     public DeliveryDefinition() {
     }
@@ -99,11 +98,4 @@ public class DeliveryDefinition {
         this.idTerm = idTerm;
     }
 
-    public Integer getIdSubjectGroup() { // Descomenta si lo agregaste a la tabla
-         return idSubjectGroup;
-     }
-
-     public void setIdSubjectGroup(Integer idSubjectGroup) { // Descomenta si lo agregaste a la tabla
-        this.idSubjectGroup = idSubjectGroup;
-    }
 }

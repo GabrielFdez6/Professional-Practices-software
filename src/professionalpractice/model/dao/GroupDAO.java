@@ -1,6 +1,5 @@
 package professionalpractice.model.dao;
 
-import professionalpractice.model.ConectionBD;
 import professionalpractice.model.pojo.Academic;
 import professionalpractice.model.pojo.Group;
 import professionalpractice.model.pojo.Subject;
@@ -68,26 +67,25 @@ public class GroupDAO {
 
     private static Group convertGroupRecord(ResultSet rs) throws SQLException {
         Group group = new Group();
-        group.setIdGroup(rs.getInt("idSubjectGroup")); // Changed from setIdGrupo to setIdGroup
-
+        group.setIdGroup(rs.getInt("idSubjectGroup"));
         Academic academic = new Academic();
         academic.setIdAcademic(rs.getInt("idAcademic"));
         academic.setFirstName(rs.getString("academicFirstName") + " " +
                 rs.getString("academicLastNameFather") + " " +
                 (rs.getString("academicLastNameMother") != null ? rs.getString("academicLastNameMother") : ""));
-        group.setAcademic(academic); // Changed from setAcademico to setAcademic
+        group.setAcademic(academic);
 
         Subject subject = new Subject();
         subject.setIdSubject(rs.getInt("idSubject"));
         subject.setName(rs.getString("subjectName"));
-        group.setEducationalExperience(subject); // Changed from setExperienciaEducativa to setEducationalExperience
+        group.setEducationalExperience(subject);
 
         Term term = new Term();
         term.setIdTerm(rs.getInt("idTerm"));
         term.setName(rs.getString("termName"));
         term.setStartDate(String.valueOf(rs.getDate("termStartDate").toLocalDate()));
         term.setEndDate(String.valueOf(rs.getDate("termEndDate").toLocalDate()));
-        group.setTerm(term); // Changed from setPeriodo to setTerm
+        group.setTerm(term);
 
         return group;
     }

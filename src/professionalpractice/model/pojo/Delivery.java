@@ -1,17 +1,15 @@
 package professionalpractice.model.pojo;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp; // Necesario si dateDelivered es Timestamp
-import java.time.LocalDate; // Necesario si dateDelivered es LocalDate
+import java.sql.Timestamp;
 
 public class Delivery {
     private int idDelivery;
     private int idRecord;
     private Integer idDeliveryDefinition;
-    private DeliveryDefinition deliveryDefinition; // Para anidar la definición de la entrega
+    private DeliveryDefinition deliveryDefinition;
 
-    // --- NUEVAS COLUMNAS DE LA TABLA `delivery` ---
-    private Timestamp dateDelivered; // O LocalDate si solo necesitas la fecha
+    private Timestamp dateDelivered;
     private Boolean delivered;
     private String status;
     private String filePath;
@@ -21,7 +19,6 @@ public class Delivery {
 
     public Delivery() {}
 
-    // --- Getters y Setters existentes ---
     public int getIdDelivery() { return idDelivery; }
     public void setIdDelivery(int idDelivery) { this.idDelivery = idDelivery; }
 
@@ -34,8 +31,7 @@ public class Delivery {
     public DeliveryDefinition getDeliveryDefinition() { return deliveryDefinition; }
     public void setDeliveryDefinition(DeliveryDefinition deliveryDefinition) { this.deliveryDefinition = deliveryDefinition; }
 
-    // --- NUEVOS Getters y Setters para las columnas de entrega individual ---
-    public Timestamp getDateDelivered() { return dateDelivered; } // O LocalDate, según tu elección
+    public Timestamp getDateDelivered() { return dateDelivered; }
     public void setDateDelivered(Timestamp dateDelivered) { this.dateDelivered = dateDelivered; }
 
     public Boolean getDelivered() { return delivered; }
