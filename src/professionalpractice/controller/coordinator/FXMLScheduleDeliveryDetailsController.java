@@ -66,7 +66,7 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     @FXML
     private void btnClicCancelar(ActionEvent event) {
         boolean confirmado = Utils.showConfirmationAlert("Cancelar Operación",
-                "¿Estás seguro de que quieres cancelar?");
+                "¿Estás seguro de que quieres cancelar?", "Se cerrarán todas las ventanas abiertas.");
         if (confirmado) {
             cerrarVentana();
         }
