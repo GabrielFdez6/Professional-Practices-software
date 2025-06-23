@@ -122,7 +122,8 @@ public class FXMLProjectFormController implements Initializable {
   @FXML
   public void btnCancel(ActionEvent actionEvent) {
     if (Utils.showConfirmationAlert("Cancelar operación",
-            "¿Estás seguro que quieres cancelar? Se perderán los cambios no guardados.")) {
+            "¿Estás seguro que quieres cancelar? Se perderán los cambios no guardados.",
+            "Cualquier dato no guardado se perderá.")) {
       closeWindow(actionEvent);
     }
   }
@@ -192,6 +193,7 @@ public class FXMLProjectFormController implements Initializable {
         }
         newProject.setIdLinkedOrganization(currentOrganization.getIdLinkedOrganization());
         newProject.setIdProjectManager(currentProjectManager.getIdProjectManager());
+        newProject.setIdCoordinator(1);
 
         response = projectDAO.saveProject(newProject);
         if (response == Constants.OPERATION_SUCCESFUL) {

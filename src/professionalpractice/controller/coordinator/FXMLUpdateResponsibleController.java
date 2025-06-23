@@ -35,6 +35,7 @@ public class FXMLUpdateResponsibleController {
 
   private ProjectManager managerToUpdate;
   private IProjectManagerDAO projectManagerDAO;
+  private boolean updateSuccessful = false;
 
   @FXML
   public void initialize() {
@@ -96,7 +97,7 @@ public class FXMLUpdateResponsibleController {
       if (!newValue) {
         String name = field.getText();
         if (name != null && !name.trim().isEmpty()) {
-          String nameError = ValidationUtils.validatePersonName(name, fieldName,true);
+          String nameError = ValidationUtils.validatePersonName(name, fieldName, true);
           if (!nameError.isEmpty()) {
             Utils.showSimpleAlert(Alert.AlertType.WARNING, fieldName + " Inválido", nameError);
             field.requestFocus();
@@ -152,6 +153,7 @@ public class FXMLUpdateResponsibleController {
 
         int result = projectManagerDAO.updateProjectManager(updatedManager);
         if (result == Constants.OPERATION_SUCCESFUL) {
+          updateSuccessful = true;
           Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Actualización Exitosa",
               Constants.SUCCESS_RECORD_UPDATED +
                   "\nLos datos del responsable han sido actualizados correctamente.");
@@ -318,8 +320,9 @@ public class FXMLUpdateResponsibleController {
   private ProjectManager createUpdatedManagerFromForm() {
     ProjectManager updatedManager = new ProjectManager();
 
-    // Mantener el ID original
+    // Mantener el ID original y el ID de la organización vinculada
     updatedManager.setIdProjectManager(managerToUpdate.getIdProjectManager());
+    updatedManager.setIdLinkedOrganization(managerToUpdate.getIdLinkedOrganization());
 
     // Asignar valores sanitizados
     updatedManager.setFirstName(tfFirstName.getText().trim());
@@ -342,7 +345,8 @@ public class FXMLUpdateResponsibleController {
   void btnCancelarClick(ActionEvent event) {
     if (Utils.showConfirmationAlert("Cancelar Actualización",
         "¿Estás seguro que quieres cancelar la actualización?\n" +
-            "Se perderán los cambios realizados.")) {
+            "Se perderán los cambios realizados.",
+        "Cualquier dato no guardado se perderá.")) {
       closeWindow();
     }
   }
@@ -350,5 +354,32 @@ public class FXMLUpdateResponsibleController {
   private void closeWindow() {
     Stage stage = (Stage) tfFirstName.getScene().getWindow();
     stage.close();
+  }
+
+  public boolean isUpdateSuccessful() {
+    return updateSuccessful;
+  }
+
+  private void goToMainCoordinatorScreen() {
+    try {
+      // Cerrar la ventana actual
+      Stage currentStage = (Stage) tfFirstName.getScene().getWindow();
+      currentStage.close();
+
+      // Abrir nueva ventana principal del coordinador
+      javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource(
+          "/professionalpractice/view/coordinator/FXMLCoordinatorMainScreen.fxml"));
+      javafx.scene.Parent view = loader.load();
+      javafx.scene.Scene scene = new javafx.scene.Scene(view);
+      Stage newStage = new Stage();
+      newStage.setScene(scene);
+      newStage.setTitle("Página Principal Coordinador");
+      newStage.show();
+    } catch (java.io.IOException ex) {
+      Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Navegación",
+          "No se pudo regresar al menú principal.");
+      System.err.println("Error al navegar al menú principal: " + ex.getMessage());
+      ex.printStackTrace();
+    }
   }
 }

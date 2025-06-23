@@ -2,134 +2,145 @@ package professionalpractice.model.pojo;
 
 public class Student {
 
-    private int idStudent;
-    private String firstName;
-    private String lastNameFather;
-    private String lastNameMother;
-    private String enrollment;
-    private String email;
-    private String phone;
-    private int credits;
-    private String semester;
-    private boolean isAssignedToProject;
-    private double grade;
-    private int idUser;
+  private int idStudent;
+  private String firstName;
+  private String lastNameFather;
+  private String lastNameMother;
+  private String enrollment;
+  private String email;
+  private String phone;
+  private int credits;
+  private String semester;
+  private boolean isAssignedToProject;
+  private double grade;
+  private int idUser;
+  private String estatus;
 
-    public Student() {
-    }
+  public Student() {
+  }
 
-    public Student(int idStudent, String firstName, String lastNameFather, String lastNameMother, String enrollment, String email, String phone, int credits, String semester, boolean isAssignedToProject, double grade, int idUser) {
-        this.idStudent = idStudent;
-        this.firstName = firstName;
-        this.lastNameFather = lastNameFather;
-        this.lastNameMother = lastNameMother;
-        this.enrollment = enrollment;
-        this.email = email;
-        this.phone = phone;
-        this.credits = credits;
-        this.semester = semester;
-        this.isAssignedToProject = isAssignedToProject;
-        this.grade = grade;
-        this.idUser = idUser;
-    }
+  public Student(int idStudent, String firstName, String lastNameFather, String lastNameMother, String enrollment,
+      String email, String phone, int credits, String semester, boolean isAssignedToProject, double grade, int idUser) {
+    this.idStudent = idStudent;
+    this.firstName = firstName;
+    this.lastNameFather = lastNameFather;
+    this.lastNameMother = lastNameMother;
+    this.enrollment = enrollment;
+    this.email = email;
+    this.phone = phone;
+    this.credits = credits;
+    this.semester = semester;
+    this.isAssignedToProject = isAssignedToProject;
+    this.grade = grade;
+    this.idUser = idUser;
+    this.estatus = "Activo";
+  }
 
-    public int getIdStudent() {
-        return idStudent;
-    }
+  public int getIdStudent() {
+    return idStudent;
+  }
 
-    public void setIdStudent(int idStudent) {
-        this.idStudent = idStudent;
-    }
+  public void setIdStudent(int idStudent) {
+    this.idStudent = idStudent;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public String getLastNameFather() {
-        return lastNameFather;
-    }
+  public String getLastNameFather() {
+    return lastNameFather;
+  }
 
-    public void setLastNameFather(String lastNameFather) {
-        this.lastNameFather = lastNameFather;
-    }
+  public void setLastNameFather(String lastNameFather) {
+    this.lastNameFather = lastNameFather;
+  }
 
-    public String getLastNameMother() {
-        return lastNameMother;
-    }
+  public String getLastNameMother() {
+    return lastNameMother;
+  }
 
-    public void setLastNameMother(String lastNameMother) {
-        this.lastNameMother = lastNameMother;
-    }
+  public void setLastNameMother(String lastNameMother) {
+    this.lastNameMother = lastNameMother;
+  }
 
-    public String getEnrollment() {
-        return enrollment;
-    }
+  public String getEnrollment() {
+    return enrollment;
+  }
 
-    public void setEnrollment(String enrollment) {
-        this.enrollment = enrollment;
-    }
+  public void setEnrollment(String enrollment) {
+    this.enrollment = enrollment;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public int getCredits() {
-        return credits;
-    }
+  public int getCredits() {
+    return credits;
+  }
 
-    public void setCredits(int credits) {
-        this.credits = credits;
-    }
+  public void setCredits(int credits) {
+    this.credits = credits;
+  }
 
-    public String getSemester() {
-        return semester;
-    }
+  public String getSemester() {
+    return semester;
+  }
 
-    public void setSemester(String semester) {
-        this.semester = semester;
-    }
+  public void setSemester(String semester) {
+    this.semester = semester;
+  }
 
-    public boolean isAssignedToProject() {
-        return isAssignedToProject;
-    }
+  public boolean isAssignedToProject() {
+    return isAssignedToProject;
+  }
 
-    public void setAssignedToProject(boolean assignedToProject) {
-        isAssignedToProject = assignedToProject;
-    }
+  public void setAssignedToProject(boolean assignedToProject) {
+    isAssignedToProject = assignedToProject;
+  }
 
-    public double getGrade() {
-        return grade;
-    }
+  public double getGrade() {
+    return grade;
+  }
 
-    public void setGrade(double grade) {
-        this.grade = grade;
-    }
+  public void setGrade(double grade) {
+    this.grade = grade;
+  }
 
-    public int getIdUser() {
-        return idUser;
-    }
+  public int getIdUser() {
+    return idUser;
+  }
 
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
-    }
+  public void setIdUser(int idUser) {
+    this.idUser = idUser;
+  }
 
-    public String getFullName() {
-        return this.firstName + " " + this.lastNameFather + (this.lastNameMother != null ? " " + this.lastNameMother : "");
-    }
+  public String getEstatus() {
+    return estatus;
+  }
+
+  public void setEstatus(String estatus) {
+    this.estatus = estatus;
+  }
+
+  public String getFullName() {
+    return this.firstName + " " + this.lastNameFather + (this.lastNameMother != null ? " " + this.lastNameMother : "");
+  }
 }

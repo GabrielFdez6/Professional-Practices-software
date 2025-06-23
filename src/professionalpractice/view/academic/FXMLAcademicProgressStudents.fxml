@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.academic.FXMLAcademicProgressStudentsController">
+<AnchorPane prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.academic.FXMLAcademicProgressStudentsController">
     <children>
         <Label layoutX="24.0" layoutY="24.0" text="Avance Académico de Estudiantes">
             <font>
@@ -22,7 +19,15 @@
                 <TableColumn fx:id="tcProject" prefWidth="180.0" text="Proyecto Asignado" />
             </columns>
         </TableView>
-        <Button fx:id="btnConsultAdvance" layoutX="555.0" layoutY="443.0" mnemonicParsing="false" onAction="#btnConsultAdvanceClick" text="Consultar Avance" />
-        <Button fx:id="btnExit" layoutX="24.0" layoutY="443.0" mnemonicParsing="false" onAction="#btnExitClick" text="Salir" />
+        <Button fx:id="btnConsultAdvance" layoutX="516.0" layoutY="443.0" mnemonicParsing="false" onAction="#btnConsultAdvanceClick" prefHeight="25.0" style="-fx-background-color: #146cd0;" text="Consultar Avance" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="btnExit" layoutX="24.0" layoutY="443.0" mnemonicParsing="false" onAction="#btnExitClick" prefHeight="25.0" style="-fx-background-color: #6c757d;" text="Salir" textFill="WHITE">
+            <font>
+                <Font name="Arial Bold" size="14.0" />
+            </font>
+        </Button>
     </children>
 </AnchorPane>

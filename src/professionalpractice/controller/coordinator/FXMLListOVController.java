@@ -84,6 +84,8 @@ public class FXMLListOVController implements Initializable {
             modalStage.setScene(new Scene(view));
             modalStage.showAndWait();
 
+            goMainCoordinatorScreen();
+
         } catch (IOException ex) {
             Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error al cargar", "Lo sentimos, no se pudo mostrar la ventana de registro.");
             ex.printStackTrace();

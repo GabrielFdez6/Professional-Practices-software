@@ -31,28 +31,30 @@
                     </columnResizePolicy>
                 </TableView>
             </children></AnchorPane>
-        <Button layoutX="661.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnCancel" style="-fx-background-color: #f3f4f6;" text="Cancelar">
+        <Button layoutX="661.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnCancel" prefHeight="25.0" style="-fx-background-color: #6c757d;" text="Cancelar" textFill="WHITE">
             <effect>
-                <DropShadow blurType="GAUSSIAN" height="19.85" offsetY="2.0" radius="9.4625" width="20.0">
+                <DropShadow offsetY="2.0" radius="9.75" width="20.0">
                     <color>
-                        <Color opacity="0.13610388338565826" />
+                        <Color opacity="0.23999999463558197" />
                     </color>
                 </DropShadow>
             </effect>
             <font>
                 <Font name="Arial Bold" size="14.0" />
-            </font></Button>
-        <Button layoutX="547.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnSelectOV" style="-fx-background-color: #146cd0;" text="Seleccionar" textFill="WHITE">
+            </font>
+        </Button>
+        <Button layoutX="547.0" layoutY="510.0" mnemonicParsing="false" onAction="#btnSelectOV" prefHeight="25.0" style="-fx-background-color: #146cd0;" text="Seleccionar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
             <effect>
-                <DropShadow height="19.93" offsetY="2.0" radius="9.4825" width="20.0">
+                <DropShadow offsetY="2.0" radius="9.75" width="20.0">
                     <color>
-                        <Color opacity="0.38675323128700256" />
+                        <Color opacity="0.23999999463558197" />
                     </color>
                 </DropShadow>
-            </effect></Button>
+            </effect>
+        </Button>
         <AnchorPane prefHeight="27.0" prefWidth="800.0" style="-fx-background-color: white;">
             <effect>
                 <DropShadow height="9.59" offsetY="1.0" radius="1.8975" width="0.0">
