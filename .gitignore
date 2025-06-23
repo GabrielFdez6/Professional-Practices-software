@@ -18,3 +18,8 @@
 # Otros archivos temporales o de sistema
 .DS_Store
 Thumbs.db
+
+# Ignorar PDFs generados/subidos en carpetas de entregas
+deliveries/INITIAL_DOCUMENT/*.pdf
+deliveries/REPORT/*.pdf
+deliveries/FINAL_DOCUMENT/*.pdf
