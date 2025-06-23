@@ -4,7 +4,6 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -67,7 +66,7 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     @FXML
     private void btnClicCancelar(ActionEvent event) {
         boolean confirmado = Utils.showConfirmationAlert("Cancelar Operación",
-                "¿Estás seguro de que quieres cancelar?", "Cualquier dato no guardado se perderá.");
+                "¿Estás seguro de que quieres cancelar?");
         if (confirmado) {
             cerrarVentana();
         }

@@ -110,7 +110,7 @@ public class FXMLAcademicProgressStudentsController implements Initializable {
     private void btnExitClick(ActionEvent event) {
         try {
             Stage stage = (Stage) tvStudents.getScene().getWindow();
-            if (Utils.showConfirmationAlert("Confirmar salida", "¿Estás seguro que quieres salir?", "Cualquier dato no guardado se perderá.")) {
+            if (Utils.showConfirmationAlert("Confirmar salida", "¿Estás seguro que quieres salir?")) {
                 stage.close();
             }
         } catch (Exception e) {

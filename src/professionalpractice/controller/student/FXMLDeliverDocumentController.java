@@ -425,7 +425,7 @@ public class FXMLDeliverDocumentController {
 
   @FXML
   void btnCancelClick(ActionEvent event) {
-    if (Utils.showConfirmationAlert("Cancelar Proceso", "¿Estás seguro que quieres cancelar la entrega?", "Cualquier dato no guardado se perderá.")) {
+    if (Utils.showConfirmationAlert("Cancelar Proceso", "¿Estás seguro que quieres cancelar la entrega?")) {
       closeWindow();
     }
   }

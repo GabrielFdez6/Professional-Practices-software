@@ -16,7 +16,7 @@ public class Utils {
         alert.showAndWait();
     }
 
-    public static boolean showConfirmationAlert(String title, String message, String s) {
+    public static boolean showConfirmationAlert(String title, String message) {
         Alert alertConfirmation = new Alert(Alert.AlertType.CONFIRMATION);
         alertConfirmation.setTitle(title);
         alertConfirmation.setHeaderText(null);

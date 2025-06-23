@@ -113,7 +113,7 @@ public class FXMLInfoStudentsProjectController implements Initializable {
     @FXML
     public void btnCancel(ActionEvent actionEvent) {
         try {
-            if (Utils.showConfirmationAlert("Salir de la proyectos", "¿Estás seguro que quieres cancelar?", "Cualquier dato no guardado se perderá.")) {
+            if (Utils.showConfirmationAlert("Salir de la proyectos", "¿Estás seguro que quieres cancelar?")) {
                 Stage stageStudentsList = (Stage) tvStudents.getScene().getWindow();
                 FXMLLoader loader = new FXMLLoader(ProfessionalPractices.class.getResource("view/coordinator/FXMLCoordinatorMainScreen.fxml"));
                 Parent viewLogIn = loader.load();
@@ -139,7 +139,7 @@ public class FXMLInfoStudentsProjectController implements Initializable {
 
         String confirmationMessage = "¿Está seguro de que desea asignar al estudiante '" + selectedStudent.getFullName() + "' al proyecto '" + selectedProject.getName() + "'?";
 
-        if (Utils.showConfirmationAlert("Confirmar Asignación", confirmationMessage, "Cualquier dato no guardado se perderá.")) {
+        if (Utils.showConfirmationAlert("Confirmar Asignación", confirmationMessage)) {
             try {
 
                 int responseCode = projectDAO.assignProjectToStudent(

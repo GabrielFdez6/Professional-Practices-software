@@ -242,7 +242,7 @@ public class FXMLEvaluationRubricController implements Initializable {
   @FXML
   public void btnCancel(ActionEvent actionEvent) {
     try {
-      if (Utils.showConfirmationAlert("Salir de la evaluacion", "¿Estás seguro que quieres cancelar?", "Cualquier dato no guardado se perderá.")) {
+      if (Utils.showConfirmationAlert("Salir de la evaluacion", "¿Estás seguro que quieres cancelar?")) {
         Stage stageStudentsList = (Stage) lbStudentName.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(
                 ProfessionalPractices.class.getResource("view/evaluator/FXMLEvaluatorMainScreen.fxml"));
