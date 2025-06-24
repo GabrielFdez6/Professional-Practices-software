@@ -199,7 +199,7 @@ public class FXMLEvaluationRubricController implements Initializable {
   }
 
   private void addNumericValidation(TextField textField) {
-    final String regex = "^($|1(0(\\.(0{1,2})?)?)?|[5-9](\\.\\d{0,2})?|[5-9]\\.)$";
+    final String regex = "^($|1(0(\\.(0{1})?)?)?|[5-9](\\.\\d{0,1})?|[5-9]\\.)$";
     UnaryOperator<TextFormatter.Change> filter = change -> {
       String newText = change.getControlNewText();
       if (newText.matches(regex)) {
