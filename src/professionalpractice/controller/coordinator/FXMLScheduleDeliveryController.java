@@ -43,7 +43,7 @@ public class FXMLScheduleDeliveryController implements Initializable {
         controller.initializeInformation(selectedType);
 
         Stage stage = new Stage();
-        stage.setTitle("Seleccionar Tipo de Documento");
+        stage.setTitle("Seleccionar Documento");
         stage.setScene(new Scene(view));
         stage.show();
         closeWindow();

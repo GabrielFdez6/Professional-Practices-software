@@ -69,7 +69,7 @@ public class FXMLSelectDocumentController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/coordinator/FXMLScheduleDelivery.fxml"));
             Parent view = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("Seleccionar Tipo de Entrega");
+            stage.setTitle("Seleccionar Tipo de Documento");
             stage.setScene(new Scene(view));
             stage.show();
             closeWindow();

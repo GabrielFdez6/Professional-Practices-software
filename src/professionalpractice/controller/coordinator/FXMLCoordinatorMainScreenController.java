@@ -68,7 +68,7 @@ public class FXMLCoordinatorMainScreenController implements Initializable {
       Parent view = loader.load();
 
       Stage stage = new Stage();
-      stage.setTitle("Programar Nueva Entrega");
+      stage.setTitle("Seleccionar Tipo de Documento");
       stage.setScene(new Scene(view));
       stage.initModality(Modality.APPLICATION_MODAL);
       stage.showAndWait();
