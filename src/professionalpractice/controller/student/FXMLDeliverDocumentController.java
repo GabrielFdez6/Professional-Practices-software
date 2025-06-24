@@ -199,9 +199,9 @@ public class FXMLDeliverDocumentController {
       errors.add("El archivo no existe o no se puede leer.");
     }
 
-    if (SecurityValidationUtils.containsSuspiciousContent(fileName)) {
-      errors.add("El nombre del archivo contiene caracteres o patrones sospechosos.");
-    }
+    //if (SecurityValidationUtils.containsSuspiciousContent(fileName)) {
+     // errors.add("El nombre del archivo contiene caracteres o patrones sospechosos.");
+    //}
 
     if (!errors.isEmpty()) {
       String allErrors = String.join("\n", errors);

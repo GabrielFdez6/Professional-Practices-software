@@ -84,4 +84,45 @@ public class RecordDAO implements IRecordDAO {
         }
         return records;
     }
+
+    public static ArrayList<Record> getRecordsForAssignedStudentsInGroupAndPeriod(int idSubjectGroup, int idTerm, Connection conexionBD) throws SQLException {
+        ArrayList<Record> records = new ArrayList<>();
+        PreparedStatement sentencia = null;
+        ResultSet resultado = null;
+
+        if (conexionBD == null) {
+            throw new SQLException("Error: La conexión a la base de datos es nula.");
+        }
+
+        try {
+            // Consulta para obtener los records donde el estudiante está asignado a un proyecto
+            String sql = "SELECT r.idRecord, r.idStudent, r.idSubjectGroup, r.hoursCount, " +
+                    "r.reportPath, r.presentationPath, r.idTerm " +
+                    "FROM record r " +
+                    "JOIN student s ON r.idStudent = s.idStudent " + // Unir con la tabla de estudiantes
+                    "WHERE r.idSubjectGroup = ? AND r.idTerm = ? AND s.isAssignedToProject = 1"; // <--- CLAVE: s.isAssignedToProject = 1
+
+            sentencia = conexionBD.prepareStatement(sql);
+            sentencia.setInt(1, idSubjectGroup);
+            sentencia.setInt(2, idTerm);
+            resultado = sentencia.executeQuery();
+
+            while (resultado.next()) {
+                Record record = new Record();
+                record.setIdRecord(resultado.getInt("idRecord"));
+                record.setIdStudent(resultado.getInt("idStudent"));
+                record.setIdSubjectGroup(resultado.getInt("idSubjectGroup"));
+                record.setHoursCount(resultado.getInt("hoursCount"));
+                record.setReportPath(resultado.getString("reportPath"));
+                record.setPresentationPath(resultado.getString("presentationPath"));
+                record.setIdTerm(resultado.getInt("idTerm"));
+                records.add(record);
+            }
+        } finally {
+            if (resultado != null) { try { resultado.close(); } catch (SQLException ex) { /* Log error */ } }
+            if (sentencia != null) { try { sentencia.close(); } catch (SQLException ex) { /* Log error */ } }
+            // NO CERRAR LA CONEXIÓN AQUÍ
+        }
+        return records;
+    }
 }

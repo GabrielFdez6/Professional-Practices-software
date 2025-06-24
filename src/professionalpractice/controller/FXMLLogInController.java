@@ -95,6 +95,7 @@ public class FXMLLogInController implements Initializable {
     }
   }
 
+
   private void clearErrorMessages() {
     lbErrorUsername.setText("");
     lbErrorPassword.setText("");

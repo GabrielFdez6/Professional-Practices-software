@@ -143,7 +143,7 @@ public class ScheduleDeliveryDAO {
 
             int totalDeliveriesScheduled = 0;
             for (Group group : groups) {
-                ArrayList<Record> recordsOfGroup = RecordDAO.getRecordsByGroupAndTerm(group.getIdGroup(), currentTerm.getIdTerm(), connectionBD); // Changed method name and getter
+                ArrayList<Record> recordsOfGroup = RecordDAO.getRecordsForAssignedStudentsInGroupAndPeriod(group.getIdGroup(), currentTerm.getIdTerm(), connectionBD); // Changed method name and getter
 
                 for (Record record : recordsOfGroup) {
                     psInstance.setInt(1, record.getIdRecord());
