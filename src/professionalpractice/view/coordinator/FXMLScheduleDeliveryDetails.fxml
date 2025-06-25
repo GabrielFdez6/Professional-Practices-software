@@ -5,8 +5,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #F5F6FA;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryDetailsController">
+<AnchorPane prefHeight="550.0" prefWidth="600.0" style="-fx-background-color: #F5F6FA;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryDetailsController">
     <children>
         <Label layoutX="211.0" layoutY="47.0" text="Programar Entrega" textFill="#333333">
             <font><Font name="System Bold" size="20.0" /></font>
@@ -24,10 +25,13 @@
         <Label layoutX="333.0" layoutY="190.0" text="Fecha de Fin *" />
         <DatePicker fx:id="dpEndDate" editable="false" layoutX="415.0" layoutY="186.0" prefHeight="25.0" prefWidth="146.0" />
 
-        <Button layoutX="333.0" layoutY="402.0" mnemonicParsing="false" onAction="#btnClickSchedule" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #146cd0;" text="Programar" textFill="WHITE">
+        <Label layoutX="32.0" layoutY="390.0" text="Grupos *" />
+        <ListView fx:id="lvGroups" layoutX="126.0" layoutY="386.0" prefHeight="80.0" prefWidth="300.0" /> <HBox alignment="CENTER_RIGHT" layoutX="320.0" layoutY="490.0" prefHeight="40.0" prefWidth="250.0" spacing="20.0"> <children>
+        <Button onAction="#btnClickSchedule" prefWidth="115.0" text="Programar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
+            <style>-fx-background-color: #146cd0;</style>
             <effect>
                 <DropShadow offsetY="2.0" radius="9.75" width="20.0">
                     <color>
@@ -36,10 +40,11 @@
                 </DropShadow>
             </effect>
         </Button>
-        <Button layoutX="470.0" layoutY="402.0" mnemonicParsing="false" onAction="#btnClickCancel" prefHeight="25.0" style="-fx-background-color: #6c757d;" text="Cancelar" textFill="WHITE">
+        <Button onAction="#btnClickCancel" prefWidth="80.0" text="Cancelar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
+            <style>-fx-background-color: #6c757d;</style>
             <effect>
                 <DropShadow offsetY="2.0" radius="9.75" width="20.0">
                     <color>
@@ -48,8 +53,9 @@
                 </DropShadow>
             </effect>
         </Button>
+    </children>
+    </HBox>
 
-        <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
         <Label layoutX="443.0" layoutY="24.0" text="Universidad Veracruzana">
             <font>
                 <Font name="Arial" size="12.0" />

@@ -2,6 +2,7 @@ package professionalpractice.model.pojo;
 
 public class Group {
     private int idGroup;
+    private String name;
     private String section;
     private String block;
     private Academic academic;
@@ -17,6 +18,14 @@ public class Group {
 
     public void setIdGroup(int idGroup) {
         this.idGroup = idGroup;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSection() {
@@ -61,6 +70,6 @@ public class Group {
 
     @Override
     public String toString() {
-        return "Sección " + section + " - NRC " + educationalExperience.getNrc();
+        return "Grupo " + idGroup + " - " + educationalExperience.getName();
     }
 }

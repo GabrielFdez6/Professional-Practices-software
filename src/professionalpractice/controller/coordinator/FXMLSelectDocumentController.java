@@ -81,7 +81,6 @@ public class FXMLSelectDocumentController implements Initializable {
     }
 
     private void loadDocuments() {
-        System.out.println("Cargando documentos para categoría: " + deliveryType);
         List<String> documentNames = new ArrayList<>();
 
         try {

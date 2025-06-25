@@ -8,9 +8,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List; // Importar List
 
 import professionalpractice.model.ConectionBD;
-import professionalpractice.model.pojo.Delivery;
 import professionalpractice.model.pojo.DeliveryDefinition;
 import professionalpractice.model.pojo.Group;
 import professionalpractice.model.pojo.OperationResult;
@@ -19,12 +19,13 @@ import professionalpractice.model.pojo.Record;
 
 public class ScheduleDeliveryDAO {
 
-    public static OperationResult scheduleDeliveryCurrentPeriod(
+    public static OperationResult scheduleDeliveryForMultipleGroups(
             String definitionName,
             String definitionDescription,
             Timestamp definitionStartDate,
             Timestamp definitionEndDate,
-            String deliveryTypeUI) throws SQLException {
+            String deliveryTypeUI,
+            List<Integer> idSelectedGroups) throws SQLException {
 
         OperationResult result = new OperationResult();
         result.setIsError(true);
@@ -33,18 +34,18 @@ public class ScheduleDeliveryDAO {
         try {
             connectionBD = ConectionBD.getConnection();
             if (connectionBD == null) {
-                throw new SQLException("Error: Sin conexión a la Base de Datos");
+                throw new SQLException("Error: Sin conexión con la Base de Datos");
             }
 
-            Term currentTerm = TermDAO.getCurrentPeriod(connectionBD); // Changed method name
+            Term currentTerm = TermDAO.getCurrentPeriod(connectionBD);
             if (currentTerm == null) {
-                result.setMensaje("No se encontró un periodo escolar activo para programar la entrega.");
+                result.setMensaje("No se encontró un periodo académico activo para programar la entrega.");
                 return result;
             }
 
-            ArrayList<Group> groups = GroupDAO.getGroupsByTerm(currentTerm.getIdTerm(), connectionBD); // Changed method name
-            if (groups.isEmpty()) {
-                result.setMensaje("No se encontraron grupos en el periodo actual para asignar la entrega.");
+            if (idSelectedGroups == null || idSelectedGroups.isEmpty()) {
+                result.setMensaje("No se seleccionaron grupos para programar la entrega.");
+                connectionBD.rollback();
                 return result;
             }
 
@@ -142,10 +143,15 @@ public class ScheduleDeliveryDAO {
             PreparedStatement psInstance = connectionBD.prepareStatement(sqlInsertInstance);
 
             int totalDeliveriesScheduled = 0;
-            for (Group group : groups) {
-                ArrayList<Record> recordsOfGroup = RecordDAO.getRecordsForAssignedStudentsInGroupAndPeriod(group.getIdGroup(), currentTerm.getIdTerm(), connectionBD); // Changed method name and getter
 
-                for (Record record : recordsOfGroup) {
+            for (Integer idGroup : idSelectedGroups) {
+                ArrayList<Record> recordsForThisGroup = RecordDAO.getRecordsForAssignedStudentsInGroupAndPeriod(idGroup, currentTerm.getIdTerm(), connectionBD);
+
+                if (recordsForThisGroup.isEmpty()) {
+                    continue;
+                }
+
+                for (Record record : recordsForThisGroup) {
                     psInstance.setInt(1, record.getIdRecord());
                     psInstance.setInt(2, generatedDeliveryDefinitionId);
                     psInstance.setBoolean(3, false);
@@ -162,9 +168,15 @@ public class ScheduleDeliveryDAO {
             }
             psInstance.close();
 
+            if (totalDeliveriesScheduled == 0) {
+                result.setMensaje("No se programaron entregas ya que no se encontraron estudiantes elegibles en los grupos seleccionados.");
+                connectionBD.rollback();
+                return result;
+            }
+
             connectionBD.commit();
             result.setIsError(false);
-            result.setMensaje("Se programaron " + totalDeliveriesScheduled + " instancias de entrega y se creó la definición de entrega.");
+            result.setMensaje("Se programaron " + totalDeliveriesScheduled + " entregas para los estudiantes de los grupos seleccionados.");
 
         } catch (SQLException e) {
             result.setMensaje("Ocurrió un error y no se pudo completar la operación: " + e.getMessage());
@@ -185,6 +197,25 @@ public class ScheduleDeliveryDAO {
             }
         }
         return result;
+    }
+
+    private static boolean isDeliveryAlreadyScheduled(int idRecord, int idDeliveryDefinition, Connection connectionBD) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM delivery WHERE idRecord = ? AND idDeliveryDefinition = ?";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connectionBD.prepareStatement(sql);
+            ps.setInt(1, idRecord);
+            ps.setInt(2, idDeliveryDefinition);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } finally {
+            if (rs != null) { try { rs.close(); } catch (SQLException ex) { ex.printStackTrace(); } }
+            if (ps != null) { try { ps.close(); } catch (SQLException ex) { ex.printStackTrace(); } }
+        }
+        return false;
     }
 
     private static int insertInitialDocument(Connection connectionBD, String name, LocalDate date, String status) throws SQLException {

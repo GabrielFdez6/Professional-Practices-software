@@ -113,11 +113,10 @@ public class FXMLDeliverDocumentController {
     switch (definition.getDeliveryType()) {
       case "INITIAL DOCUMENT":
       case "FINAL DOCUMENT":
-        tfGrade.setVisible(true);
-        tfGrade.setManaged(true);
+        tfGrade.setVisible(false);
+        tfGrade.setManaged(false);
         taObservations.setVisible(true);
         taObservations.setManaged(true);
-        tfGrade.setPromptText("Calificación (opcional)");
         taObservations.setPromptText("Observaciones adicionales...");
         tfReportedHours.setVisible(false);
         tfReportedHours.setManaged(false);
@@ -199,10 +198,6 @@ public class FXMLDeliverDocumentController {
       errors.add("El archivo no existe o no se puede leer.");
     }
 
-    //if (SecurityValidationUtils.containsSuspiciousContent(fileName)) {
-     // errors.add("El nombre del archivo contiene caracteres o patrones sospechosos.");
-    //}
-
     if (!errors.isEmpty()) {
       String allErrors = String.join("\n", errors);
       Utils.showSimpleAlert(Alert.AlertType.WARNING, "Archivo Inválido", allErrors);
@@ -232,7 +227,7 @@ public class FXMLDeliverDocumentController {
                 new Date(),
                 newStatus,
                 taObservations.getText(),
-                (tfGrade.getText() != null && !tfGrade.getText().trim().isEmpty()) ? new BigDecimal(tfGrade.getText().trim()) : null,
+                tfGrade.isVisible() && tfGrade.getText() != null && !tfGrade.getText().trim().isEmpty() ? new BigDecimal(tfGrade.getText().trim()) : null,
                 (tfReportedHours.getText() != null && !tfReportedHours.getText().trim().isEmpty()) ? Integer.parseInt(tfReportedHours.getText().trim()) : null
         );
 
@@ -335,7 +330,7 @@ public class FXMLDeliverDocumentController {
 
   private void validateDocumentFields(List<String> errors) {
     String gradeText = tfGrade.getText();
-    if (gradeText != null && !gradeText.trim().isEmpty()) {
+    if (tfGrade.isVisible() && gradeText != null && !gradeText.trim().isEmpty()) {
       String gradeError = ValidationUtils.validateGrade(gradeText);
       if (!gradeError.isEmpty()) {
         errors.add(gradeError);
@@ -376,14 +371,14 @@ public class FXMLDeliverDocumentController {
     }
 
     String hoursText = tfReportedHours.getText();
-    if (hoursText != null && !hoursText.isEmpty()) {
+    if (tfReportedHours.isVisible() && hoursText != null && !hoursText.isEmpty()) {
       if (SecurityValidationUtils.containsSQLInjection(hoursText)) {
         errors.add("El campo de horas contiene caracteres no permitidos.");
       }
     }
 
     String gradeText = tfGrade.getText();
-    if (gradeText != null && !gradeText.isEmpty()) {
+    if (tfGrade.isVisible() && gradeText != null && !gradeText.isEmpty()) {
       if (SecurityValidationUtils.containsSQLInjection(gradeText)) {
         errors.add("El campo de calificación contiene caracteres no permitidos.");
       }
@@ -394,10 +389,10 @@ public class FXMLDeliverDocumentController {
     if (taObservations.getText() != null) {
       taObservations.setText(SecurityValidationUtils.advancedSanitization(taObservations.getText()));
     }
-    if (tfReportedHours.getText() != null) {
+    if (tfReportedHours.isVisible() && tfReportedHours.getText() != null) {
       tfReportedHours.setText(ValidationUtils.sanitizeInput(tfReportedHours.getText()));
     }
-    if (tfGrade.getText() != null) {
+    if (tfGrade.isVisible() && tfGrade.getText() != null) {
       tfGrade.setText(ValidationUtils.sanitizeInput(tfGrade.getText()));
     }
   }
@@ -477,6 +472,7 @@ public class FXMLDeliverDocumentController {
     taObservations.setDisable(false);
     btnAttachFile.setDisable(false);
     btnDeliver.setDisable(false);
+    btnReturn.setDisable(false);
 
     if (currentDate.after(endDate)) {
       message = "La fecha límite de entrega ha expirado (" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(endDate) + "). No se pueden realizar entregas.";
