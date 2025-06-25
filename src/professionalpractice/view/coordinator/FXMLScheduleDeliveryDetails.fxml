@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #F5F6FA;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryDetailsController">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" style="-fx-background-color: #F5F6FA;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="professionalpractice.controller.coordinator.FXMLScheduleDeliveryDetailsController">
     <children>
         <Label layoutX="211.0" layoutY="47.0" text="Programar Entrega" textFill="#333333">
             <font><Font name="System Bold" size="20.0" /></font>
@@ -27,21 +23,30 @@
 
         <Label layoutX="333.0" layoutY="190.0" text="Fecha de Fin *" />
         <DatePicker fx:id="dpEndDate" editable="false" layoutX="415.0" layoutY="186.0" prefHeight="25.0" prefWidth="146.0" />
-        <Button layoutX="470.0" layoutY="402.0" onAction="#btnClickCancel" style="-fx-background-color: #6c757d; -fx-font-weight: bold; -fx-background-radius: 5;" text="Cancelar" textFill="WHITE">
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
+
+        <Button layoutX="333.0" layoutY="402.0" mnemonicParsing="false" onAction="#btnClickSchedule" prefHeight="25.0" prefWidth="115.0" style="-fx-background-color: #146cd0;" text="Programar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
+            <effect>
+                <DropShadow offsetY="2.0" radius="9.75" width="20.0">
+                    <color>
+                        <Color opacity="0.23999999463558197" />
+                    </color>
+                </DropShadow>
+            </effect>
         </Button>
-        <Button layoutX="346.0" layoutY="402.0" onAction="#btnClickSchedule" style="-fx-background-color: #007bff; -fx-font-weight: bold; -fx-background-radius: 5;" text="Programar" textFill="WHITE">
-            <cursor>
-                <Cursor fx:constant="HAND" />
-            </cursor>
+        <Button layoutX="470.0" layoutY="402.0" mnemonicParsing="false" onAction="#btnClickCancel" prefHeight="25.0" style="-fx-background-color: #6c757d;" text="Cancelar" textFill="WHITE">
             <font>
                 <Font name="Arial Bold" size="14.0" />
             </font>
+            <effect>
+                <DropShadow offsetY="2.0" radius="9.75" width="20.0">
+                    <color>
+                        <Color opacity="0.23999999463558197" />
+                    </color>
+                </DropShadow>
+            </effect>
         </Button>
 
         <HBox alignment="CENTER_RIGHT" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />

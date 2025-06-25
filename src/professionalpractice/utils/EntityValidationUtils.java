@@ -3,6 +3,8 @@ package professionalpractice.utils;
 import java.util.ArrayList;
 import java.util.List;
 import professionalpractice.model.pojo.*;
+import professionalpractice.model.dao.StudentDAO;
+import java.sql.SQLException;
 
 /**
  * Utilidades de validación específicas para las entidades del dominio de
@@ -96,12 +98,12 @@ public class EntityValidationUtils {
       errors.add(availabilityError);
 
     String projectManagerIdError = ValidationUtils.validateId(project.getIdProjectManager(),
-            "ID del responsable de proyecto");
+        "ID del responsable de proyecto");
     if (!projectManagerIdError.isEmpty())
       errors.add(projectManagerIdError);
 
     String organizationIdError = ValidationUtils.validateId(project.getIdLinkedOrganization(),
-            "ID de organización vinculada");
+        "ID de organización vinculada");
     if (!organizationIdError.isEmpty())
       errors.add(organizationIdError);
 
@@ -151,10 +153,9 @@ public class EntityValidationUtils {
       errors.add(phoneError);
 
     String organizationIdError = ValidationUtils.validateId(projectManager.getIdLinkedOrganization(),
-            "ID de organización vinculada");
+        "ID de organización vinculada");
     if (!organizationIdError.isEmpty())
       errors.add(organizationIdError);
-
 
     return errors;
   }
@@ -246,10 +247,10 @@ public class EntityValidationUtils {
     }
 
     boolean hasAnyScore = evaluation.getMethodsTechniquesScore() != null ||
-            evaluation.getRequirementsScore() != null ||
-            evaluation.getSecurityMasteryScore() != null ||
-            evaluation.getContentScore() != null ||
-            evaluation.getSpellingGrammarScore() != null;
+        evaluation.getRequirementsScore() != null ||
+        evaluation.getSecurityMasteryScore() != null ||
+        evaluation.getContentScore() != null ||
+        evaluation.getSpellingGrammarScore() != null;
 
     if (!hasAnyScore) {
       errors.add("Se debe proporcionar al menos una calificación.");
@@ -364,13 +365,23 @@ public class EntityValidationUtils {
       if (student.getCredits() < 240) {
         errors.add("El estudiante no cumple con los créditos mínimos requeridos para prácticas profesionales.");
       }
+
+      // Validación del período escolar actual
+      try {
+        if (!StudentDAO.isStudentInCurrentPeriod(student.getIdStudent())) {
+          errors.add(
+              "El estudiante no está registrado en el período escolar actual y no se puede asignar a un proyecto.");
+        }
+      } catch (SQLException e) {
+        errors.add("Error al verificar el período escolar del estudiante: " + e.getMessage());
+      }
     }
 
     return errors;
   }
 
   public static List<String> validateProjectCreation(Project project, ProjectManager manager,
-                                                     LinkedOrganization organization) {
+      LinkedOrganization organization) {
     List<String> errors = new ArrayList<>();
 
     errors.addAll(validateProject(project));

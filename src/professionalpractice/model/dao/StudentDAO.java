@@ -13,6 +13,7 @@ import professionalpractice.model.pojo.Student;
 import professionalpractice.model.pojo.StudentProgress;
 import professionalpractice.model.pojo.StudentProject;
 import professionalpractice.model.pojo.DeliveryInfo;
+import professionalpractice.model.pojo.Term;
 import professionalpractice.utils.Constants;
 import java.time.LocalDateTime;
 
@@ -182,9 +183,73 @@ public class StudentDAO implements IStudentDAO {
     return idRecord;
   }
 
+  /**
+   * Verifica si un estudiante está registrado en el período escolar actual
+   * 
+   * @param idStudent ID del estudiante
+   * @return true si el estudiante está en el período actual, false en caso
+   *         contrario
+   * @throws SQLException si hay error en la consulta
+   */
+  public static boolean isStudentInCurrentPeriod(int idStudent) throws SQLException {
+    String query = "SELECT COUNT(*) FROM record r " +
+        "JOIN term t ON r.idTerm = t.idTerm " +
+        "WHERE r.idStudent = ? AND CURDATE() BETWEEN t.startDate AND t.endDate";
+
+    try (Connection connection = ConectionBD.getConnection();
+        PreparedStatement ps = connection.prepareStatement(query)) {
+      ps.setInt(1, idStudent);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt(1) > 0;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Obtiene el período escolar actual para un estudiante específico
+   * 
+   * @param idStudent ID del estudiante
+   * @return Term del período actual o null si no está en ningún período activo
+   * @throws SQLException si hay error en la consulta
+   */
+  public static Term getCurrentPeriodForStudent(int idStudent) throws SQLException {
+    String query = "SELECT t.idTerm, t.name, t.startDate, t.endDate " +
+        "FROM record r " +
+        "JOIN term t ON r.idTerm = t.idTerm " +
+        "WHERE r.idStudent = ? AND CURDATE() BETWEEN t.startDate AND t.endDate " +
+        "LIMIT 1";
+
+    try (Connection connection = ConectionBD.getConnection();
+        PreparedStatement ps = connection.prepareStatement(query)) {
+      ps.setInt(1, idStudent);
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          Term term = new Term();
+          term.setIdTerm(rs.getInt("idTerm"));
+          term.setName(rs.getString("name"));
+          term.setStartDate(String.valueOf(rs.getDate("startDate").toLocalDate()));
+          term.setEndDate(String.valueOf(rs.getDate("endDate").toLocalDate()));
+          return term;
+        }
+      }
+    }
+    return null;
+  }
+
   public ArrayList<Student> getUnassignedStudents() throws SQLException {
     ArrayList<Student> students = new ArrayList<>();
-    String query = "SELECT idStudent, enrollment, semester, email, firstName, lastNameMother, lastNameFather FROM student WHERE isAssignedToProject = 0 OR isAssignedToProject IS NULL";
+    // Modificada la consulta para incluir solo estudiantes del período actual
+    String query = "SELECT DISTINCT s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather "
+        +
+        "FROM student s " +
+        "JOIN record r ON s.idStudent = r.idStudent " +
+        "JOIN term t ON r.idTerm = t.idTerm " +
+        "WHERE (s.isAssignedToProject = 0 OR s.isAssignedToProject IS NULL) " +
+        "AND CURDATE() BETWEEN t.startDate AND t.endDate";
+
     try (Connection connection = ConectionBD.getConnection();
         PreparedStatement ps = connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery()) {
@@ -200,7 +265,7 @@ public class StudentDAO implements IStudentDAO {
         students.add(student);
       }
     } catch (SQLException e) {
-      System.err.println("Error al obtener los estudiantes no asignados: " + e.getMessage());
+      System.err.println("Error al obtener los estudiantes no asignados del período actual: " + e.getMessage());
       throw e;
     }
     return students;
@@ -247,7 +312,7 @@ public class StudentDAO implements IStudentDAO {
         "FROM delivery d " +
         "INNER JOIN deliverydefinition dd ON d.idDeliveryDefinition = dd.idDeliveryDefinition " +
         "INNER JOIN record r ON d.idRecord = r.idRecord " +
-        "WHERE r.idStudent = ? " +
+        "WHERE r.idStudent = ? AND d.status IN ('ENTREGADO', 'EN_REVISION', 'RECHAZADO', 'APROBADO') " +
         "ORDER BY dd.endDate ASC";
 
     try (Connection connection = ConectionBD.getConnection();

@@ -166,7 +166,8 @@ public class FXMLAcademicDetailedStudentProgressController implements Initializa
       ArrayList<professionalpractice.model.pojo.DeliveryInfo> deliveries = dao.getStudentDeliveries(studentId);
 
       for (professionalpractice.model.pojo.DeliveryInfo delivery : deliveries) {
-        String type = mapDeliveryType(delivery.getDeliveryType());
+        // Solo procesar entregas que estén entregadas (el DAO ya filtra por ENTREGADO)
+        String type = delivery.getDeliveryTypeInSpanish();
         String name = delivery.getDeliveryName();
         Double grade = delivery.getGrade();
         String date = delivery.getFormattedDeliveryDate();

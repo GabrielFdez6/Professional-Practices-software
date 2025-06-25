@@ -129,14 +129,6 @@ public class FXMLDeliveryListController {
                     canDeliver = true;
                 }
                 break;
-            case "ENTREGADO":
-                if (currentDate.after(endDate)) {
-                    message = "La entrega ya fue realizada y la fecha límite ha expirado. No se puede volver a entregar.";
-                } else {
-                    canDeliver = true;
-                    message = "La entrega ya fue realizada, pero aún puedes subir una nueva versión.";
-                }
-                break;
             case "RECHAZADO":
                 if (currentDate.after(endDate)) {
                     message = "La entrega fue rechazada y la fecha límite ha expirado. No se puede volver a entregar.";
@@ -145,8 +137,8 @@ public class FXMLDeliveryListController {
                     message = "Tu entrega fue rechazada. Puedes subir una nueva versión.";
                 }
                 break;
-            case "EN_REVISION":
-                message = "Tu entrega está actualmente en revisión. No se puede subir una nueva versión hasta que sea evaluada.";
+            case "ENTREGADO":
+                message = "Tu entrega no ha sido aprobada. No se puede subir una nueva versión hasta que sea aprobada.";
                 break;
             case "APROBADO":
                 message = "Tu entrega ha sido aprobada. No se puede subir una nueva versión.";

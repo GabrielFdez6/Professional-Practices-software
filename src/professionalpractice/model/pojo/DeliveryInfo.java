@@ -162,6 +162,28 @@ public class DeliveryInfo {
     return "Sin calificar";
   }
 
+  /**
+   * Obtiene el tipo de entrega traducido al español
+   * 
+   * @return Tipo de entrega en español
+   */
+  public String getDeliveryTypeInSpanish() {
+    if (deliveryType == null) {
+      return "Sin tipo";
+    }
+
+    switch (deliveryType.toUpperCase()) {
+      case "INITIAL DOCUMENT":
+        return "Documento Inicial";
+      case "FINAL DOCUMENT":
+        return "Documento Final";
+      case "REPORT":
+        return "Reporte";
+      default:
+        return deliveryType;
+    }
+  }
+
   @Override
   public String toString() {
     return "DeliveryInfo{" +

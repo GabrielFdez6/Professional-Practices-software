@@ -16,7 +16,7 @@
                         <Image url="@../../resource/logoUV.png" />
                     </image>
                 </ImageView>
-                <Label fx:id="lbFullName" layoutX="520.0" layoutY="23.0" text="[Nombre del Académico]">
+                <Label fx:id="lbFullName" layoutX="520.0" layoutY="23.0" text="">
                     <font>
                         <Font name="Arial" size="15.0" />
                     </font>

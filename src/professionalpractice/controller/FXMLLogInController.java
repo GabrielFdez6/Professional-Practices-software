@@ -95,7 +95,6 @@ public class FXMLLogInController implements Initializable {
     }
   }
 
-
   private void clearErrorMessages() {
     lbErrorUsername.setText("");
     lbErrorPassword.setText("");
@@ -314,6 +313,14 @@ public class FXMLLogInController implements Initializable {
       if (student == null) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Datos",
             "No se pudo encontrar la información del estudiante asociada a esta cuenta.");
+        return;
+      }
+
+      // Validar que el estudiante pertenezca al período escolar actual
+      if (!StudentDAO.isStudentInCurrentPeriod(student.getIdStudent())) {
+        Utils.showSimpleAlert(Alert.AlertType.WARNING, "Acceso Denegado",
+            "No puedes acceder al sistema porque no estás registrado en el período escolar actual. " +
+                "Por favor, contacta al coordinador de prácticas profesionales.");
         return;
       }
 

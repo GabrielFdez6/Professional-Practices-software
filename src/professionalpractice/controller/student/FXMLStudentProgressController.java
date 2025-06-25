@@ -72,7 +72,8 @@ public class FXMLStudentProgressController implements Initializable {
 
   private void configureDeliveryTable() {
     colDeliveryName.setCellValueFactory(new PropertyValueFactory<>("deliveryName"));
-    colDeliveryType.setCellValueFactory(new PropertyValueFactory<>("deliveryType"));
+    colDeliveryType.setCellValueFactory(
+        cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDeliveryTypeInSpanish()));
     colDeliveryStatus.setCellValueFactory(
         cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getStatusText()));
     colDeliveryDate.setCellValueFactory(
