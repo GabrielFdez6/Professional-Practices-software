@@ -35,18 +35,30 @@ import javafx.scene.control.Button;
 
 public class FXMLDeliverDocumentController {
 
-  @FXML private Label lblDeliveryName;
-  @FXML private Label lblStartDate;
-  @FXML private Label lblEndDate;
-  @FXML private Label lblFileName;
-  @FXML private AnchorPane vboxDynamicFields;
-  @FXML private TextField tfReportedHours;
-  @FXML private TextField tfGrade;
-  @FXML private TextArea taObservations;
-  @FXML private Label lblStatus;
-  @FXML private Button btnAttachFile;
-  @FXML private Button btnDeliver;
-  @FXML private Button btnReturn;
+  @FXML
+  private Label lblDeliveryName;
+  @FXML
+  private Label lblStartDate;
+  @FXML
+  private Label lblEndDate;
+  @FXML
+  private Label lblFileName;
+  @FXML
+  private AnchorPane vboxDynamicFields;
+  @FXML
+  private TextField tfReportedHours;
+  @FXML
+  private TextField tfGrade;
+  @FXML
+  private TextArea taObservations;
+  @FXML
+  private Label lblStatus;
+  @FXML
+  private Button btnAttachFile;
+  @FXML
+  private Button btnDeliver;
+  @FXML
+  private Button btnReturn;
 
   private Delivery currentDelivery;
   private File selectedFile;
@@ -66,11 +78,13 @@ public class FXMLDeliverDocumentController {
         if (loadedDelivery != null && loadedDelivery.getDeliveryDefinition() != null) {
           this.currentDelivery = loadedDelivery;
         } else {
-          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Carga", "No se pudo cargar la definición completa de la entrega.");
+          Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Carga",
+              "No se pudo cargar la definición completa de la entrega.");
           return;
         }
       } catch (SQLException e) {
-        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Carga", "No se pudo cargar la información completa de la entrega debido a un error de base de datos.");
+        Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Carga",
+            "No se pudo cargar la información completa de la entrega debido a un error de base de datos.");
         e.printStackTrace();
         return;
       }
@@ -124,12 +138,11 @@ public class FXMLDeliverDocumentController {
       case "REPORT":
         tfReportedHours.setVisible(true);
         tfReportedHours.setManaged(true);
-        tfGrade.setVisible(true);
-        tfGrade.setManaged(true);
+        tfGrade.setVisible(false);
+        tfGrade.setManaged(false);
         taObservations.setVisible(true);
         taObservations.setManaged(true);
         tfReportedHours.setPromptText("Horas reportadas (requerido)");
-        tfGrade.setPromptText("Calificación (ej. 8.5)");
         taObservations.setPromptText("Observaciones del reporte...");
         break;
     }
@@ -147,7 +160,8 @@ public class FXMLDeliverDocumentController {
   @FXML
   void btnAttachFileClick(ActionEvent event) {
     if (btnAttachFile.isDisable()) {
-      Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Disponible", "No puedes adjuntar archivos en el estado actual de la entrega.");
+      Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Disponible",
+          "No puedes adjuntar archivos en el estado actual de la entrega.");
       return;
     }
 
@@ -186,7 +200,8 @@ public class FXMLDeliverDocumentController {
     }
 
     if (!SecurityValidationUtils.isFileSizeValid(file)) {
-      errors.add("El archivo excede el tamaño máximo permitido. (Ajustar mensaje si ya no hay constante MAX_FILE_SIZE)");
+      errors
+          .add("El archivo excede el tamaño máximo permitido. (Ajustar mensaje si ya no hay constante MAX_FILE_SIZE)");
     }
 
     String fileNameError = ValidationUtils.validateFileName(fileName);
@@ -210,7 +225,8 @@ public class FXMLDeliverDocumentController {
   @FXML
   void btnDeliverClick(ActionEvent event) {
     if (btnDeliver.isDisable()) {
-      Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Permitida", "No puedes realizar la entrega en el estado actual de la tarea o fuera de fecha.");
+      Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega No Permitida",
+          "No puedes realizar la entrega en el estado actual de la tarea o fuera de fecha.");
       return;
     }
 
@@ -221,22 +237,14 @@ public class FXMLDeliverDocumentController {
 
         String newStatus = "ENTREGADO";
 
-        int updateResult = ((DeliveryDAO) deliveryDAO).updateStudentDeliveryStatus(
-                currentDelivery.getIdDelivery(),
-                newFilePath,
-                new Date(),
-                newStatus,
-                taObservations.getText(),
-                tfGrade.isVisible() && tfGrade.getText() != null && !tfGrade.getText().trim().isEmpty() ? new BigDecimal(tfGrade.getText().trim()) : null,
-                (tfReportedHours.getText() != null && !tfReportedHours.getText().trim().isEmpty()) ? Integer.parseInt(tfReportedHours.getText().trim()) : null
-        );
+        int updateResult = updateDeliveryInstanceForStudent(newFilePath);
 
         if (updateResult > 0) {
           currentDelivery.setStatus(newStatus);
           lblStatus.setText("Estado: " + newStatus);
           Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega Exitosa",
-                  "El documento '" + lblFileName.getText() + "' ha sido entregado correctamente.\n" +
-                          "Estado: " + newStatus);
+              "El documento '" + lblFileName.getText() + "' ha sido entregado correctamente.\n" +
+                  "Estado: " + newStatus);
 
           closeWindow();
 
@@ -246,21 +254,22 @@ public class FXMLDeliverDocumentController {
 
       } catch (IOException e) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Archivo",
-                "No se pudo guardar el archivo. Verifique los permisos del sistema e inténtelo de nuevo.");
+            "No se pudo guardar el archivo. Verifique los permisos del sistema e inténtelo de nuevo.");
         System.err.println("Error de E/O al guardar archivo: " + e.getMessage());
         e.printStackTrace();
       } catch (SQLException e) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Base de Datos",
-                "No fue posible conectar con la base de datos o hubo un error en la operación." + "\nDetalle: " + e.getMessage());
+            "No fue posible conectar con la base de datos o hubo un error en la operación." + "\nDetalle: "
+                + e.getMessage());
         System.err.println("Error de base de datos en entrega: " + e.getMessage());
         e.printStackTrace();
       } catch (NumberFormatException e) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error de Formato",
-                "Los valores numéricos ingresados no son válidos.");
+            "Los valores numéricos ingresados no son válidos.");
         e.printStackTrace();
       } catch (Exception e) {
         Utils.showSimpleAlert(Alert.AlertType.ERROR, "Error Inesperado",
-                "Ocurrió un error inesperado durante la entrega. Intente más tarde.");
+            "Ocurrió un error inesperado durante la entrega. Intente más tarde.");
         System.err.println("Error inesperado en entrega de documento: " + e.getMessage());
         e.printStackTrace();
       }
@@ -317,15 +326,8 @@ public class FXMLDeliverDocumentController {
       }
     }
 
-    String gradeText = tfGrade.getText();
-    if (gradeText == null || gradeText.trim().isEmpty()) {
-      errors.add("La calificación es obligatoria para un reporte.");
-    } else {
-      String gradeError = ValidationUtils.validateGrade(gradeText);
-      if (!gradeError.isEmpty()) {
-        errors.add(gradeError);
-      }
-    }
+    // La calificación no es ingresada por el estudiante, se establece
+    // automáticamente en 0
   }
 
   private void validateDocumentFields(List<String> errors) {
@@ -353,12 +355,12 @@ public class FXMLDeliverDocumentController {
 
     if (now.before(startDate)) {
       errors.add("La entrega aún no está disponible. Fecha de inicio: " +
-              new SimpleDateFormat("dd-MM-yyyy HH:mm").format(startDate));
+          new SimpleDateFormat("dd-MM-yyyy HH:mm").format(startDate));
     }
 
     if (now.after(endDate)) {
       errors.add("La fecha límite de entrega ha expirado. Fecha límite: " +
-              new SimpleDateFormat("dd-MM-yyyy HH:mm").format(endDate));
+          new SimpleDateFormat("dd-MM-yyyy HH:mm").format(endDate));
     }
   }
 
@@ -366,7 +368,7 @@ public class FXMLDeliverDocumentController {
     String observations = taObservations.getText();
     if (observations != null && !observations.isEmpty()) {
       List<String> securityErrors = SecurityValidationUtils.performComprehensiveSecurityValidation(
-              observations, "Observaciones");
+          observations, "Observaciones");
       errors.addAll(securityErrors);
     }
 
@@ -377,12 +379,7 @@ public class FXMLDeliverDocumentController {
       }
     }
 
-    String gradeText = tfGrade.getText();
-    if (tfGrade.isVisible() && gradeText != null && !gradeText.isEmpty()) {
-      if (SecurityValidationUtils.containsSQLInjection(gradeText)) {
-        errors.add("El campo de calificación contiene caracteres no permitidos.");
-      }
-    }
+    // No validamos el campo de calificación ya que el estudiante no lo usa
   }
 
   private void sanitizeAllTextFields() {
@@ -392,9 +389,7 @@ public class FXMLDeliverDocumentController {
     if (tfReportedHours.isVisible() && tfReportedHours.getText() != null) {
       tfReportedHours.setText(ValidationUtils.sanitizeInput(tfReportedHours.getText()));
     }
-    if (tfGrade.isVisible() && tfGrade.getText() != null) {
-      tfGrade.setText(ValidationUtils.sanitizeInput(tfGrade.getText()));
-    }
+    // No sanitizamos el campo de calificación ya que el estudiante no lo usa
   }
 
   private int updateDeliveryInstanceForStudent(String filePath) throws SQLException {
@@ -402,8 +397,8 @@ public class FXMLDeliverDocumentController {
     String status = "ENTREGADO";
     String observations = taObservations.getText();
     BigDecimal grade = null;
-    if (tfGrade.getText() != null && !tfGrade.getText().trim().isEmpty()) {
-      grade = new BigDecimal(tfGrade.getText().trim());
+    if (currentDelivery.getDeliveryDefinition().getDeliveryType().equals("REPORT")) {
+      grade = BigDecimal.ZERO;
     }
     Integer reportedHours = null;
     if (tfReportedHours.getText() != null && !tfReportedHours.getText().trim().isEmpty()) {
@@ -411,14 +406,13 @@ public class FXMLDeliverDocumentController {
     }
 
     return ((DeliveryDAO) deliveryDAO).updateStudentDeliveryStatus(
-            currentDelivery.getIdDelivery(),
-            filePath,
-            deliveryDate,
-            status,
-            observations,
-            grade,
-            reportedHours
-    );
+        currentDelivery.getIdDelivery(),
+        filePath,
+        deliveryDate,
+        status,
+        observations,
+        grade,
+        reportedHours);
   }
 
   private File copyFileToDeliveriesFolder(File sourceFile) throws IOException {
@@ -437,7 +431,8 @@ public class FXMLDeliverDocumentController {
   @FXML
   private void btnClickReturn(ActionEvent event) {
     try {
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/professionalpractice/view/student/FXMLDeliveryList.fxml"));
+      FXMLLoader loader = new FXMLLoader(
+          getClass().getResource("/professionalpractice/view/student/FXMLDeliveryList.fxml"));
       Parent view = loader.load();
 
       closeWindow();
@@ -449,8 +444,8 @@ public class FXMLDeliverDocumentController {
 
   private void showSuccessAndClose() {
     Utils.showSimpleAlert(Alert.AlertType.INFORMATION, "Entrega Exitosa",
-            "El documento '" + lblFileName.getText() + "' ha sido entregado correctamente.\n" +
-                    "Estado: En revisión");
+        "El documento '" + lblFileName.getText() + "' ha sido entregado correctamente.\n" +
+            "Estado: En revisión");
     closeWindow();
   }
 
@@ -475,7 +470,8 @@ public class FXMLDeliverDocumentController {
     btnReturn.setDisable(false);
 
     if (currentDate.after(endDate)) {
-      message = "La fecha límite de entrega ha expirado (" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(endDate) + "). No se pueden realizar entregas.";
+      message = "La fecha límite de entrega ha expirado (" + new SimpleDateFormat("dd-MM-yyyy HH:mm").format(endDate)
+          + "). No se pueden realizar entregas.";
       enableDeliveryUI = false;
     } else {
       switch (currentStatus) {

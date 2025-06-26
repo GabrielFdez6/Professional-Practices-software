@@ -27,14 +27,22 @@ public class StudentDAO implements IStudentDAO {
     if (connection != null) {
       try {
         String query = "SELECT " +
-            "s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, s.grade, "
+            "s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, "
             +
-            "p.name AS nombreProyecto, r.hoursCount AS horasAcumuladas " +
+            "p.name AS nombreProyecto, r.hoursCount AS horasAcumuladas, " +
+            "COALESCE(AVG(all_grades.grade), 0.0) AS averageGrade " +
             "FROM student s " +
             "INNER JOIN record r ON s.idStudent = r.idStudent " +
             "LEFT JOIN projectassignment pa ON r.idRecord = pa.idRecord " +
             "LEFT JOIN project p ON pa.idProject = p.idProject " +
-            "WHERE s.idStudent = ?;";
+            "LEFT JOIN ( " +
+            "    SELECT d.idRecord, d.grade FROM delivery d WHERE d.grade IS NOT NULL AND d.status IN ('APROBADO') "
+            +
+            "    UNION ALL " +
+            "    SELECT pe.idRecord, pe.grade FROM presentationevaluation pe WHERE pe.grade IS NOT NULL " +
+            ") AS all_grades ON r.idRecord = all_grades.idRecord " +
+            "WHERE s.idStudent = ? " +
+            "GROUP BY s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, p.name, r.hoursCount;";
 
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, idStudent);
@@ -49,7 +57,7 @@ public class StudentDAO implements IStudentDAO {
           student.setFirstName(resultSet.getString("firstName"));
           student.setLastNameMother(resultSet.getString("lastNameMother"));
           student.setLastNameFather(resultSet.getString("lastNameFather"));
-          student.setGrade(resultSet.getDouble("grade"));
+          student.setGrade(resultSet.getDouble("averageGrade"));
 
           studentProgress = new StudentProgress();
           studentProgress.setProjectName(resultSet.getString("nombreProyecto"));
@@ -72,7 +80,19 @@ public class StudentDAO implements IStudentDAO {
 
     if (connection != null) {
       try {
-        String query = "SELECT idStudent, enrollment, semester, email, firstName, lastNameMother, lastNameFather, idUser FROM student WHERE idUser = ?";
+        String query = "SELECT s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, s.idUser, s.isAssignedToProject, "
+            +
+            "COALESCE(AVG(all_grades.grade), 0.0) as calculatedGrade " +
+            "FROM student s " +
+            "LEFT JOIN record r ON s.idStudent = r.idStudent " +
+            "LEFT JOIN ( " +
+            "    SELECT d.idRecord, d.grade FROM delivery d WHERE d.grade IS NOT NULL AND d.status IN ('ENTREGADO', 'APROBADO') "
+            +
+            "    UNION ALL " +
+            "    SELECT pe.idRecord, pe.grade FROM presentationevaluation pe WHERE pe.grade IS NOT NULL " +
+            ") AS all_grades ON r.idRecord = all_grades.idRecord " +
+            "WHERE s.idUser = ? " +
+            "GROUP BY s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, s.idUser, s.isAssignedToProject";
         PreparedStatement ps = connection.prepareStatement(query);
         ps.setInt(1, userId);
         ResultSet rs = ps.executeQuery();
@@ -86,6 +106,8 @@ public class StudentDAO implements IStudentDAO {
           student.setLastNameMother(rs.getString("lastNameMother"));
           student.setLastNameFather(rs.getString("lastNameFather"));
           student.setIdUser(rs.getInt("idUser"));
+          student.setAssignedToProject(rs.getBoolean("isAssignedToProject"));
+          student.setGrade(rs.getDouble("calculatedGrade"));
         }
         connection.close();
       } catch (SQLException e) {
@@ -145,7 +167,18 @@ public class StudentDAO implements IStudentDAO {
 
     if (connection != null) {
       try {
-        String query = "SELECT idStudent, enrollment, semester, email, firstName, lastNameMother, lastNameFather FROM student";
+        String query = "SELECT s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, "
+            +
+            "COALESCE(AVG(all_grades.grade), 0.0) as calculatedGrade " +
+            "FROM student s " +
+            "LEFT JOIN record r ON s.idStudent = r.idStudent " +
+            "LEFT JOIN ( " +
+            "    SELECT d.idRecord, d.grade FROM delivery d WHERE d.grade IS NOT NULL AND d.status IN ('ENTREGADO', 'APROBADO') "
+            +
+            "    UNION ALL " +
+            "    SELECT pe.idRecord, pe.grade FROM presentationevaluation pe WHERE pe.grade IS NOT NULL " +
+            ") AS all_grades ON r.idRecord = all_grades.idRecord " +
+            "GROUP BY s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather";
         PreparedStatement ps = connection.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
@@ -157,6 +190,7 @@ public class StudentDAO implements IStudentDAO {
           student.setFirstName(rs.getString("firstName"));
           student.setLastNameMother(rs.getString("lastNameMother"));
           student.setLastNameFather(rs.getString("lastNameFather"));
+          student.setGrade(rs.getDouble("calculatedGrade"));
           students.add(student);
         }
         connection.close();
@@ -359,6 +393,102 @@ public class StudentDAO implements IStudentDAO {
     }
 
     return deliveries;
+  }
+
+  /**
+   * Calcula el promedio de calificaciones del estudiante basado en sus entregas y
+   * evaluaciones de presentación
+   * 
+   * @param idStudent ID del estudiante
+   * @return Promedio de calificaciones o 0.0 si no tiene calificaciones
+   * @throws SQLException si hay error en la consulta
+   */
+  public static double calculateStudentAverage(int idStudent) throws SQLException {
+    double average = 0.0;
+
+    String query = "SELECT AVG(all_grades.grade) as averageGrade " +
+        "FROM record r " +
+        "INNER JOIN ( " +
+        "    SELECT d.idRecord, d.grade FROM delivery d WHERE d.grade IS NOT NULL AND d.status IN ('ENTREGADO', 'APROBADO') "
+        +
+        "    UNION ALL " +
+        "    SELECT pe.idRecord, pe.grade FROM presentationevaluation pe WHERE pe.grade IS NOT NULL " +
+        ") AS all_grades ON r.idRecord = all_grades.idRecord " +
+        "WHERE r.idStudent = ?";
+
+    try (Connection connection = ConectionBD.getConnection();
+        PreparedStatement ps = connection.prepareStatement(query)) {
+
+      ps.setInt(1, idStudent);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next() && rs.getObject("averageGrade") != null) {
+          average = rs.getDouble("averageGrade");
+        }
+      }
+    } catch (SQLException e) {
+      System.err.println("Error al calcular el promedio del estudiante: " + e.getMessage());
+      throw e;
+    }
+
+    return average;
+  }
+
+  /**
+   * Obtiene el estudiante con su promedio calculado dinámicamente basado en
+   * entregas y evaluaciones de presentación
+   * 
+   * @param idStudent ID del estudiante
+   * @return Student con el promedio calculado
+   * @throws SQLException si hay error en la consulta
+   */
+  public static Student getStudentWithCalculatedGrade(int idStudent) throws SQLException {
+    Student student = null;
+
+    String query = "SELECT s.idStudent, s.enrollment, s.semester, s.email, s.firstName, " +
+        "s.lastNameMother, s.lastNameFather, s.phone, s.credits, s.isAssignedToProject, " +
+        "s.idUser, " +
+        "COALESCE(AVG(all_grades.grade), 0.0) as calculatedGrade " +
+        "FROM student s " +
+        "LEFT JOIN record r ON s.idStudent = r.idStudent " +
+        "LEFT JOIN ( " +
+        "    SELECT d.idRecord, d.grade FROM delivery d WHERE d.grade IS NOT NULL AND d.status IN ('ENTREGADO', 'APROBADO') "
+        +
+        "    UNION ALL " +
+        "    SELECT pe.idRecord, pe.grade FROM presentationevaluation pe WHERE pe.grade IS NOT NULL " +
+        ") AS all_grades ON r.idRecord = all_grades.idRecord " +
+        "WHERE s.idStudent = ? " +
+        "GROUP BY s.idStudent, s.enrollment, s.semester, s.email, s.firstName, s.lastNameMother, s.lastNameFather, " +
+        "s.phone, s.credits, s.isAssignedToProject, s.idUser";
+
+    try (Connection connection = ConectionBD.getConnection();
+        PreparedStatement ps = connection.prepareStatement(query)) {
+
+      ps.setInt(1, idStudent);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          student = new Student();
+          student.setIdStudent(rs.getInt("idStudent"));
+          student.setEnrollment(rs.getString("enrollment"));
+          student.setSemester(rs.getString("semester"));
+          student.setEmail(rs.getString("email"));
+          student.setFirstName(rs.getString("firstName"));
+          student.setLastNameMother(rs.getString("lastNameMother"));
+          student.setLastNameFather(rs.getString("lastNameFather"));
+          student.setPhone(rs.getString("phone"));
+          student.setCredits(rs.getInt("credits"));
+          student.setAssignedToProject(rs.getBoolean("isAssignedToProject"));
+          student.setIdUser(rs.getInt("idUser"));
+          student.setGrade(rs.getDouble("calculatedGrade"));
+        }
+      }
+    } catch (SQLException e) {
+      System.err.println("Error al obtener el estudiante con promedio calculado: " + e.getMessage());
+      throw e;
+    }
+
+    return student;
   }
 
 }

@@ -60,7 +60,7 @@ public class FXMLStudentProgressController implements Initializable {
   private TableColumn<DeliveryInfo, String> colDeliveryDueDate;
 
   private IStudentDAO studentDAO;
-  private final int TOTAL_HOURS = 300;
+  private final int TOTAL_HOURS = 400;
   private ObservableList<DeliveryInfo> deliveryList;
 
   @Override

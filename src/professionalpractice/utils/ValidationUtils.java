@@ -690,8 +690,8 @@ public class ValidationUtils {
 
     observations = observations.trim();
 
-    if (observations.length() > 1000) {
-      return "Las observaciones no pueden exceder 1000 caracteres.";
+    if (observations.length() > 150) {
+      return "Las observaciones no pueden exceder 150 caracteres.";
     }
 
     if (!DESCRIPTION_PATTERN.matcher(observations).matches()) {
@@ -714,7 +714,7 @@ public class ValidationUtils {
       }
 
       if (hours > 100) {
-        return "Las horas reportadas no pueden exceder 100 por período.";
+        return "Las horas reportadas no pueden exceder 100 por reporte.";
       }
 
       return "";

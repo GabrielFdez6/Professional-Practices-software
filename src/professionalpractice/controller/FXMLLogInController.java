@@ -316,6 +316,14 @@ public class FXMLLogInController implements Initializable {
         return;
       }
 
+      // Validar que el estudiante tenga un proyecto asignado
+      if (!student.isAssignedToProject()) {
+        Utils.showSimpleAlert(Alert.AlertType.WARNING, "Acceso Denegado",
+            "No puedes acceder al sistema porque no tienes un proyecto asignado. " +
+                "Por favor, contacta al coordinador de prácticas profesionales para que te asigne un proyecto.");
+        return;
+      }
+
       // Validar que el estudiante pertenezca al período escolar actual
       if (!StudentDAO.isStudentInCurrentPeriod(student.getIdStudent())) {
         Utils.showSimpleAlert(Alert.AlertType.WARNING, "Acceso Denegado",

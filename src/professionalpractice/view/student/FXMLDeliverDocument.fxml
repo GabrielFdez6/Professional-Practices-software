@@ -36,8 +36,8 @@
         <AnchorPane fx:id="vboxDynamicFields" layoutX="22.0" layoutY="310.0" managed="false" prefHeight="100.0" prefWidth="559.0" visible="false">
             <children>
                 <TextField fx:id="tfReportedHours" layoutX="10.0" layoutY="0.0" prefWidth="539.0" promptText="Horas Reportadas (ej. 40)" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
-                <TextField fx:id="tfGrade" layoutX="10.0" layoutY="40.0" prefWidth="539.0" promptText="Calificación (Opcional, ej. 8.5)" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
-                <TextArea fx:id="taObservations" layoutX="10.0" layoutY="80.0" prefHeight="80.0" prefWidth="539.0" promptText="Observaciones (Opcional)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
+                <TextField fx:id="tfGrade" layoutX="10.0" layoutY="40.0" prefWidth="539.0" promptText="Calificación (Opcional, ej. 8.5)" visible="false" managed="false" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+                <TextArea fx:id="taObservations" layoutX="10.0" layoutY="40.0" prefHeight="60.0" prefWidth="539.0" promptText="Observaciones (Opcional)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
             </children>
         </AnchorPane>
 

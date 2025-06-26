@@ -219,7 +219,7 @@ public class ScheduleDeliveryDAO {
     }
 
     private static int insertInitialDocument(Connection connectionBD, String name, LocalDate date, String status) throws SQLException {
-        String sql = "INSERT INTO initialdocument (name, date, delivered, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO initialdocument (name, date) VALUES (?, ?)";
         PreparedStatement ps = null;
         ResultSet rs = null;
         int generatedId = -1;
@@ -228,8 +228,6 @@ public class ScheduleDeliveryDAO {
             ps = connectionBD.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setDate(2, java.sql.Date.valueOf(date));
-            ps.setBoolean(3, false);
-            ps.setString(4, status);
 
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
@@ -244,7 +242,7 @@ public class ScheduleDeliveryDAO {
     }
 
     private static int insertFinalDocument(Connection connectionBD, String name, LocalDate date, String status) throws SQLException {
-        String sql = "INSERT INTO finaldocument (name, date, delivered, status) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO finaldocument (name, date) VALUES (?, ?)";
         PreparedStatement ps = null;
         ResultSet rs = null;
         int generatedId = -1;
@@ -253,8 +251,6 @@ public class ScheduleDeliveryDAO {
             ps = connectionBD.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setDate(2, java.sql.Date.valueOf(date));
-            ps.setBoolean(3, false);
-            ps.setString(4, status);
 
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();
@@ -269,7 +265,7 @@ public class ScheduleDeliveryDAO {
     }
 
     private static int insertReportDocument(Connection connectionBD, String name, LocalDate date, int reportedHours, float grade, String status) throws SQLException {
-        String sql = "INSERT INTO reportdocument (name, date, reportedHours, grade, delivered, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO reportdocument (name, date) VALUES (?, ?)";
         PreparedStatement ps = null;
         ResultSet rs = null;
         int generatedId = -1;
@@ -278,10 +274,6 @@ public class ScheduleDeliveryDAO {
             ps = connectionBD.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setDate(2, java.sql.Date.valueOf(date));
-            ps.setInt(3, reportedHours);
-            ps.setFloat(4, grade);
-            ps.setBoolean(5, false);
-            ps.setString(6, status);
 
             ps.executeUpdate();
             rs = ps.getGeneratedKeys();

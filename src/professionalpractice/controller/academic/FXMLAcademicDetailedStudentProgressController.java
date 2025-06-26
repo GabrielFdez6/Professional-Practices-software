@@ -64,7 +64,7 @@ public class FXMLAcademicDetailedStudentProgressController implements Initializa
   private IStudentDAO studentDAO;
   private DocumentDAO documentDAO;
   private EvaluationDetailDAO evaluationDAO;
-  private final int TOTAL_HOURS = 300;
+  private final int TOTAL_HOURS = 400;
   private ObservableList<DocumentGrade> documentGrades;
 
   @Override

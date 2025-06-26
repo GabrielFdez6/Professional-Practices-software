@@ -40,7 +40,7 @@ public class FXMLScheduleDeliveryDetailsController implements Initializable {
     @FXML private TextArea taDescription;
     @FXML private DatePicker dpStartDate;
     @FXML private DatePicker dpEndDate;
-    @FXML private ListView<Group> lvGroups; // ¡CAMBIO: De ComboBox a ListView!
+    @FXML private ListView<Group> lvGroups;
 
     private String deliveryType;
     private String selectedDocumentName;
