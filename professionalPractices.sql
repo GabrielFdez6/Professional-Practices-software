@@ -102,7 +102,7 @@ CREATE TABLE `delivery` (
   KEY `fk_delivery_definition` (`idDeliveryDefinition`),
   CONSTRAINT `delivery_ibfk_1` FOREIGN KEY (`idRecord`) REFERENCES `record` (`idRecord`),
   CONSTRAINT `fk_delivery_definition` FOREIGN KEY (`idDeliveryDefinition`) REFERENCES `deliverydefinition` (`idDeliveryDefinition`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -111,9 +111,36 @@ CREATE TABLE `delivery` (
 
 LOCK TABLES `delivery` WRITE;
 /*!40000 ALTER TABLE `delivery` DISABLE KEYS */;
-INSERT INTO `delivery` VALUES (1,NULL,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(2,NULL,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(3,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(4,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(5,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(6,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(7,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(8,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(9,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(22,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(23,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(24,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(25,4,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(26,5,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(27,6,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(28,12,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(29,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(30,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(31,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(32,4,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(33,5,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(34,6,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(35,12,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(36,15,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(37,16,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(38,17,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(39,5,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(40,6,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(41,3,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(42,4,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(43,18,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(44,1,6,'2025-06-22 20:51:54',1,'ENTREGADO','deliveries\\REPORT\\1750625514481_SEW13_CastilloCarlos.pdf','pruebaReporte',7.60,10),(45,2,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(46,12,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(47,15,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(48,16,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(49,17,6,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL);
+INSERT INTO `delivery` VALUES (1,NULL,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(2,NULL,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(3,1,1,'2025-06-25 00:32:25',1,'RECHAZADO','deliveries\\INITIAL_DOCUMENT\\1750811544562_ComprobantedePago_S22020662_14242.pdf','',NULL,NULL),(4,1,1,'2025-06-25 00:33:49',1,'APROBADO','deliveries\\INITIAL_DOCUMENT\\1750811628705_Eq7DocumentoFinal.pdf','',NULL,NULL),(5,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(6,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(7,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(8,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(9,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(22,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(23,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(24,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(25,4,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(26,5,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(27,6,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(28,12,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(29,1,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(30,2,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(31,3,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(32,4,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(33,5,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(34,6,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(35,12,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(36,15,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(37,16,1,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(75,1,12,'2025-06-25 16:58:22',1,'APROBADO','deliveries\\REPORT\\1750870701677_ComprobantedePago_S22020662_14242.pdf','',8.00,80),(76,2,12,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(77,12,12,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(83,1,14,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(84,2,14,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(85,12,14,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(86,16,14,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(87,17,14,'2025-06-25 18:31:57',1,'ENTREGADO','deliveries\\INITIAL_DOCUMENT\\1750876316534_ComprobantedePago_S22020662_14242.pdf','',NULL,NULL),(88,1,15,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(89,2,15,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(90,12,15,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(91,16,15,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(92,17,15,'2025-06-25 18:33:55',1,'ENTREGADO','deliveries\\FINAL_DOCUMENT\\1750876435290_ordiDiseno.pdf','Se entrega documento final del alumno',NULL,NULL),(93,1,16,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(94,2,16,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(95,12,16,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(96,16,16,NULL,0,'PENDIENTE',NULL,NULL,NULL,NULL),(97,17,16,'2025-06-25 18:33:30',1,'APROBADO','deliveries\\REPORT\\1750876410224_Eq7DocumentoFinal.pdf','',8.00,80);
 /*!40000 ALTER TABLE `delivery` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trg_accumulate_reported_hours` AFTER UPDATE ON `delivery` FOR EACH ROW BEGIN
+    -- Verificar si el nuevo estado es 'APROBADO', el estado anterior era diferente
+    -- y el campo 'reportedHours' tiene un valor.
+    IF NEW.status = 'APROBADO' AND OLD.status <> 'APROBADO' AND NEW.reportedHours IS NOT NULL THEN
+
+        -- Actualizar el contador de horas en la tabla 'record' sumando
+        -- las horas de la entrega recién aprobada.
+        UPDATE `record`
+        SET `hoursCount` = `hoursCount` + NEW.reportedHours
+        WHERE `idRecord` = NEW.idRecord;
+
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `deliverydefinition`
@@ -142,7 +169,7 @@ CREATE TABLE `deliverydefinition` (
   CONSTRAINT `fk_final_doc_template` FOREIGN KEY (`idFinalDocumentTemplate`) REFERENCES `finaldocument` (`idFinalDocument`),
   CONSTRAINT `fk_initial_doc_template` FOREIGN KEY (`idInitialDocumentTemplate`) REFERENCES `initialdocument` (`idInitialDocument`),
   CONSTRAINT `fk_report_doc_template` FOREIGN KEY (`idReportDocumentTemplate`) REFERENCES `reportdocument` (`idReportDocument`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -151,7 +178,7 @@ CREATE TABLE `deliverydefinition` (
 
 LOCK TABLES `deliverydefinition` WRITE;
 /*!40000 ALTER TABLE `deliverydefinition` DISABLE KEYS */;
-INSERT INTO `deliverydefinition` VALUES (1,'Entrega General de Prácticas','Definición de entrega genérica para prácticas profesionales.','2025-01-01 00:00:00','2025-12-31 23:59:59','INITIAL DOCUMENT',NULL,NULL,NULL,1),(6,'Reporte de Implementación de Módulos.pdf','pruebaReporte','2025-06-22 06:00:00','2025-06-25 06:00:00','REPORT',NULL,NULL,12,1);
+INSERT INTO `deliverydefinition` VALUES (1,'Entrega General de Prácticas','Definición de entrega genérica para prácticas profesionales.','2025-01-01 00:00:00','2025-12-31 23:59:59','INITIAL DOCUMENT',NULL,NULL,NULL,1),(12,'Reporte Mensual de Actividades - Junio','','2025-06-25 06:00:00','2025-06-30 06:00:00','REPORT',NULL,NULL,14,1),(14,'Propuesta Inicial de Proyecto','Subir documento de prueba','2025-06-25 06:00:00','2025-06-30 06:00:00','INITIAL DOCUMENT',19,NULL,NULL,1),(15,'Presentación Ejecutiva del Proyecto.pptx','Subir documento de prueba','2025-06-25 06:00:00','2025-06-30 06:00:00','FINAL DOCUMENT',NULL,6,NULL,1),(16,'Reporte Mensual de Actividades - Junio','Subir documento de prueba','2025-06-25 06:00:00','2025-06-30 06:00:00','REPORT',NULL,NULL,15,1);
 /*!40000 ALTER TABLE `deliverydefinition` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +228,7 @@ CREATE TABLE `evaluationdetail` (
   KEY `fk_evaluation_detail_criteria_idx` (`idCriteria`),
   CONSTRAINT `fk_evaluation_detail_to_criteria` FOREIGN KEY (`idCriteria`) REFERENCES `evaluationcriteria` (`idCriteria`),
   CONSTRAINT `fk_evaluation_detail_to_presentationevaluation` FOREIGN KEY (`idEvaluation`) REFERENCES `presentationevaluation` (`idEvaluation`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,6 +237,7 @@ CREATE TABLE `evaluationdetail` (
 
 LOCK TABLES `evaluationdetail` WRITE;
 /*!40000 ALTER TABLE `evaluationdetail` DISABLE KEYS */;
+INSERT INTO `evaluationdetail` VALUES (96,33,1,6.5),(97,33,2,9.4),(98,33,3,6),(99,33,4,5),(100,33,5,10);
 /*!40000 ALTER TABLE `evaluationdetail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,13 +252,9 @@ CREATE TABLE `finaldocument` (
   `idFinalDocument` int NOT NULL AUTO_INCREMENT,
   `name` varchar(65) NOT NULL,
   `date` date DEFAULT NULL,
-  `delivered` tinyint(1) NOT NULL DEFAULT '0',
-  `status` enum('ENTREGADO','NO_ENTREGADO','EN_REVISION') NOT NULL,
   `filePath` varchar(255) DEFAULT NULL,
-  `observations` varchar(200) DEFAULT NULL,
-  `grade` decimal(4,2) DEFAULT NULL,
   PRIMARY KEY (`idFinalDocument`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,7 +263,7 @@ CREATE TABLE `finaldocument` (
 
 LOCK TABLES `finaldocument` WRITE;
 /*!40000 ALTER TABLE `finaldocument` DISABLE KEYS */;
-INSERT INTO `finaldocument` VALUES (1,'Presentación Ejecutiva del Proyecto.pptx','2025-06-17',1,'ENTREGADO','docsfinal1_Presentacion_Ejecutiva.pptx','Excelente presentación, muy completa',9.50),(2,'Sistema de Gestión Completo.zip','2025-06-18',1,'EN_REVISION','docsfinal2_Sistema_Gestion.zip','Pendiente revisión de funcionalidades',NULL),(3,'Manual de Usuario Final.pdf','2025-06-19',0,'NO_ENTREGADO',NULL,'Pendiente de entrega',NULL),(4,'Presentación final del proyecto','2025-06-16',1,'EN_REVISION','deliveries\\FINAL_DOCUMENT\\1750073345677_Propuesta de proyecto-19-39.pdf',NULL,NULL),(5,'Presentación final del proyecto','2025-06-16',1,'EN_REVISION','deliveries\\FINAL_DOCUMENT\\1750073948629_Propuesta de proyecto-19-39.pdf','',NULL);
+INSERT INTO `finaldocument` VALUES (1,'Presentación Ejecutiva del Proyecto.pptx','2025-06-17','docsfinal1_Presentacion_Ejecutiva.pptx'),(2,'Sistema de Gestión Completo.zip','2025-06-18','docsfinal2_Sistema_Gestion.zip'),(3,'Manual de Usuario Final.pdf','2025-06-19',NULL),(4,'Presentación final del proyecto','2025-06-16','deliveries\\FINAL_DOCUMENT\\1750073345677_Propuesta de proyecto-19-39.pdf'),(5,'Presentación final del proyecto','2025-06-16','deliveries\\FINAL_DOCUMENT\\1750073948629_Propuesta de proyecto-19-39.pdf'),(6,'Presentación Ejecutiva del Proyecto.pptx','2025-06-25',NULL);
 /*!40000 ALTER TABLE `finaldocument` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,13 +278,9 @@ CREATE TABLE `initialdocument` (
   `idInitialDocument` int NOT NULL AUTO_INCREMENT,
   `name` varchar(65) DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `delivered` tinyint(1) NOT NULL DEFAULT '0',
-  `status` enum('ENTREGADO','NO_ENTREGADO','EN_REVISION') NOT NULL,
   `filePath` varchar(255) DEFAULT NULL,
-  `observations` varchar(200) DEFAULT NULL,
-  `grade` decimal(4,2) DEFAULT NULL,
   PRIMARY KEY (`idInitialDocument`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -269,7 +289,7 @@ CREATE TABLE `initialdocument` (
 
 LOCK TABLES `initialdocument` WRITE;
 /*!40000 ALTER TABLE `initialdocument` DISABLE KEYS */;
-INSERT INTO `initialdocument` VALUES (1,'Propuesta Inicial de Proyecto.docx','2025-06-16',0,'ENTREGADO','docsinitial1_Propuesta_Inicial.docx','Bien estructurada, objetivos claros',8.75),(2,'Especificaciones Técnicas.pdf','2025-06-17',0,'EN_REVISION','docsinitial2_Especificaciones_Tecnicas.pdf','Revisar sección de arquitectura',NULL),(3,'Análisis de Requerimientos.docx','2025-06-18',0,'ENTREGADO','docsinitial3_Analisis_Requerimientos.docx','Muy detallado y completo',9.25),(4,'Carta de Presentación.pdf','2025-06-15',0,'NO_ENTREGADO',NULL,'Falta entregar documento',NULL),(5,'Propuesta inicial del proyecto','2025-06-16',1,'EN_REVISION','deliveries\\INITIAL_DOCUMENT\\1750073932170_Copia de Propuesta de proyecto.pdf','',NULL),(6,'Propuesta inicial del proyecto','2025-06-16',1,'EN_REVISION','deliveries\\INITIAL_DOCUMENT\\1750116532448_clases2.pdf','',NULL),(7,'asdfasdf','2025-06-16',1,'EN_REVISION','deliveries\\INITIAL_DOCUMENT\\1750121124650_ordiDiseno.pdf','',NULL),(8,'asdfasdf','2025-06-16',1,'EN_REVISION','deliveries\\INITIAL_DOCUMENT\\1750126001610_clases.pdf','',NULL),(9,'Entrega 1','2025-06-17',1,'EN_REVISION','deliveries\\INITIAL_DOCUMENT\\1750181336911_clases.pdf',NULL,NULL),(10,'Entrega 1','2025-06-17',1,'ENTREGADO','deliveries\\INITIAL_DOCUMENT\\1750181404531_robustez.pdf',NULL,NULL),(11,'Entrega 1','2025-06-17',1,'EN_REVISION','deliveries\\INITIAL_DOCUMENT\\1750181493043_clases2.pdf',NULL,NULL),(12,'Propuesta Inicial de Proyecto.docx','2025-06-22',0,'EN_REVISION',NULL,NULL,NULL);
+INSERT INTO `initialdocument` VALUES (1,'Propuesta Inicial de Proyecto','2025-06-16','docsinitial1_Propuesta_Inicial.docx'),(2,'Especificaciones Técnicas','2025-06-17','docsinitial2_Especificaciones_Tecnicas.pdf'),(3,'Análisis de Requerimientos','2025-06-18','docsinitial3_Analisis_Requerimientos.docx'),(4,'Carta de Presentación','2025-06-15',NULL),(17,'Documento prueba','2025-06-25',NULL),(18,'Documento prueba','2025-06-30',NULL),(19,'Propuesta Inicial de Proyecto','2025-06-25',NULL);
 /*!40000 ALTER TABLE `initialdocument` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +336,7 @@ CREATE TABLE `presentationevaluation` (
   PRIMARY KEY (`idEvaluation`),
   KEY `idRecord` (`idRecord`),
   CONSTRAINT `presentationevaluation_ibfk_1` FOREIGN KEY (`idRecord`) REFERENCES `record` (`idRecord`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,7 +345,7 @@ CREATE TABLE `presentationevaluation` (
 
 LOCK TABLES `presentationevaluation` WRITE;
 /*!40000 ALTER TABLE `presentationevaluation` DISABLE KEYS */;
-INSERT INTO `presentationevaluation` VALUES (1,'2025-06-18',9.20,'Excelente dominio del tema, presentación clara y bien estructurada. Demostró conocimiento técnico sólido.',1),(2,'2025-06-19',8.75,'Buena explicación de la metodología utilizada. Podría mejorar en la gestión del tiempo de presentación.',2),(3,'2025-06-20',9.50,'Presentación excepcional, respondió todas las preguntas con seguridad y demostró dominio completo del proyecto.',3),(4,'2025-06-21',8.90,'Muy buena presentación, resultados claros y bien documentados. Excelente uso de recursos visuales.',4),(5,'2025-06-16',6.00,'asdfasdf',12),(6,'2025-06-16',6.00,'asdfasdf		',12),(7,'2025-06-16',6.00,'asdfasdfsad	',12),(8,'2025-06-16',6.00,'asdfasdfasdf',6),(15,'2025-06-17',7.00,'pruebaComentarios Y observaciones sdsadasdsad',17);
+INSERT INTO `presentationevaluation` VALUES (1,'2025-06-18',9.20,'Excelente dominio del tema, presentación clara y bien estructurada. Demostró conocimiento técnico sólido.',1),(2,'2025-06-19',8.75,'Buena explicación de la metodología utilizada. Podría mejorar en la gestión del tiempo de presentación.',2),(3,'2025-06-20',9.50,'Presentación excepcional, respondió todas las preguntas con seguridad y demostró dominio completo del proyecto.',3),(4,'2025-06-21',8.90,'Muy buena presentación, resultados claros y bien documentados. Excelente uso de recursos visuales.',4),(33,'2025-06-25',7.40,'Se sube la evaluacion',17);
 /*!40000 ALTER TABLE `presentationevaluation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -353,7 +373,7 @@ CREATE TABLE `project` (
   CONSTRAINT `project_ibfk_2` FOREIGN KEY (`idProjectManager`) REFERENCES `projectmanager` (`idProjectManager`),
   CONSTRAINT `project_ibfk_3` FOREIGN KEY (`idLinkedOrganization`) REFERENCES `linkedorganization` (`idLinkedOrganization`),
   CONSTRAINT `project_ibfk_4` FOREIGN KEY (`idCoordinator`) REFERENCES `coordinator` (`idCoordinator`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -362,7 +382,7 @@ CREATE TABLE `project` (
 
 LOCK TABLES `project` WRITE;
 /*!40000 ALTER TABLE `project` DISABLE KEYS */;
-INSERT INTO `project` VALUES (1,1,1,1,'Sistema de Gestión Empresarial','Desarrollo Frontend','Desarrollo de una plataforma web para gestión integral de procesos empresariales con interfaz moderna.','Scrum',1),(2,2,2,1,'Automatización de Procesos','Backend Development','Implementación de sistema automatizado para optimización de flujos de trabajo empresariales.','Kanban',1),(3,3,3,1,'Plataforma E-commerce','Full Stack','Desarrollo completo de tienda en línea con sistema de pagos y gestión de inventarios.','Agile',4),(4,4,4,1,'Sistema de Monitoreo IoT','Desarrollo de Software','Creación de dashboard para monitoreo en tiempo real de dispositivos IoT industriales.','DevOps',1),(5,5,5,1,'App Móvil Corporativa','Mobile Development','Aplicación móvil para gestión de recursos humanos y comunicación interna empresarial.','Lean',2),(6,6,6,1,'Portal de Servicios Digitales','Web Development','Portal web para digitalización de trámites y servicios gubernamentales locales.','Waterfall',1),(12,1,1,1,'Analisis para creacion de paginas web','PruebaDepartamento','Se debe realizar un trabajo de investigacion','SCRUM',2),(14,1,1,1,'PruebaDeProyecto','PruebaDepartamento2','PruebaDescripcion','MetodologiaPrueba',3);
+INSERT INTO `project` VALUES (1,1,1,1,'Sistema de Gestión Empresarial','Desarrollo Frontend','Desarrollo de una plataforma web para gestión integral de procesos empresariales con interfaz moderna.','Scrum',1),(2,2,2,1,'Automatización de Procesos','Backend Development','Implementación de sistema automatizado para optimización de flujos de trabajo empresariales.','Kanban',1),(3,3,3,1,'Plataforma E-commerce','Full Stack','Desarrollo completo de tienda en línea con sistema de pagos y gestión de inventarios.','Agile',4),(4,4,4,1,'Sistema de Monitoreo IoT','Desarrollo de Software','Creación de dashboard para monitoreo en tiempo real de dispositivos IoT industriales.','DevOps',1),(5,5,5,1,'App Móvil Corporativa','Mobile Development','Aplicación móvil para gestión de recursos humanos y comunicación interna empresarial.','Lean',2),(6,6,6,1,'Portal de Servicios Digitales','Web Development','Portal web para digitalización de trámites y servicios gubernamentales locales.','Waterfall',1),(12,1,1,1,'Analisis para creacion de paginas web','PruebaDepartamento','Se debe realizar un trabajo de investigacion','SCRUM',2),(24,1,1,1,'Aplicacion de pruebas','SISTEMAS','Se realizara una aplicacion que realice pruebas automatizadas','ICONIX',0);
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -389,7 +409,7 @@ CREATE TABLE `projectassignment` (
 
 LOCK TABLES `projectassignment` WRITE;
 /*!40000 ALTER TABLE `projectassignment` DISABLE KEYS */;
-INSERT INTO `projectassignment` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(12,12);
+INSERT INTO `projectassignment` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,6),(12,12),(24,16),(24,17);
 /*!40000 ALTER TABLE `projectassignment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,7 +432,7 @@ CREATE TABLE `projectmanager` (
   PRIMARY KEY (`idProjectManager`),
   KEY `idLinkedOrganization` (`idLinkedOrganization`),
   CONSTRAINT `projectmanager_ibfk_1` FOREIGN KEY (`idLinkedOrganization`) REFERENCES `linkedorganization` (`idLinkedOrganization`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -421,7 +441,7 @@ CREATE TABLE `projectmanager` (
 
 LOCK TABLES `projectmanager` WRITE;
 /*!40000 ALTER TABLE `projectmanager` DISABLE KEYS */;
-INSERT INTO `projectmanager` VALUES (1,1,'María','Fernández','López','Directora de Proyectos Tecnológicos','maria.fernandez@desarrolloweb.mx','2288123456'),(2,2,'José','Hernández','García','Gerente de Desarrollo de Software','jose.hernandez@sistemasgolfo.mx','2299876543'),(3,3,'Carmen','Rodríguez','Martínez','Coordinadora de Innovación Digital','carmen.rodriguez@innovacionver.mx','2291234567'),(4,4,'Fernando','González','Pérez','Jefe de Consultoría Tecnológica','fernando.gonzalez@consultoriadigital.mx','9211234567'),(5,5,'Adriana','Jiménez','Morales','Líder de Proyectos de Software','adriana.jimenez@techsolutions.mx','2287654321'),(6,6,'Ricardo','Vázquez','Ruiz','Director de Desarrollo Empresarial','ricardo.vazquez@grupopuerto.mx','2292345678'),(14,2,'juan','perez','sanchez','encargado','admin@gmail.com','1234567894');
+INSERT INTO `projectmanager` VALUES (1,1,'María','Fernández','López','Directora de Proyectos Tecnológicos','maria.fernandez@desarrolloweb.mx','2288123456'),(2,2,'José','Hernández','García','Gerente de Desarrollo de Software','jose.hernandez@sistemasgolfo.mx','2299876543'),(3,3,'Carmen','Rodríguez','Martínez','Coordinadora de Innovación Digital','carmen.rodriguez@innovacionver.mx','2291234567'),(4,4,'Fernando','González','Pérez','Jefe de Consultoría Tecnológica','fernando.gonzalez@consultoriadigital.mx','9211234567'),(5,5,'Adriana','Jiménez','Morales','Líder de Proyectos de Software','adriana.jimenez@techsolutions.mx','2287654321'),(6,6,'Ricardo','Vázquez','Ruiz','Director de Desarrollo Empresarial','ricardo.vazquez@grupopuerto.mx','2292345678'),(14,2,'juan','perez','sanchez','encargado','admin@gmail.com','1234567894'),(20,1,'Omar','Espinosaaaa','Fernandez','Empleado','asdf1023@uv.mx','1234567891');
 /*!40000 ALTER TABLE `projectmanager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -456,7 +476,7 @@ CREATE TABLE `record` (
 
 LOCK TABLES `record` WRITE;
 /*!40000 ALTER TABLE `record` DISABLE KEYS */;
-INSERT INTO `record` VALUES (1,1,1,120,'reportselena_silva_report.pdf','presentationselena_silva_presentation.pptx',1),(2,2,1,95,'reportscarlos_mendoza_report.pdf','presentationscarlos_mendoza_presentation.pptx',1),(3,3,2,140,'reportsana_torres_report.pdf','presentationsana_torres_presentation.pptx',1),(4,4,2,110,'reportsmiguel_vargas_report.pdf','presentationsmiguel_vargas_presentation.pptx',1),(5,5,3,85,'reportssofia_herrera_report.pdf',NULL,1),(6,6,3,75,NULL,NULL,1),(12,7,1,0,'reportaldo_antonio_campos.pdf','reportaldo_antonio_campos.pptx',1),(15,8,1,0,'reportomar_espinosa_fernandez.pdf','reportomar_espinosa_fernandez.pptx',1),(16,9,1,0,'reportcarlos_castillo_barradas.pdf','reportcarlos_castillo_barradas.pptx',1),(17,10,1,0,'reportbrayan_fernandez_tlapa.pdf','reportbrayan_fernandez_tlapa.pptx',1),(18,11,2,200,'reportgab_fernandez_tlapa.pdf','reportgab_fernandez_tlapa.pptx',1);
+INSERT INTO `record` VALUES (1,1,1,200,'reportselena_silva_report.pdf','presentationselena_silva_presentation.pptx',1),(2,2,1,95,'reportscarlos_mendoza_report.pdf','presentationscarlos_mendoza_presentation.pptx',1),(3,3,2,140,'reportsana_torres_report.pdf','presentationsana_torres_presentation.pptx',1),(4,4,2,110,'reportsmiguel_vargas_report.pdf','presentationsmiguel_vargas_presentation.pptx',1),(5,5,3,85,'reportssofia_herrera_report.pdf',NULL,1),(6,6,3,75,NULL,NULL,1),(12,7,1,0,'reportaldo_antonio_campos.pdf','reportaldo_antonio_campos.pptx',1),(15,8,1,0,'reportomar_espinosa_fernandez.pdf','reportomar_espinosa_fernandez.pptx',1),(16,9,1,0,'reportcarlos_castillo_barradas.pdf','reportcarlos_castillo_barradas.pptx',1),(17,10,1,80,'reportbrayan_fernandez_tlapa.pdf','reportbrayan_fernandez_tlapa.pptx',1),(18,11,2,200,'reportgab_fernandez_tlapa.pdf','reportgab_fernandez_tlapa.pptx',4);
 /*!40000 ALTER TABLE `record` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -469,15 +489,11 @@ DROP TABLE IF EXISTS `reportdocument`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reportdocument` (
   `idReportDocument` int NOT NULL AUTO_INCREMENT,
-  `reportedHours` int NOT NULL,
   `date` date NOT NULL,
-  `grade` decimal(4,2) NOT NULL,
   `name` varchar(65) DEFAULT NULL,
-  `delivered` tinyint(1) NOT NULL DEFAULT '0',
-  `status` enum('ENTREGADO','NO_ENTREGADO','EN_REVISION') NOT NULL,
   `filePath` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idReportDocument`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -486,7 +502,7 @@ CREATE TABLE `reportdocument` (
 
 LOCK TABLES `reportdocument` WRITE;
 /*!40000 ALTER TABLE `reportdocument` DISABLE KEYS */;
-INSERT INTO `reportdocument` VALUES (1,40,'2025-06-16',8.50,'Reporte Mensual de Actividades - Junio.pdf',1,'ENTREGADO','docs\reports1_Reporte_Mensual_Junio.pdf'),(2,35,'2025-06-17',9.00,'Informe Semanal de Progreso.pdf',1,'ENTREGADO','docs\reports2_Informe_Semanal.pdf'),(3,45,'2025-06-18',8.75,'Reporte de Implementación de Módulos.pdf',1,'EN_REVISION','docs\reports3_Reporte_Implementacion.pdf'),(4,30,'2025-06-19',9.25,'Documento de Pruebas del Sistema.pdf',1,'ENTREGADO','docs\reports4_Pruebas_Sistema.pdf'),(5,25,'2025-06-20',0.00,'Reporte de Avances Semanales.pdf',0,'NO_ENTREGADO',NULL),(6,50,'2025-06-16',8.50,'Reporte mensual de avances',1,'EN_REVISION','deliveries\\REPORT\\1750073844896_Propuesta de proyecto-19-39.pdf'),(7,10,'2025-06-16',8.50,'Reporte mensual de avances',1,'EN_REVISION','deliveries\\REPORT\\1750126080838_ordiDiseno.pdf'),(12,0,'2025-06-22',0.00,'Reporte de Implementación de Módulos.pdf',0,'EN_REVISION',NULL);
+INSERT INTO `reportdocument` VALUES (1,'2025-06-16','Reporte Mensual de Actividades - Junio','docs\reports1_Reporte_Mensual_Junio.pdf'),(2,'2025-06-17','Informe Semanal de Progreso','docs\reports2_Informe_Semanal.pdf'),(3,'2025-06-18','Reporte de Implementación de Módulos','docs\reports3_Reporte_Implementacion.pdf'),(4,'2025-06-19','Documento de Pruebas del Sistema','docs\reports4_Pruebas_Sistema.pdf'),(5,'2025-06-20','Reporte de Avances Semanales',NULL),(6,'2025-06-16','Reporte mensual de avances','deliveries\\REPORT\\1750073844896_Propuesta de proyecto-19-39.pdf'),(13,'2025-06-25','Informe Semanal de Progreso',NULL),(14,'2025-06-25','Reporte Mensual de Actividades - Junio',NULL),(15,'2025-06-25','Reporte Mensual de Actividades - Junio',NULL);
 /*!40000 ALTER TABLE `reportdocument` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -509,7 +525,6 @@ CREATE TABLE `student` (
   `semester` varchar(45) DEFAULT NULL,
   `isAssignedToProject` tinyint(1) DEFAULT NULL,
   `projectSelection` varchar(100) DEFAULT NULL,
-  `grade` decimal(3,2) DEFAULT NULL,
   `idUser` int NOT NULL,
   PRIMARY KEY (`idStudent`),
   UNIQUE KEY `idUser` (`idUser`),
@@ -523,7 +538,7 @@ CREATE TABLE `student` (
 
 LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` DISABLE KEYS */;
-INSERT INTO `student` VALUES (1,'Elena','Silva','Morales','S210001','zS210001@estudiantes.uv.mx','2288765432',335,'9',1,'Sistema de Gestión Empresarial',8.85,1),(2,'Carlos','Mendoza','Rivera','S200502','zS200502@estudiantes.uv.mx','2287654321',342,'10',1,'Automatización de Procesos',9.10,5),(3,'Ana','Torres','Jiménez','S190807','zS190807@estudiantes.uv.mx','2291234567',358,'11',1,'Plataforma E-commerce',9.45,6),(4,'Miguel','Vargas','Castillo','S200156','zS200156@estudiantes.uv.mx','2299876543',348,'10',1,'Sistema de Monitoreo IoT',8.75,7),(5,'Sofía','Herrera','Delgado','S210234','zS210234@estudiantes.uv.mx','2283456789',325,'9',1,'App Móvil Corporativa',8.60,8),(6,'Diego','Ramírez','Flores','S200789','zS200789@estudiantes.uv.mx','2292345678',340,'10',1,'Portal de Servicios Digitales',9.20,9),(7,'Aldo','Antonio','Campos','s230145','zs230145@estudiantes.uv.mx','2283421934',0,'9',1,'Analisis para creacion de paginas web',NULL,12),(8,'Omar','Espinosa','Fernandez','s230146','zs230146@estudiantes.uv.mx','2292345678',0,'9',0,NULL,0.00,13),(9,'Carlos','Castillo','Barradas','s230147','zs230147@estudiantes.uv.mx','2292345678',0,'9',0,NULL,0.00,14),(10,'Brayan','Fernandez','Tlapa','s230148','zs230148@estudiantes.uv.mx','2292345678',0,'9',0,'',0.00,15),(11,'Gabriel','Tlapa','Fernández','s237648','s2379648@estudiantes.uv.mx','2297654678',0,'9',0,'',0.00,16);
+INSERT INTO `student` VALUES (1,'Elena','Silva','Morales','S210001','zS210001@estudiantes.uv.mx','2288765432',335,'9',1,'Sistema de Gestión Empresarial',1),(2,'Carlos','Mendoza','Rivera','S200502','zS200502@estudiantes.uv.mx','2287654321',342,'10',1,'Automatización de Procesos',5),(3,'Ana','Torres','Jiménez','S190807','zS190807@estudiantes.uv.mx','2291234567',358,'11',1,'Plataforma E-commerce',6),(4,'Miguel','Vargas','Castillo','S200156','zS200156@estudiantes.uv.mx','2299876543',348,'10',1,'Sistema de Monitoreo IoT',7),(5,'Sofía','Herrera','Delgado','S210234','zS210234@estudiantes.uv.mx','2283456789',325,'9',1,'App Móvil Corporativa',8),(6,'Diego','Ramírez','Flores','S200789','zS200789@estudiantes.uv.mx','2292345678',340,'10',1,'Portal de Servicios Digitales',9),(7,'Aldo','Antonio','Campos','s230145','zs230145@estudiantes.uv.mx','2283421934',0,'9',1,'Analisis para creacion de paginas web',12),(8,'Omar','Espinosa','Fernandez','s230146','zs230146@estudiantes.uv.mx','2292345678',0,'9',0,NULL,13),(9,'Carlos','Castillo','Barradas','s230147','zs230147@estudiantes.uv.mx','2292345678',0,'9',1,'Aplicacion de pruebas',14),(10,'Brayan','Fernandez','Tlapa','s230148','zs230148@estudiantes.uv.mx','2292345678',0,'9',1,'Aplicacion de pruebas',15),(11,'Gabriel','Tlapa','Fernández','s237648','s2379648@estudiantes.uv.mx','2297654678',0,'9',1,'',16);
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -550,7 +565,7 @@ CREATE TABLE `studentingroup` (
 
 LOCK TABLES `studentingroup` WRITE;
 /*!40000 ALTER TABLE `studentingroup` DISABLE KEYS */;
-INSERT INTO `studentingroup` VALUES (1,1),(2,1),(3,2),(4,2),(5,3),(6,3);
+INSERT INTO `studentingroup` VALUES (1,2),(2,2),(3,2),(4,2),(10,2),(5,3),(6,3),(7,3);
 /*!40000 ALTER TABLE `studentingroup` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -649,7 +664,7 @@ CREATE TABLE `term` (
   `startDate` date DEFAULT NULL,
   `endDate` date DEFAULT NULL,
   PRIMARY KEY (`idTerm`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -658,7 +673,7 @@ CREATE TABLE `term` (
 
 LOCK TABLES `term` WRITE;
 /*!40000 ALTER TABLE `term` DISABLE KEYS */;
-INSERT INTO `term` VALUES (1,'Febrero 2025 - Julio 2025','2025-02-03','2025-07-25'),(2,'Agosto 2025 - Enero 2026','2025-08-04','2026-01-30'),(3,'Febrero 2026 - Julio 2026','2026-02-02','2026-07-24');
+INSERT INTO `term` VALUES (1,'Febrero 2025 - Julio 2025','2025-02-03','2025-07-25'),(2,'Agosto 2025 - Enero 2026','2025-08-04','2026-01-30'),(3,'Febrero 2026 - Julio 2026','2026-02-02','2026-07-24'),(4,'Agosto 2024 - Enero 2025','2024-08-04','2025-01-30');
 /*!40000 ALTER TABLE `term` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -698,4 +713,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-06-22 18:59:57
+-- Dump completed on 2025-06-26 15:06:13
